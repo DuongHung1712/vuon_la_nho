@@ -1,0 +1,67 @@
+name: Update Helm Values
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  update-helm-values:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+        with:
+          path: main-repo
+
+      - name: Checkout config repo
+        uses: actions/checkout@v4
+        with:
+          repository: DuongHung1712/vuon_la_nho-config
+          token: ${{ secrets.PAT }}
+          ref: main
+          path: config-repo
+
+      - name: Update image tags in values.yaml
+        run: |
+          declare -A tags
+          declare -A map=(
+            [frontend]="frontend"
+            [backend]="backend"
+            [admin]="admin"
+          )
+
+          cd main-repo
+          for dir in */; do
+            service="${dir%/}"
+            if [ -f "$service/VERSION" ]; then
+              tag=$(cat "$service/VERSION")
+              tags["$service"]=$tag
+            fi
+          done
+
+          cd ../config-repo
+          values_file="kubernetes/values.yaml"
+
+          for service in "${!map[@]}"; do
+            yaml_key="${map[$service]}"
+            tag="${tags[$service]}"
+            if [ -n "$tag" ]; then
+              echo "🛠 Updating $yaml_key.image to $tag"
+              sed -i "/^$yaml_key:/,/^[^[:space:]]/ s|^\(\s*image:\s*.*$service:\).*|\1$tag|" "$values_file"
+            else
+              echo " No tag found for $service"
+            fi
+          done
+
+      - name: Commit and push
+        run: |
+          cd config-repo
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          if git diff --exit-code -- kubernetes/values.yaml > /dev/null; then
+            echo " No changes"
+          else
+            git add kubernetes/values.yaml
+            git commit -m "chore: update image tags from main branch"
+            git push origin main

@@ -1,0 +1,61 @@
+name: CI for Dev Branch
+
+on:
+  push:
+    branches: [dev]
+
+permissions:
+  contents: write
+
+jobs:
+  build-push-dev-images:
+    if: github.actor != 'github-actions[bot]' && !contains(github.event.head_commit.message, 'ci(')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Detect changed services
+        id: detect
+        run: |
+          changed_paths=$(git diff --name-only HEAD~1 HEAD)
+          services=()
+          for path in $changed_paths; do
+            dir="${path%%/*}"
+            if [ -d "$dir" ] && [ -f "$dir/Dockerfile" ] && [ -f "$dir/VERSION" ]; then
+              services+=("$dir")
+            fi
+          done
+          unique_services=$(printf "%s " "${services[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' ' | sed 's/ $//')
+          echo "changed_services=$unique_services" >> $GITHUB_OUTPUT
+
+      - name: Build, tag and push Docker images
+        if: steps.detect.outputs.changed_services != ''
+        run: |
+          NOW=$(date +"%d%m%Y-%H-%M-%S")
+          IFS=' ' read -r -a services <<< "${{ steps.detect.outputs.changed_services }}"
+          for service in "${services[@]}"; do
+            version_line=$(cat $service/VERSION)
+            version_clean=$(echo "$version_line" | sed 's/^v//' | cut -d- -f1)
+            IFS='.' read -r major minor patch <<< "$version_clean"
+            new_patch=$((patch + 1))
+            new_version="$major.$minor.$new_patch"
+            image_tag="v$new_version-$NOW"
+            echo "$image_tag" > $service/VERSION
+            git config user.name "github-actions"
+            git config user.email "github-actions@github.com"
+            git add $service/VERSION
+            git commit -m "ci($service): bump version to $image_tag"
+            git push origin dev
+            docker build -t ${{ secrets.DOCKER_USERNAME }}/vuonlanho-$service:$image_tag ./$service
+            docker push ${{ secrets.DOCKER_USERNAME }}/vuonlanho-$service:$image_tag
+          done
