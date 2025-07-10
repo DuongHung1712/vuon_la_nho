@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Fetch all history for all branches and tags
 
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
@@ -50,12 +50,20 @@ jobs:
             new_patch=$((patch + 1))
             new_version="$major.$minor.$new_patch"
             image_tag="v$new_version-$NOW"
+            echo "New image tag for $service: $image_tag"
+            # Ghi lại image_tag vào file VERSION
             echo "$image_tag" > $service/VERSION
+
+            # Commit Version mới
             git config user.name "github-actions"
             git config user.email "github-actions@github.com"
             git add $service/VERSION
             git commit -m "ci($service): bump version to $image_tag"
             git push origin dev
+            
             docker build -t ${{ secrets.DOCKER_USERNAME }}/vuonlanho-$service:$image_tag ./$service
             docker push ${{ secrets.DOCKER_USERNAME }}/vuonlanho-$service:$image_tag
+            else 
+              echo "Skipping $service: missing Dockerfile or VERSION"
+            fi
           done
