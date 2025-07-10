@@ -27,15 +27,21 @@ jobs:
       - name: Detect changed services
         id: detect
         run: |
-          changed_paths=$(git diff --name-only HEAD~1 HEAD)
+          if git rev-parse HEAD~1 >/dev/null 2>&1; then
+            changed_paths=$(git diff --name-only HEAD~1 HEAD)
+          else
+            changed_paths=$(git diff-tree --no-commit-id --name-only -r HEAD)
+          fi
           services=()
           for path in $changed_paths; do
-            dir="${path%%/*}"
+          dir="${path%%/*}"
             if [ -d "$dir" ] && [ -f "$dir/Dockerfile" ] && [ -f "$dir/VERSION" ]; then
               services+=("$dir")
             fi
           done
+            
           unique_services=$(printf "%s " "${services[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' ' | sed 's/ $//')
+          echo "Changed services: $unique_services"
           echo "changed_services=$unique_services" >> $GITHUB_OUTPUT
 
       - name: Build, tag and push Docker images
@@ -44,6 +50,9 @@ jobs:
           NOW=$(date +"%d%m%Y-%H-%M-%S")
           IFS=' ' read -r -a services <<< "${{ steps.detect.outputs.changed_services }}"
           for service in "${services[@]}"; do
+          if [ -f "$service/Dockerfile" ] && [ -f "$service/VERSION" ]; then
+              echo "Building $service..."
+            # Đọc phiên bản cũ và tăng patch
             version_line=$(cat $service/VERSION)
             version_clean=$(echo "$version_line" | sed 's/^v//' | cut -d- -f1)
             IFS='.' read -r major minor patch <<< "$version_clean"
