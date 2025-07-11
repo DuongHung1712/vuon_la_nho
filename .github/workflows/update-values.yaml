@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: main-repo
-
+        # Clone repo config , nơi chứa values.yaml để update image tag tương ứng, dùng PAT để có quyền push
       - name: Checkout config repo
         uses: actions/checkout@v4
         with:
@@ -30,7 +30,7 @@ jobs:
             [backend]="backend"
             [admin]="admin"
           )
-
+          # Lặp qua từng Service đọc tag từ file VERSION của mỗi Service
           cd main-repo
           for dir in */; do
             service="${dir%/}"
@@ -40,6 +40,7 @@ jobs:
             fi
           done
 
+          #  Câu lệnh sed tìm dòng image: <registry>/<service>:<tag> trong khối services và cập nhật tag
           cd ../config-repo
           values_file="kubernetes/values.yaml"
 
@@ -53,7 +54,8 @@ jobs:
               echo " No tag found for $service"
             fi
           done
-
+        
+        # Nếu file values.yaml có thực sự thay đổi thì commit và push
       - name: Commit and push
         run: |
           cd config-repo

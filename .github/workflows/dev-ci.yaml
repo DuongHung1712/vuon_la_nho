@@ -10,10 +10,12 @@ permissions:
 
 jobs:
   build-push-dev-images:
+    # Tránh loop vô hạn khi bot push VERSION lại vào repo, với xác định không phải commit của bot
     if: github.actor != 'github-actions[bot]' && !contains(github.event.head_commit.message, 'ci(')
     runs-on: ubuntu-latest
 
     steps:
+      # Clone toàn bộ repo, bao gồm lịch sử commit
       - name: Checkout code
         uses: actions/checkout@v3
         with:
@@ -33,7 +35,7 @@ jobs:
           else
             changed_paths=$(git diff-tree --no-commit-id --name-only -r HEAD)
           fi
-      
+          # Lấy danh sách file thay đổi ở commit gần nhất, nếu các file nằm trong folder có chứa VERSION và Dockerfile xác định là 1 service
           services=()
           for path in $changed_paths; do
             dir="${path%%/*}"
@@ -57,7 +59,7 @@ jobs:
 
           for service in "${services[@]}"; do
             if [ -f "$service/Dockerfile" ] && [ -f "$service/VERSION" ]; then
-              echo "🔧 Building $service..."
+              echo "Building $service..."
 
               # Đọc phiên bản cũ và tăng patch
               version_line=$(cat $service/VERSION)
@@ -67,7 +69,7 @@ jobs:
               new_version="$major.$minor.$new_patch"
               image_tag="v$new_version-$NOW"
 
-              echo "📦 New image tag for $service: $image_tag"
+              echo "New image tag for $service: $image_tag"
 
               # Ghi lại image tag vào file VERSION
               echo "$image_tag" > $service/VERSION
@@ -83,6 +85,6 @@ jobs:
               docker build -t ${{ secrets.DOCKER_USERNAME }}/vuonlanho-$service:$image_tag ./$service
               docker push ${{ secrets.DOCKER_USERNAME }}/vuonlanho-$service:$image_tag
             else
-              echo "⚠️ Skipping $service: missing Dockerfile or VERSION"
+              echo "Skipping $service: missing Dockerfile or VERSION"
             fi
           done
