@@ -42,5 +42,29 @@ cd frontend
 npm install
 npm run server
 ```
+## 📦 Build and Push Docker Images
+```
+docker build -t your-dockerhub/frontend:<tag> ./frontend
+docker push your-dockerhub/frontend:<tag>
+```
+```
+docker build -t your-dockerhub/admin:<tag> ./admin
+docker push your-dockerhub/admin:<tag>
+```
+```
+docker build -t your-dockerhub/backend:<tag> ./backend
+docker push your-dockerhub/backend:<tag>
+```
+## 📦 Deploy with Helm Chart
+- Cập nhật tên image:tag khi push lên dockerhub.
+```
+helm install vuonlanho .
+```
+- Cập nhật tên image:tag khi push lên dockerhub.
+```
+helm upgrade vuonlanho . --values values.yaml
+```
+
+
 
 
