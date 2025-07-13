@@ -1,6 +1,6 @@
 # 🌿 Vuon La Nho - Foliage Shop Platform
 A full-stack e-commerce project for selling foliage plants. The platform is built with modern web technologies (React, Node.js), containerized using Docker, and deployed to production on Google Kubernetes Engine (GKE) with full GitOps CI/CD automation and HTTPS domain.
-
+# 🌍 Visit Production Site 👉[here[(https://vuonlanho.store).
 # Vườn Lá Nhỏ Repository Config [here](https://github.com/DuongHung1712/vuon_la_nho-config)
 
 
@@ -29,21 +29,18 @@ A full-stack e-commerce project for selling foliage plants. The platform is buil
 
 ---
 
-## 🧩 Project Structure
+## 🧪 Local Development
+**Frontend**
+```
+cd frontend
+npm install
+npm run dev
+```
+**Backend**
+```
+cd frontend
+npm install
+npm run server
+```
 
-```bash
-/
-├── .github/workflows/     # GitHub Actions for CI/CD
-├── frontend/              # React app
-  ├── VERSION                # Docker image version tracking
-├── admin/              # React app
-  ├── VERSION                # Docker image version tracking
-├── backend/               # Node.js API
-  ├── VERSION                # Docker image version tracking
 
-
-
-├── charts/                # Helm charts (Deployment, Service, Ingress)
-  ├── values.yaml                
-  ├── templates.yaml                
-  ├── Chart.yaml
