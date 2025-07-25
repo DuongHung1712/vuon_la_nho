@@ -67,7 +67,7 @@ jobs:
               new_version="$major.$minor.$new_patch"
               image_tag="v$new_version-$NOW"
 
-              echo "📦 New image tag for $service: $image_tag"
+              echo "New image tag for $service: $image_tag"
 
               # Ghi lại image tag vào file VERSION
               echo "$image_tag" > $service/VERSION
@@ -83,6 +83,6 @@ jobs:
               docker build -t ${{ secrets.DOCKER_USERNAME }}/vuonlanho-$service:$image_tag ./$service
               docker push ${{ secrets.DOCKER_USERNAME }}/vuonlanho-$service:$image_tag
             else
-              echo "⚠️ Skipping $service: missing Dockerfile or VERSION"
+              echo "Skipping $service: missing Dockerfile or VERSION"
             fi
           done
