@@ -47,7 +47,7 @@ jobs:
             yaml_key="${map[$service]}"
             tag="${tags[$service]}"
             if [ -n "$tag" ]; then
-              echo "🛠 Updating $yaml_key.image to $tag"
+              echo " Updating $yaml_key.image to $tag"
               sed -i "/^$yaml_key:/,/^[^[:space:]]/ s|^\(\s*image:\s*.*$service:\).*|\1$tag|" "$values_file"
             else
               echo " No tag found for $service"
