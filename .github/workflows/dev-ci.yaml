@@ -57,7 +57,7 @@ jobs:
 
           for service in "${services[@]}"; do
             if [ -f "$service/Dockerfile" ] && [ -f "$service/VERSION" ]; then
-              echo "🔧 Building $service..."
+              echo " Building $service..."
 
               # Đọc phiên bản cũ và tăng patch
               version_line=$(cat $service/VERSION)
