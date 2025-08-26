@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "axios": "^1.10.0",
+    "passport-facebook": "^3.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.5.2",

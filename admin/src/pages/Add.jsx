@@ -13,10 +13,11 @@ const Add = ({token}) => {
   const [name,setName] = useState("");
   const [description , setDescription] = useState("");
   const [price , setPrice] = useState("");
-  const [category , setCategory] = useState("Indoor");
-  const [subCategory , setSubCategory] = useState("A");
+  const [category , setCategory] = useState("indoor");
+  const [difficulty , setDifficulty] = useState("easy");
+  const [light , setLight] = useState("low");
+
   const [bestseller , setBestseller] = useState(false);
-  const [sizes , setSizes] = useState([]); 
 
   const onSummitHandler = async (e) => {
     e.preventDefault();
@@ -24,11 +25,11 @@ const Add = ({token}) => {
       const formData = new FormData()
       formData.append("name", name)
       formData.append("description", description)
-      formData.append("price", price)
       formData.append("category", category)
-      formData.append("subCategory", subCategory)
+      formData.append("difficulty", difficulty)
+      formData.append("light", light)
+      formData.append("price", price)
       formData.append("bestseller", bestseller)
-      formData.append("sizes", JSON.stringify(sizes)) 
       image1 && formData.append("image1", image1)
       image2 && formData.append("image2", image2)
       image3 && formData.append("image3", image3)
@@ -43,6 +44,8 @@ const Add = ({token}) => {
         setImage2(false)
         setImage3(false)
         setImage4(false)
+        setDifficulty('')
+        setLight('')
         setPrice('')
       }else {
         toast.error(response.data.message)
@@ -90,44 +93,34 @@ const Add = ({token}) => {
         <div>
           <p className='mb-2'>Loại sản phẩm</p>
           <select onChange={(e)=> setCategory(e.target.value)} className='w-full px-3 py-2' >
-            <option value="Trong nhà">Trong nhà</option>
-            <option value="Ngoài trời">Ngoài trời</option>
+            <option value="indoor">Trong nhà</option>
+            <option value="outdoor">Ngoài trời</option>
           </select>
         </div>
         <div>
-          <p className='mb-2'>Tiêu chí</p>
-          <select onChange={(e)=> setSubCategory(e.target.value)} className='w-full px-3 py-2' >
-            <option value="Mini để bàn">Mini để bàn</option>
-            <option value="Phong thủy">Phong thủy</option>
-            <option value="Cây chịu nắng tốt">Cây chịu nắng tốt</option>
-            <option value="Lá độc lạ / sưu tầm">Lá độc lạ / sưu tầm</option>
-            <option value="Trang trí sân vườn">Trang trí sân vườn</option>
-            <option value="Cây dây leo / phủ tường ">Cây dây leo / phủ tường </option>
-            
-
-
+          <p className='mb-2'>Difficulty</p>
+          <select onChange={(e)=> setDifficulty(e.target.value)} className='w-full px-3 py-2' >
+            <option value="easy">Dễ</option>
+            <option value="medium">Trung bình</option>
+            <option value="hard">Khó</option>
           </select>
         </div>
+        <div>
+          <p className='mb-2'>Light</p>
+          <select onChange={(e)=> setLight(e.target.value)} className='w-full px-3 py-2' >
+            <option value="low">Ít</option>
+            <option value="medium">Trung bình</option>
+            <option value="high">Nhiều</option>
+          </select>
+        </div>
+        
+
         <div>
           <p className='mb-2'>Giá sản phẩm</p>
           <input onChange={(e) => setPrice(e.target.value)} value={price} className='w-full px-3 py-2 sm:w-[120px]' type="Number" placeholder='25' />
         </div>
       </div>
-      <div>
-        <p className='mb-2'>Kích cỡ sản phẩm</p>
-        <div className='flex gap-3'>
-          <div onClick={()=>setSizes(prev => prev.includes("S") ? prev.filter(item => item !=="S"):[...prev,"S"])}>
-            <p className={`${sizes.includes("S")? "bg-pink-100" : "bg-slate-200"} px-3 py-1 cursor-pointer`}>S</p>
-          </div>
-          <div onClick={()=>setSizes(prev => prev.includes("M") ? prev.filter(item => item !=="M"):[...prev,"M"])}>
-            <p className={`${sizes.includes("M")? "bg-pink-100" : "bg-slate-200"} px-3 py-1 cursor-pointer`}>M</p>
-          </div>
-          <div onClick={()=>setSizes(prev => prev.includes("L") ? prev.filter(item => item !=="L"):[...prev,"L"])}>
-            <p className={`${sizes.includes("L")? "bg-pink-100" : "bg-slate-200"} px-3 py-1 cursor-pointer`}>L</p>
-          </div>
-
-        </div>
-      </div>
+      
       <div className=' flex gap-2 mt-2'>
         <input onChange={() => setBestseller(prev => !prev)}  checked={bestseller } type="checkbox" id='bestseller' />
         <label className='curs-pointer' htmlFor="bestseller">Thêm vào bán chạy</label>

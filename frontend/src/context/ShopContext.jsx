@@ -6,35 +6,30 @@ export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
 
-    const currency = ' VND';
+    const currency = 'đ';
     const delivery_fee = 20000;
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const [search, setSearch] = useState('');
     const [showSearch, setShowSearch] = useState(false);
     const [cartItems, setCartItems] = useState({});
     const [products, setProducts] = useState([]);
-    const [size, setSize] = useState('');
     const [token, setToken] = useState('');
     const navigate = useNavigate();
 
 
 
-    const addToCart = async (itemId, size, quantity) => {
+    const addToCart = async (itemId, quantity) => {
     let cartData = structuredClone(cartItems);
 
     if (!cartData[itemId]) {
         cartData[itemId] = {};
     }
 
-    if (cartData[itemId][size]) {
-        cartData[itemId][size] += quantity;
-    } else {
-        cartData[itemId][size] = quantity;
-    }
-        setCartItems(cartData);
-        if (token) {
-            try {
-                await axios.post(backendUrl + '/api/cart/add', { itemId, size }, { headers: { token } })
+    cartData[itemId]['quantity'] = quantity;
+    setCartItems(cartData);
+    if (token) {
+        try {
+            await axios.post(backendUrl + '/api/cart/add', { itemId, quantity }, { headers: { token } })
 
             } catch (error) {
                 console.log(error)
@@ -54,14 +49,14 @@ const ShopContextProvider = (props) => {
     return totalCount;
 }
 
-    const updateQuantity = async (itemId, size, quantity) => {
+    const updateQuantity = async (itemId, quantity) => {
         let cartData = structuredClone(cartItems);
 
         cartData[itemId] = quantity;    
         setCartItems(cartData);
         if (token) {
             try {
-                await axios.post(backendUrl + '/api/cart/update', { itemId, size, quantity }, { headers: { token } })
+                await axios.post(backendUrl + '/api/cart/update', { itemId, quantity }, { headers: { token } })
             } catch (error) {
                 console.log(error)
                 toast.error(error.message)
