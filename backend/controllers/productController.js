@@ -3,7 +3,7 @@ import productModel from '../models/productModel.js'
 // function for add product
 const addProduct = async (req, res) => {
     try {
-        const {name, description, price, category, subCategory, sizes, bestseller} = req.body
+        const {name, description, category, difficulty, light, price, bestseller} = req.body
 
         const image1 = req.files.image1 && req.files.image1[0]
         const image2 = req.files.image2 && req.files.image2[0]
@@ -21,10 +21,10 @@ const addProduct = async (req, res) => {
             name,
             description,
             category,
+            difficulty,
+            light,
             price: Number(price),
-            subCategory,
             bestseller: bestseller === 'true' ? true : false,
-            sizes: JSON.parse(sizes),
             image: imagesUrl,
             date: Date.now()
 
@@ -74,4 +74,28 @@ const singleProduct = async (req, res) => {
     }
 }
 
-export {listProduct, addProduct, removeProduct, singleProduct}  
+// funcition for get product from suggest AI
+const suggestProduct = async (req, res) => {
+    try {
+        const { spaceDesc, preferences } = req.body;
+
+        const regexSpace = new RegExp(spaceDesc, "i");
+        const regexPref = new RegExp(preferences, "i");
+        const products = await productModel.find({
+      $or: [
+        { description: regexSpace },
+        { description: regexPref },
+        { category: regexPref },
+        { difficulty: regexPref },
+        { light: regexPref }
+      ]
+    }).limit(10); 
+    res.json(products);
+
+    } catch (error) {
+      console.error(err);
+    res.status(500).json({ message: "Server error" });   
+    }
+}
+
+export {listProduct, addProduct, removeProduct, singleProduct, suggestProduct}  

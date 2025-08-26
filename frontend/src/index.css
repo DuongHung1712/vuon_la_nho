@@ -11,6 +11,9 @@ a.active hr {
     font-family: 'Be Vietnam Pro', sans-serif;
 }
 
+.rounded-xl {
+    border-radius: calc(var(--radius) + 4px);
+}
 .prata-regular {
     font-family: "Prata", serif;
     font-weight: 400;

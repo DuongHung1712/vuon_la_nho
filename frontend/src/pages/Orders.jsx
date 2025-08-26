@@ -51,7 +51,6 @@ const Orders = () => {
                   <div className='flex items-center gap-3 mt-2 test-base text-gray-700'>
                     <p >{item.price}{currency}</p>
                     <p>Số lượng: {item.quantity}</p>
-                    <p>Kích cỡ: {item.size}</p>
                   </div>
                   <p className='mt-2'>Ngày đặt: <span className='text-gray-400'>{new Date(item.date).toDateString()}</span></p>
                   <p className='mt-2'>Thanh toán: <span className='text-gray-400'>{item.paymentMethod}</span></p>
