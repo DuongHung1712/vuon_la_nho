@@ -19,17 +19,17 @@ const ShopContextProvider = (props) => {
 
 
     const addToCart = async (itemId, quantity) => {
-    let cartData = structuredClone(cartItems);
+        let cartData = structuredClone(cartItems);
 
-    if (!cartData[itemId]) {
-        cartData[itemId] = {};
-    }
+        if (!cartData[itemId]) {
+            cartData[itemId] = {};
+        }
 
-    cartData[itemId]['quantity'] = quantity;
-    setCartItems(cartData);
-    if (token) {
-        try {
-            await axios.post(backendUrl + '/api/cart/add', { itemId, quantity }, { headers: { token } })
+        cartData[itemId]['quantity'] = quantity;
+        setCartItems(cartData);
+        if (token) {
+            try {
+                await axios.post(backendUrl + '/api/cart/add', { itemId, quantity }, { headers: { token } })
 
             } catch (error) {
                 console.log(error)
@@ -39,47 +39,52 @@ const ShopContextProvider = (props) => {
     }
 
     const getCartCount = () => {
-    let totalCount = 0;
-    for (const itemId in cartItems) {
-        const sizes = cartItems[itemId];
-        for (const size in sizes) {
-            totalCount += Number(sizes[size]) || 0;
-        }
-    }
-    return totalCount;
-}
-
-    const updateQuantity = async (itemId, quantity) => {
-        let cartData = structuredClone(cartItems);
-
-        cartData[itemId] = quantity;    
-        setCartItems(cartData);
-        if (token) {
-            try {
-                await axios.post(backendUrl + '/api/cart/update', { itemId, quantity }, { headers: { token } })
-            } catch (error) {
-                console.log(error)
-                toast.error(error.message)
+        let totalCount = 0;
+        for (const itemId in cartItems) {
+            const sizes = cartItems[itemId];
+            for (const size in sizes) {
+                totalCount += Number(sizes[size]) || 0;
             }
         }
+        return totalCount;
     }
+
+    const updateQuantity = async (itemId, quantity) => {
+        setCartItems(prev => {
+            const updated = { ...prev, [itemId]: quantity };
+            return updated;
+        });
+
+        if (token) {
+            try {
+                await axios.post(
+                    backendUrl + '/api/cart/update',
+                    { itemId, quantity },
+                    { headers: { token } }
+                );
+            } catch (error) {
+                console.log(error);
+                toast.error(error.message);
+            }
+        }
+    };
 
     const getCartAmount = () => {
-    let totalAmount = 0;
+        let totalAmount = 0;
 
-    for (const itemId in cartItems) {
-        const itemInfo = products.find(product => product._id === itemId);
-        if (!itemInfo) continue;
+        for (const itemId in cartItems) {
+            const itemInfo = products.find(product => product._id === itemId);
+            if (!itemInfo) continue;
 
-        const sizes = cartItems[itemId];
-        for (const size in sizes) {
-            const quantity = sizes[size];
-            totalAmount += itemInfo.price * quantity;
+            const sizes = cartItems[itemId];
+            for (const size in sizes) {
+                const quantity = sizes[size];
+                totalAmount += itemInfo.price * quantity;
+            }
         }
-    }
 
-    return totalAmount;
-};
+        return totalAmount;
+    };
     const getProductsData = async () => {
         try {
             const response = await axios.get(backendUrl + '/api/product/list')
@@ -95,9 +100,9 @@ const ShopContextProvider = (props) => {
     }
     const getUserCart = async (token) => {
         try {
-            const response = await axios.post(backendUrl + '/api/cart/get',{},{headers:{token}})
+            const response = await axios.post(backendUrl + '/api/cart/get', {}, { headers: { token } })
             console.log(response.data)
-            if (response.data.success){
+            if (response.data.success) {
                 setCartItems(response.data.cartData)
             }
         } catch (error) {

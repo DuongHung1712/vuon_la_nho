@@ -39,7 +39,7 @@ const Login = () => {
 
     }
   }
-  const onClickFacebook = () => {
+  const onClickFacebook = async () => {
     window.location.href = backendUrl + '/api/user/auth/facebook';
   };
   useEffect(() => {
@@ -93,6 +93,7 @@ const Login = () => {
         </div>
       </div>
     </div>
+    
   )
 }
 

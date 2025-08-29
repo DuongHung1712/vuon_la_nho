@@ -49,17 +49,7 @@ const Cart = () => {
                     </div>
                   </div>
                 </div>
-                <input
-                  value={cartItems[item._id] ?? 1}
-                  onChange={(e) => {
-                    const val = Number(e.target.value);
-                    if (val >= 1) {
-                      updateQuantity(item._id, val);
-                    }
-                  }}
-                   className='border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1' type="number"
-                  min={1}
-                />
+                <input className='border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1' type="number" min={1} defaultValue={item.quantity}  />
                 <img onClick={() => updateQuantity(item._id, 0)} className='w-4 mr-4 sm:w-5 cursor-pointer' src={assets.bin_icon} alt="" />
               </div>
             )
@@ -73,7 +63,7 @@ const Cart = () => {
             <button onClick={() => navigate('/place-order')} className='bg-black text-white text-sm my-8 px-8 py-3'>Thanh Toán</button>
           </div>
         </div>
-      </div>
+      </div>  
     </div>
   )
 }

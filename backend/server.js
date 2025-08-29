@@ -9,6 +9,8 @@ import cartRouter from './routes/cartRoute.js'
 import orderRouter from './routes/orderRoute.js'
 import configLoginwithFacebook from './social/FacebookController.js'
 import { config } from 'dotenv'
+import passport from 'passport'
+import LocalStratery from 'passport-local'
 // APP Config
 const app = express()   
 const port = process.env.PORT || 4000
@@ -17,6 +19,7 @@ connectCloudinary()
 // Middleware
 app.use(express.json())
 app.use(cors()) 
+
 
 
 // API Endpoints
@@ -28,7 +31,9 @@ app.get('/', (req, res) => {
     res.send("API Working")
 })
 configLoginwithFacebook();
-
+passport.use(new LocalStratery(function verify(username, password, cb) {
+    console.log(username, password);
+}));
 app.listen(port, () => {
     console.log(`Server started on port ${port}`)
 })
