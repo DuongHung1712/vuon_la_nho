@@ -89,7 +89,7 @@ const adminLogin = async (req, res) => {
     }
 }
 const facebooklogin = async (req, res) => {
-    const redirectUri = `http://localhost:4000/api/user/auth/facebook/callback`;
+    const redirectUri = `https://vuonlanho.store/api/user/auth/facebook/callback`;
     const clientId = process.env.FACEBOOK_APP_ID;
     const url = `https://www.facebook.com/v10.0/dialog/oauth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=email`;
     res.redirect(url);
@@ -97,7 +97,7 @@ const facebooklogin = async (req, res) => {
 
 const facebookcallback = async (req, res) => {
     const code = req.query.code;
-    const redirectUri = 'http://localhost:4000/api/user/auth/facebook/callback';
+    const redirectUri = 'https://vuonlanho.store/api/user/auth/facebook/callback';
     try {
         const tokenRes = await axios.post('https://graph.facebook.com/v10.0/oauth/access_token', null, {
             params: {
@@ -128,13 +128,13 @@ const facebookcallback = async (req, res) => {
             });
         }
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-        res.redirect(`http://localhost:5173/success?token=${token}`);
+        res.redirect(`https://vuonlanho.store/success?token=${token}`);
     } catch (error) {
         console.error('Error fetching Facebook user info:', error);
     }
 }
 const googleLogin = (req, res) => {
-    const redirectUri = `http://localhost:4000/api/user/auth/google/callback`;
+    const redirectUri = `https://vuonlanho.store/api/user/auth/google/callback`;
     const clientId = process.env.GOOGLE_CLIENT_ID;
     const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=email`;
     res.redirect(url);
@@ -142,7 +142,7 @@ const googleLogin = (req, res) => {
 
 const googleCallback = async (req, res) => {
     const code = req.query.code;
-    const redirectUri = 'http://localhost:4000/api/user/auth/google/callback';
+    const redirectUri = 'https://vuonlanho.store/api/user/auth/google/callback';
     try {
         const tokenRes = await axios.post('https://oauth2.googleapis.com/token', {
             client_id: process.env.GOOGLE_CLIENT_ID,
@@ -172,7 +172,7 @@ const googleCallback = async (req, res) => {
             });
         }
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-        res.redirect(`http://localhost:5173/success?token=${token}`);
+        res.redirect(`https://vuonlanho.store/success?token=${token}`);
     } catch (error) {
         console.error('Error fetching Google user info:', error);
     }
