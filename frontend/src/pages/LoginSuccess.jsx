@@ -1,22 +1,20 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
-function LoginSuccess() {
+export default function LoginSuccess() {
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const query = new URLSearchParams(window.location.search);
-    const token = query.get("token");
+    const token = searchParams.get("token");
 
     if (token) {
-      localStorage.setItem("token", token); // lưu token
-      setToken(token);
-
-      navigate("/"); // chuyển về home
+      localStorage.setItem("token", token);
+      navigate("/"); // quay về trang chủ hoặc dashboard
+    } else {
+      navigate("/login");
     }
-  }, [navigate]);
+  }, [searchParams, navigate]);
 
   return <p>Đang xử lý đăng nhập...</p>;
 }
-
-export default LoginSuccess;
