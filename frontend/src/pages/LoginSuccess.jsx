@@ -1,24 +1,20 @@
-import { useContext, useEffect } from "react"
-import { ShopContext } from "../context/ShopContext"
+import { useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
+export default function LoginSuccess() {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const token = searchParams.get("token");
 
-const LoginSuccess = () => {
-    const {setToken} = useContext(ShopContext);
-    const navigate = useContext(ShopContext).navigate;
+    if (token) {
+      localStorage.setItem("token", token);
+      navigate("/"); // quay về trang chủ hoặc dashboard
+    } else {
+      navigate("/login");
+    }
+  }, [searchParams, navigate]);
 
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const token = params.get('token');  
-        if (token){
-            localStorage.setItem('token', token);
-            setToken(token);
-            navigate('/');
-        }else{
-            navigate('/login');
-        }
-    }, [navigate, setToken]);
-    return <div>Đang xử lý đăng nhập...</div>;
+  return <p>Đang xử lý đăng nhập...</p>;
 }
-
-export default LoginSuccess;
