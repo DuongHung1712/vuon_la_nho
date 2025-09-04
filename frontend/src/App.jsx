@@ -31,7 +31,7 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/place-order' element={<PlaceOrder />} />
         <Route path='/orders' element={<Orders />} />
-        <Route path="/login-success" element={<LoginSuccess />} />
+        <Route path="/success" element={<LoginSuccess />} />
       </Routes>
       <Footer />
     </div>
