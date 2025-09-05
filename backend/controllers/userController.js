@@ -3,7 +3,7 @@ import userModel from "../models/userModel.js"
 import validator from "validator"
 import bycrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-
+const qs = require('querystring');
 
 
 const createToken = (id) => {
@@ -99,14 +99,18 @@ const facebookcallback = async (req, res) => {
     const code = req.query.code;
     const redirectUri = 'https://vuonlanho.store/api/user/auth/facebook/callback';
     try {
-        const tokenRes = await axios.post('https://graph.facebook.com/v10.0/oauth/access_token', null, {
-            params: {
-                client_id: process.env.FACEBOOK_APP_ID,
-                client_secret: process.env.FACEBOOK_APP_SECRET,
-                redirect_uri: redirectUri,
-                code
+        const tokenRes = await axios.get(
+            'https://graph.facebook.com/v10.0/oauth/access_token',
+            {
+                params: {
+                    client_id: process.env.FB_CLIENT_ID,
+                    client_secret: process.env.FB_CLIENT_SECRET,
+                    redirect_uri: 'https://vuonlanho.store/api/user/auth/facebook/callback',
+                    code: req.query.code,
+                },
+                timeout: 10000,
             }
-        });
+        );
         const access_token = tokenRes.data.access_token;
         const profileRes = await axios.get(
             'https://graph.facebook.com/me',
@@ -144,13 +148,18 @@ const googleCallback = async (req, res) => {
     const code = req.query.code;
     const redirectUri = 'https://vuonlanho.store/api/user/auth/google/callback';
     try {
-        const tokenRes = await axios.post('https://oauth2.googleapis.com/token', {
+        const tokenRes = await axios.post('https://oauth2.googleapis.com/token', qs.stringify({
             client_id: process.env.GOOGLE_CLIENT_ID,
             client_secret: process.env.GOOGLE_CLIENT_SECRET,
             code,
             redirect_uri: redirectUri,
             grant_type: 'authorization_code'
-        });
+        }),
+            {
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                timeout: 10000,
+            }
+        );
         const accessToken = tokenRes.data.access_token;
 
         const profileRes = await axios.get(
