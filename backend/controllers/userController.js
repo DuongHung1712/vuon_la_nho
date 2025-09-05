@@ -3,7 +3,8 @@ import userModel from "../models/userModel.js"
 import validator from "validator"
 import bycrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import qs from 'qs';
+import axios from "axios"
+import qs from "qs"
 
 const createToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET)
