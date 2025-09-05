@@ -30,7 +30,6 @@ const loginUser = async (req, res) => {
     }
 }
 
-
 // Route for user register
 const registerUser = async (req, res) => {
     try {
