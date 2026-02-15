@@ -1,0 +1,148 @@
+{
+  "nav": {
+    "home": "Trang chủ",
+    "collection": "Bộ sưu tập",
+    "about": "Về chúng tôi",
+    "contact": "Liên hệ",
+    "login": "Đăng nhập",
+    "register": "Đăng ký"
+  },
+  "user": {
+    "profile": "Hồ sơ của tôi",
+    "orders": "Đơn hàng",
+    "logout": "Đăng xuất",
+    "welcome": "Chào mừng bạn quay trở lại",
+    "createAccount": "Tạo tài khoản mới"
+  },
+  "auth": {
+    "loginTitle": "Đăng Nhập",
+    "loginDesc": "Nhập thông tin để đăng nhập vào tài khoản",
+    "registerTitle": "Đăng Ký",
+    "registerDesc": "Điền thông tin để tạo tài khoản mới",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "name": "Họ và tên",
+    "forgotPassword": "Quên mật khẩu?",
+    "hasAccount": "Đã có tài khoản?",
+    "noAccount": "Chưa có tài khoản?",
+    "loginNow": "Đăng nhập",
+    "registerNow": "Đăng ký",
+    "or": "Hoặc",
+    "loginWithGoogle": "Đăng nhập với Google",
+    "loginWithFacebook": "Đăng nhập với Facebook",
+    "registerWithGoogle": "Đăng ký với Google",
+    "registerWithFacebook": "Đăng ký với Facebook",
+    "processing": "Đang xử lý...",
+    "errors": {
+      "emailRequired": "Vui lòng nhập email",
+      "emailInvalid": "Email không hợp lệ",
+      "passwordRequired": "Vui lòng nhập mật khẩu",
+      "passwordMinLength": "Mật khẩu phải có ít nhất 6 ký tự",
+      "confirmPasswordRequired": "Vui lòng xác nhận mật khẩu",
+      "passwordNotMatch": "Mật khẩu xác nhận không khớp",
+      "nameRequired": "Vui lòng nhập họ tên",
+      "nameMinLength": "Họ tên phải có ít nhất 2 ký tự",
+      "oauthFailed": "Đăng nhập thất bại. Vui lòng thử lại.",
+      "noCode": "Không nhận được mã xác thực. Vui lòng thử lại.",
+      "noEmail": "Không thể lấy email từ tài khoản. Vui lòng thử phương thức khác.",
+      "authFailed": "Xác thực thất bại. Vui lòng thử lại."
+    }
+  },
+  "product": {
+    "addToCart": "Thêm vào giỏ hàng",
+    "selectSize": "Chọn kích thước",
+    "description": "Mô tả",
+    "relatedProducts": "Sản phẩm liên quan",
+    "bestseller": "Bán chạy",
+    "category": {
+      "indoor": "Trong nhà",
+      "outdoor": "Ngoài trời"
+    },
+    "difficulty": {
+      "easy": "Dễ",
+      "medium": "Trung bình",
+      "hard": "Khó"
+    },
+    "light": {
+      "low": "Ít",
+      "medium": "Trung bình",
+      "high": "Nhiều"
+    }
+  },
+  "cart": {
+    "title": "Giỏ hàng của bạn",
+    "empty": "Giỏ hàng trống",
+    "total": "Tổng cộng",
+    "checkout": "Thanh toán",
+    "continueShopping": "Tiếp tục mua sắm",
+    "size": "Kích thước",
+    "quantity": "Số lượng",
+    "price": "Giá",
+    "remove": "Xóa"
+  },
+  "collection": {
+    "title1": "Tất cả",
+    "title2": "bộ sưu tập",
+    "filters": "Bộ lọc",
+    "clearFilters": "Xóa bộ lọc",
+    "search": "Tìm kiếm",
+    "searchPlaceholder": "Tên cây, mô tả...",
+    "category": "Danh mục",
+    "noProducts": "Không có sản phẩm nào khớp với tùy chọn của bạn",
+    "tryAdjustFilters": "Hãy thử thay đổi bộ lọc nhé",
+    "selectCategory": "Chọn danh mục",
+    "productsFound": "sản phẩm được tìm thấy",
+    "difficulty": "Độ khó chăm sóc",
+    "selectDifficulty": "Chọn độ khó",
+    "light": "Yêu cầu ánh sáng",
+    "selectLight": "Chọn ánh sáng",
+    "priceRange": "Khoảng giá",
+    "sortBy": "Sắp xếp theo",
+    "sortRelevant": "Liên quan",
+    "sortLowHigh": "Giá: Thấp đến Cao",
+    "sortHighLow": "Giá: Cao đến Thấp"
+  },
+  "admin": {
+    "addProduct": "Thêm sản phẩm mới",
+    "updateProduct": "Cập nhật sản phẩm",
+    "productName": "Tên Sản Phẩm",
+    "productDescription": "Mô tả sản phẩm",
+    "productPrice": "Giá sản phẩm",
+    "uploadImage": "Tải ảnh lên",
+    "updateImage": "Cập nhật ảnh (để trống nếu không đổi)",
+    "sizes": "Kích thước (phân cách bằng dấu phẩy)",
+    "sizesPlaceholder": "Ví dụ: Nhỏ, Vừa, Lớn hoặc 10cm, 15cm, 20cm",
+    "sizesHelper": "Nhập các kích thước, phân cách bằng dấu phẩy",
+    "category": "Loại sản phẩm",
+    "difficulty": "Độ khó",
+    "light": "Ánh sáng",
+    "addToBestseller": "Thêm vào bán chạy",
+    "create": "TẠO MỚI",
+    "update": "CẬP NHẬT",
+    "refresh": "Làm mới",
+    "errors": {
+      "nameRequired": "Vui lòng nhập tên sản phẩm",
+      "nameMinLength": "Tên sản phẩm phải có ít nhất 3 ký tự",
+      "descriptionRequired": "Vui lòng nhập mô tả sản phẩm",
+      "descriptionMinLength": "Mô tả phải có ít nhất 10 ký tự",
+      "sizesRequired": "Vui lòng nhập ít nhất một kích thước",
+      "priceRequired": "Vui lòng nhập giá sản phẩm",
+      "priceMin": "Giá phải lớn hơn 0"
+    }
+  },
+  "common": {
+    "submit": "Gửi",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "search": "Tìm kiếm",
+    "filter": "Lọc",
+    "sort": "Sắp xếp",
+    "loading": "Đang tải...",
+    "error": "Đã có lỗi xảy ra",
+    "success": "Thành công",
+    "currency": "đ"
+  }
+}

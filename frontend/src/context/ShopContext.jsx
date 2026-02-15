@@ -1,7 +1,9 @@
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'
+import { useProducts, useCart, useAddToCart, useUpdateCart } from '../hooks/useApi';
+import Loading from '../components/Loading';
+
 export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
@@ -11,30 +13,24 @@ const ShopContextProvider = (props) => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const [search, setSearch] = useState('');
     const [showSearch, setShowSearch] = useState(false);
-    const [cartItems, setCartItems] = useState({});
-    const [products, setProducts] = useState([]);
     const [token, setToken] = useState('');
     const navigate = useNavigate();
 
+    // Use TanStack Query hooks
+    const { data: products = [], isLoading: productsLoading } = useProducts();
+    const { data: cartItems = {}, refetch: refetchCart } = useCart();
+    const addToCartMutation = useAddToCart();
+    const updateCartMutation = useUpdateCart();
 
-
-    const addToCart = async (itemId, quantity) => {
-        let cartData = structuredClone(cartItems);
-
-        if (!cartData[itemId]) {
-            cartData[itemId] = {};
+    const addToCart = async (itemId, quantity, size) => {
+        if (!size) {
+            toast.error('Vui lòng chọn kích thước');
+            return;
         }
-
-        cartData[itemId]['quantity'] = quantity;
-        setCartItems(cartData);
         if (token) {
-            try {
-                await axios.post(backendUrl + '/api/cart/add', { itemId, quantity }, { headers: { token } })
-
-            } catch (error) {
-                console.log(error)
-                toast.error(error.message)
-            }
+            addToCartMutation.mutate({ itemId, quantity, size });
+        } else {
+            toast.error('Vui lòng đăng nhập để thêm vào giỏ hàng');
         }
     }
 
@@ -49,23 +45,9 @@ const ShopContextProvider = (props) => {
         return totalCount;
     }
 
-    const updateQuantity = async (itemId, quantity) => {
-        setCartItems(prev => {
-            const updated = { ...prev, [itemId]: quantity };
-            return updated;
-        });
-
+    const updateQuantity = async (itemId, quantity, size) => {
         if (token) {
-            try {
-                await axios.post(
-                    backendUrl + '/api/cart/update',
-                    { itemId, quantity },
-                    { headers: { token } }
-                );
-            } catch (error) {
-                console.log(error);
-                toast.error(error.message);
-            }
+            updateCartMutation.mutate({ itemId, quantity, size });
         }
     };
 
@@ -85,55 +67,60 @@ const ShopContextProvider = (props) => {
 
         return totalAmount;
     };
-    const getProductsData = async () => {
-        try {
-            const response = await axios.get(backendUrl + '/api/product/list')
-            if (response.data.success) {
-                setProducts(response.data.products)
-            } else {
-                toast.error(response.data.message)
-            }
-        } catch (error) {
-            console.log(error)
-            toast.error(error.message)
-        }
-    }
-    const getUserCart = async (token) => {
-        try {
-            const response = await axios.post(backendUrl + '/api/cart/get', {}, { headers: { token } })
-            console.log(response.data)
-            if (response.data.success) {
-                setCartItems(response.data.cartData)
-            }
-        } catch (error) {
-            console.log(error)
-            toast.error(error.message)
-        }
-    }
-    useEffect(() => {
-        getProductsData()
-    }, [])
-    useEffect(() => {
-        if (!token && localStorage.getItem('token')) {
-            setToken(localStorage.getItem('token'))
-            getUserCart(localStorage.getItem('token'))
-        }
-    }, [])
-    const value = {
-        products, currency, delivery_fee,
-        search, setSearch, showSearch, setShowSearch,
-        cartItems, addToCart, setCartItems,
-        getCartCount, updateQuantity,
-        getCartAmount, navigate, backendUrl,
-        setToken, token
-    }
-    useEffect(() => {
-        console.log(cartItems);
 
-    }, [cartItems])
+    // Load token from localStorage on mount
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            setToken(storedToken);
+            refetchCart();
+        }
+    }, []);
+
+    const value = {
+        products,
+        productsLoading,
+        currency,
+        delivery_fee,
+        search,
+        setSearch,
+        showSearch,
+        setShowSearch,
+        cartItems,
+        addToCart,
+        getCartCount,
+        updateQuantity,
+        getCartAmount,
+        navigate,
+        backendUrl,
+        setToken,
+        token,
+        refetchCart
+    }
+
     return (
         <ShopContext.Provider value={value}>
-            {props.children}
+            {productsLoading ? (
+                <div className="min-h-screen flex items-center justify-center">
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="relative w-20 h-20 overflow-hidden animate-grow-up">
+                            <img 
+                                src="/favicon.png" 
+                                alt="Loading" 
+                                className="w-full h-full object-contain"
+                            />
+                        </div>
+                        <div className="flex items-center gap-2 animate-pulse">
+                            <span className="text-primary-700 font-medium">Vườn Lá Nhỏ</span>
+                            <div className="flex gap-1">
+                                <span className="w-1.5 h-1.5 bg-primary-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                                <span className="w-1.5 h-1.5 bg-primary-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                                <span className="w-1.5 h-1.5 bg-primary-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : props.children}
         </ShopContext.Provider>
     )
 }
