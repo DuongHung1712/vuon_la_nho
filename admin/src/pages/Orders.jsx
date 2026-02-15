@@ -1,87 +1,158 @@
 import React from 'react'
-import { useEffect } from 'react'
-import { useState } from 'react'
-import axios from 'axios'
-import { backendUrl, currency } from '../App'
+import { currency } from '../App'
 import { toast } from 'react-toastify'
-import { assets } from '../assets/assets'
+import DataTable from '../components/DataTable'
+import { Package } from 'lucide-react'
+import { useOrders, useUpdateOrderStatus } from '../hooks/useApi'
+
 const Orders = ({ token }) => {
-  const [orders, setOrders] = useState([])
-  const fetchAllOrders = async () => {
-    if (!token) {
-      return null;
-    }
-    try {
-      const response = await axios.post(backendUrl + '/api/order/list', {}, { headers: { token } })
-      if (response.data.success) {
-        setOrders(response.data.orders)
-      } else {
-        toast.error(response.data.message)
-      }
-    } catch (error) {
-      toast.error(error.message)
-    }
+  const { data: orders = [], isLoading } = useOrders()
+  const updateStatusMutation = useUpdateOrderStatus()
+
+  const statusHandler = async (event, orderId) => {
+    const newStatus = event.target.value
+    updateStatusMutation.mutate({ orderId, status: newStatus })
   }
-  const statusHandler = async (event, orderId ) => {
-    try {
-      const response = await axios.post(backendUrl+ '/api/order/status',{orderId,status:event.target.value},{headers:{token}})
-      if (response.data.success){
-        await fetchAllOrders
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(response.data.message)
-      
-    }
+
+  if (isLoading) {
+    return <div className="text-center py-8">Đang tải...</div>
   }
-  useEffect(() => {
-    fetchAllOrders();
-  }, [token])
+
+  const getStatusColor = (status) => {
+    const colors = {
+      'Đã đặt hàng': 'bg-blue-100 text-blue-700',
+      'Đang đóng gói': 'bg-yellow-100 text-yellow-700',
+      'Đã gửi đi': 'bg-purple-100 text-purple-700',
+      'Đang trên đường': 'bg-orange-100 text-orange-700',
+      'Đã giao hàng thành công': 'bg-primary-50 text-primary-700'
+    };
+    return colors[status] || 'bg-gray-100 text-gray-700';
+  };
+
+  const columns = [
+    {
+      header: 'Đơn hàng',
+      key: 'items',
+      accessor: (order) => order.items.length,
+      render: (order) => (
+        <div className="flex items-start gap-3">
+          <Package className="w-10 h-10 text-gray-400 flex-shrink-0" />
+          <div className="text-xs">
+            {order.items.map((item, index) => (
+              <p key={index} className="py-0.5">
+                {item.name} x {item.quantity}
+                {index < order.items.length - 1 && ','}
+              </p>
+            ))}
+          </div>
+        </div>
+      ),
+      sortable: false,
+      searchable: true,
+    },
+    {
+      header: 'Khách hàng',
+      key: 'customer',
+      accessor: (order) => order.address.firstName + ' ' + order.address.lastName,
+      render: (order) => (
+        <div className="text-xs">
+          <p className="font-medium text-gray-900">{order.address.firstName} {order.address.lastName}</p>
+          <p className="text-gray-600 mt-1">{order.address.phone}</p>
+          <p className="text-gray-500 mt-1">
+            {order.address.street}, {order.address.city}
+          </p>
+        </div>
+      ),
+      sortable: true,
+      searchable: true,
+    },
+    {
+      header: 'Số lượng',
+      key: 'quantity',
+      accessor: (order) => order.items.length,
+      render: (order) => (
+        <span className="font-medium">{order.items.length} items</span>
+      ),
+      sortable: true,
+      searchable: false,
+    },
+    {
+      header: 'Tổng tiền',
+      key: 'amount',
+      accessor: (order) => order.amount,
+      render: (order) => (
+        <span className="font-medium text-primary-700">{order.amount.toLocaleString('vi-VN')} {currency}</span>
+      ),
+      sortable: true,
+      searchable: false,
+    },
+    {
+      header: 'Thanh toán',
+      key: 'payment',
+      accessor: (order) => order.payment ? 'Done' : 'Pending',
+      render: (order) => (
+        <div className="text-xs ">
+          <p className='text-center'>{order.paymentMethod}</p>
+          <span className={`inline-block px-2 py-1 text-center  rounded text-xs font-medium mt-1 ${order.payment ? 'bg-primary-50 text-primary-700' : 'bg-yellow-100 text-yellow-700'}`}>
+            {order.payment ? 'Đã thanh toán' : 'Chưa thanh toán'}
+          </span>
+        </div>
+      ),
+      sortable: true,
+      searchable: false,
+    },
+    {
+      header: 'Ngày đặt',
+      key: 'date',
+      accessor: (order) => order.date,
+      render: (order) => (
+        <span className="text-xs text-gray-600">{new Date(order.date).toLocaleDateString('vi-VN')}</span>
+      ),
+      sortable: true,
+      searchable: false,
+    },
+    {
+      header: 'Trạng thái',
+      key: 'status',
+      accessor: (order) => order.status,
+      render: (order) => (
+        <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(order.status)}`}>
+          {order.status}
+        </span>
+      ),
+      sortable: true,
+      searchable: true,
+    },
+    {
+      header: 'Cập nhật',
+      key: 'action',
+      accessor: () => '',
+      render: (order) => (
+        <select
+          onChange={(event) => statusHandler(event, order._id)}
+          value={order.status}
+          className='p-2 text-xs border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary'
+        >
+          <option value="OrderPlaced">Order Placed</option>
+          <option value="Packing">Packing</option>
+          <option value="Shipped">Shipped</option>
+          <option value="Out for delivery">Out for delivery</option>
+          <option value="Delivered">Delivered</option>
+        </select>
+      ),
+      sortable: false,
+      searchable: false,
+    },
+  ];
+
   return (
     <div>
-      <h3>Trang Đơn Hàng</h3>
-      <div>
-        {
-          orders.map((order, index) => (
-            <div className='grid grid-cols-1 sm:grid-cols-[0.5fr_2fr_1fr] lg:grid-cols-[0.5fr_2fr_1fr_1fr_1fr] gap-3 items-start border-2 border-gray-200 p-5 md:p-8 my-3 md:my-4 text-xs sm:text-sm text-gray-700' key={index}>
-              <img className='w-12' src={assets.parcel_icon} alt="" />
-              <div>
-                <div>
-                  {order.items.map((item, index) => {
-                    if (index === order.items.length - 1) {
-                      return  <p className='py-0.5' key={index}>{item.name} X {item.quantity} <span> {item.size}</span></p>
-                    }
-                    else {
-                      return  <p className='py-0.5' key={index}>{item.name} X {item.quantity} <span> {item.size}</span>,</p>
-                    }
-                  })}
-                </div>
-                <p className='mt-3 mb-2 font-medium'>{order.address.firstName + " " + order.address.lastName}</p>
-                <div>
-                  <p>{order.address.street + ","}</p>
-                  <p>{order.address.city + ", " + order.address.state + ", " + order.address.country + ", " + order.address.zipcode}</p>
-                </div>
-                <p>{order.address.phone}</p>
-              </div>
-              <div>
-                <p className='text-sm sm:text-[15px]'>Items: {order.items.length}</p>
-                <p className='mt-3'>Method:{order.paymentMethod}</p>
-                <p>Payment: {order.payment ? 'Done' : 'Pending'}</p>
-                <p>Date:{new Date(order.date).toLocaleDateString()}</p>
-              </div>
-              <p className='text-sm sm:text-[15px]'>{order.amount}{currency}</p>
-              <select onChange={(event)=>statusHandler(event,order._id)} value={order.status} className='p-2 font-semibold'>
-                <option value="OrderPlaced">OrderPlaced</option>
-                <option value="Packing">Packing</option>
-                <option value="Shipped">Shipped</option>
-                <option value="Out for delivery">Out for delivery</option>
-                <option value="Delivered">Delivered</option>
-
-              </select>
-            </div>
-          ))}
-      </div>
-
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Quản lý đơn hàng</h2>
+      <DataTable
+        columns={columns}
+        data={orders}
+        itemsPerPage={10}
+      />
     </div>
   )
 }

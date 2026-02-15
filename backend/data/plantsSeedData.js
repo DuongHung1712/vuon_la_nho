@@ -1,0 +1,222 @@
+export const plantsData = [
+  {
+    name: "Cây Kim Tiền",
+    description: "Cây kim tiền (Zamioculcas zamiifolia) là loại cây cảnh nội thất được ưa chuộng với lá xanh bóng, dày. Cây tượng trưng cho sự thịnh vượng, may mắn. Rất dễ chăm sóc, chịu bóng tốt, ít cần tưới nước.",
+    category: "Cây để bàn",
+    difficulty: "Dễ",
+    light: "Bóng râm đến ánh sáng vừa",
+    price: 150000,
+    image: ["https://example.com/kim-tien-1.jpg"],
+    bestseller: true,
+    date: Date.now()
+  },
+  {
+    name: "Cây Trầu Bà",
+    description: "Trầu bà (Epipremnum aureum) là cây leo nội thất phổ biến với lá màu xanh có đốm vàng. Rất dễ trồng, có khả năng lọc không khí tốt. Phù hợp trồng trong chậu treo hoặc để bàn.",
+    category: "Cây treo",
+    difficulty: "Dễ",
+    light: "Ánh sáng gián tiếp",
+    price: 80000,
+    image: ["https://example.com/trau-ba-1.jpg"],
+    bestseller: true,
+    date: Date.now()
+  },
+  {
+    name: "Cây Lưỡi Hổ",
+    description: "Lưỡi hổ (Sansevieria) có lá dài, cứng, mọc thẳng đứng. Cây rất dễ chăm sóc, chịu khô hạn tốt, có khả năng lọc không khí xuất sắc. Thích hợp cho người bận rộn.",
+    category: "Cây để bàn",
+    difficulty: "Rất dễ",
+    light: "Bóng râm đến ánh sáng trực tiếp",
+    price: 120000,
+    image: ["https://example.com/luoi-ho-1.jpg"],
+    bestseller: true,
+    date: Date.now()
+  },
+  {
+    name: "Cây Phát Tài",
+    description: "Cây phát tài (Pachira aquatica) có thân tết bím độc đáo, lá xanh bóng mọc từng chùm. Cây mang ý nghĩa phong thủy tốt, thu hút tài lộc. Thích hợp làm quà tặng.",
+    category: "Cây phong thủy",
+    difficulty: "Trung bình",
+    light: "Ánh sáng gián tiếp đến sáng",
+    price: 350000,
+    image: ["https://example.com/phat-tai-1.jpg"],
+    bestseller: true,
+    date: Date.now()
+  },
+  {
+    name: "Cây Đuôi Công",
+    description: "Đuôi công (Calathea) có lá với họa tiết đẹp mắt, nhiều màu sắc. Lá có khả năng đóng mở theo ánh sáng. Cần độ ẩm cao và ánh sáng gián tiếp.",
+    category: "Cây để bàn",
+    difficulty: "Khó",
+    light: "Ánh sáng yếu đến vừa",
+    price: 180000,
+    image: ["https://example.com/duoi-cong-1.jpg"],
+    bestseller: false,
+    date: Date.now()
+  },
+  {
+    name: "Cây Lan Ý",
+    description: "Lan ý (Chlorophytum comosum) có lá dài, mềm, màu xanh có viền trắng. Cây dễ trồng, sinh trưởng nhanh, tạo cây con ở đầu cành. Lọc không khí hiệu quả.",
+    category: "Cây treo",
+    difficulty: "Dễ",
+    light: "Ánh sáng gián tiếp",
+    price: 60000,
+    image: ["https://example.com/lan-y-1.jpg"],
+    bestseller: false,
+    date: Date.now()
+  },
+  {
+    name: "Cây Trúc Phú Quý",
+    description: "Trúc phú quý (Dracaena sanderiana) có thân mảnh, lá xanh dài. Thường được uốn tạo hình độc đáo. Cây mang ý nghĩa may mắn, thịnh vượng trong phong thủy.",
+    category: "Cây phong thủy",
+    difficulty: "Dễ",
+    light: "Ánh sáng yếu đến vừa",
+    price: 90000,
+    image: ["https://example.com/truc-phu-quy-1.jpg"],
+    bestseller: true,
+    date: Date.now()
+  },
+  {
+    name: "Cây Phú Quý",
+    description: "Cây phú quý (Dracaena fragrans) có lá rộng, xanh đậm với viền vàng. Cây cao, thích hợp làm điểm nhấn trong phòng. Dễ chăm sóc, chịu bóng tốt.",
+    category: "Cây để sàn",
+    difficulty: "Dễ",
+    light: "Ánh sáng gián tiếp",
+    price: 250000,
+    image: ["https://example.com/phu-quy-1.jpg"],
+    bestseller: false,
+    date: Date.now()
+  },
+  {
+    name: "Cây Vạn Lộc",
+    description: "Vạn lộc (Aglaonema) có lá màu xanh với họa tiết đỏ, hồng, bạc đẹp mắt. Cây chịu bóng tốt, dễ chăm sóc. Phù hợp với không gian văn phòng.",
+    category: "Cây để bàn",
+    difficulty: "Dễ",
+    light: "Bóng râm đến ánh sáng vừa",
+    price: 140000,
+    image: ["https://example.com/van-loc-1.jpg"],
+    bestseller: true,
+    date: Date.now()
+  },
+  {
+    name: "Cây Tùng La Hán",
+    description: "Tùng la hán (Podocarpus) là cây bụi nhỏ với lá xanh đậm, mọc dày. Thường được tạo dáng bonsai. Mang ý nghĩa trường thọ, bình an.",
+    category: "Cây phong thủy",
+    difficulty: "Trung bình",
+    light: "Ánh sáng trực tiếp đến gián tiếp",
+    price: 300000,
+    image: ["https://example.com/tung-la-han-1.jpg"],
+    bestseller: false,
+    date: Date.now()
+  },
+  {
+    name: "Cây Hoa Giấy Mini",
+    description: "Hoa giấy mini (Bougainvillea) là cây bụi nhỏ với hoa màu sắc rực rỡ. Thích hợp trồng trong chậu nhỏ, đặt nơi có nhiều ánh sáng. Cần chăm sóc tỉ mỉ.",
+    category: "Cây có hoa",
+    difficulty: "Trung bình",
+    light: "Ánh sáng trực tiếp",
+    price: 100000,
+    image: ["https://example.com/hoa-giay-1.jpg"],
+    bestseller: false,
+    date: Date.now()
+  },
+  {
+    name: "Cây Thiết Mộc Lan",
+    description: "Thiết mộc lan (Chlorophytum) có lá xanh dài với đường viền trắng. Cây dễ trồng, sinh trưởng mạnh, tạo cây con nhiều. Lọc không khí tốt.",
+    category: "Cây treo",
+    difficulty: "Dễ",
+    light: "Ánh sáng gián tiếp",
+    price: 70000,
+    image: ["https://example.com/thiet-moc-lan-1.jpg"],
+    bestseller: false,
+    date: Date.now()
+  },
+  {
+    name: "Cây Ngọc Ngân",
+    description: "Ngọc ngân (Scindapsus pictus) là cây leo với lá có đốm bạc lấp lánh. Dễ trồng, chịu bóng tốt. Thích hợp trồng trong chậu treo hoặc leo giàn.",
+    category: "Cây treo",
+    difficulty: "Dễ",
+    light: "Bóng râm đến ánh sáng vừa",
+    price: 95000,
+    image: ["https://example.com/ngoc-ngan-1.jpg"],
+    bestseller: false,
+    date: Date.now()
+  },
+  {
+    name: "Cây Lưỡi Hổ Đuôi Cá",
+    description: "Lưỡi hổ đuôi cá (Sansevieria cylindrica) có lá hình trụ mọc thẳng. Cây rất dễ chăm sóc, chịu hạn tốt. Có thể tạo hình độc đáo bằng cách bện lá.",
+    category: "Cây để bàn",
+    difficulty: "Rất dễ",
+    light: "Ánh sáng gián tiếp đến trực tiếp",
+    price: 130000,
+    image: ["https://example.com/luoi-ho-duoi-ca-1.jpg"],
+    bestseller: false,
+    date: Date.now()
+  },
+  {
+    name: "Cây Xương Rồng Lá",
+    description: "Xương rồng lá (Epiphyllum) có lá dẹt, răng cưa. Ra hoa to, đẹp vào ban đêm. Cần độ ẩm cao và ánh sáng gián tiếp. Thích hợp trồng trong giỏ treo.",
+    category: "Cây có hoa",
+    difficulty: "Trung bình",
+    light: "Ánh sáng gián tiếp",
+    price: 110000,
+    image: ["https://example.com/xuong-rong-la-1.jpg"],
+    bestseller: false,
+    date: Date.now()
+  },
+  {
+    name: "Cây Bàng Singapore",
+    description: "Bàng Singapore (Ficus microcarpa) có tán lá xanh mướt, dày đặc. Cây cao, thích hợp làm cây chậu lớn trang trí sảnh, phòng khách. Dễ chăm sóc.",
+    category: "Cây để sàn",
+    difficulty: "Dễ",
+    light: "Ánh sáng gián tiếp đến sáng",
+    price: 450000,
+    image: ["https://example.com/bang-singapore-1.jpg"],
+    bestseller: true,
+    date: Date.now()
+  },
+  {
+    name: "Cây Dương Xỉ",
+    description: "Dương xỉ (Nephrolepis) có lá xanh mềm mại, mọc từng tầng đẹp mắt. Cây cần độ ẩm cao, ánh sáng yếu. Thích hợp trồng trong nhà tắm hoặc chậu treo.",
+    category: "Cây treo",
+    difficulty: "Trung bình",
+    light: "Ánh sáng yếu đến vừa",
+    price: 85000,
+    image: ["https://example.com/duong-xi-1.jpg"],
+    bestseller: false,
+    date: Date.now()
+  },
+  {
+    name: "Cây Cọ Nhật",
+    description: "Cọ Nhật (Rhapis excelsa) có lá hình quạt, màu xanh đậm. Cây cao, sang trọng, thích hợp cho không gian rộng. Dễ chăm sóc, chịu bóng tốt.",
+    category: "Cây để sàn",
+    difficulty: "Dễ",
+    light: "Bóng râm đến ánh sáng vừa",
+    price: 380000,
+    image: ["https://example.com/co-nhat-1.jpg"],
+    bestseller: false,
+    date: Date.now()
+  },
+  {
+    name: "Cây Hồng Môn",
+    description: "Hồng môn (Anthurium) có lá xanh bóng và hoa đỏ rực hình tim đặc trưng. Cây cần độ ẩm cao và ánh sáng gián tiếp. Tượng trưng cho tình yêu và may mắn.",
+    category: "Cây có hoa",
+    difficulty: "Trung bình",
+    light: "Ánh sáng gián tiếp",
+    price: 160000,
+    image: ["https://example.com/hong-mon-1.jpg"],
+    bestseller: true,
+    date: Date.now()
+  },
+  {
+    name: "Cây Phong Lá Xẻ",
+    description: "Phong lá xẻ (Monstera deliciosa) có lá to, xẻ thùy độc đáo. Cây tạo điểm nhấn tuyệt vời cho không gian hiện đại. Dễ chăm sóc, thích hợp leo giàn.",
+    category: "Cây để sàn",
+    difficulty: "Dễ",
+    light: "Ánh sáng gián tiếp đến sáng",
+    price: 200000,
+    image: ["https://example.com/phong-la-xe-1.jpg"],
+    bestseller: true,
+    date: Date.now()
+  }
+];

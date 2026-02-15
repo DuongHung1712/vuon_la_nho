@@ -1,47 +1,182 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { ShopContext } from '../context/ShopContext'
-import Title from './Title';
-import ProductItem from './ProductItem';
+import React, { useContext, useState } from 'react'
+import { ShopContext } from '../context/ShopContext';
+import { toast } from 'react-toastify';
+import { CloudUpload, X, Loader2, Sparkles, CheckCircle } from 'lucide-react';
 
 const AiSuggest = () => {
+    const { backendUrl } = useContext(ShopContext);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null);
+    const [result, setResult] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-    const [spaceDesc, setSpaceDesc] = useState("");
-    const [preferences, setPreferences] = useState("");
-    const [suggestions, setSuggestions] = useState([]);
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedImage(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewUrl(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
-    const handleSuggest = async () => {
-        const res = await fetch("/api/suggest", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ spaceDesc, preferences })
-        });
-        const data = await res.json();
-        setSuggestions(data);
+    const handleAnalyze = async () => {
+        if (!selectedImage) return;
+
+        setLoading(true);
+        const formData = new FormData();
+        formData.append('image', selectedImage);
+
+        try {
+            const res = await fetch(backendUrl + "/api/disease-detection/detect", {
+                method: "POST",
+                body: formData
+            });
+
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+
+            const data = await res.json();
+
+            if (data.success) {
+                setResult(data);
+                toast.success('Phân tích thành công!');
+            } else {
+                toast.error(data.message || 'Có lỗi xảy ra khi phân tích');
+            }
+        } catch (error) {
+            console.error("Error analyzing image:", error);
+            toast.error('Không thể kết nối đến server. Vui lòng thử lại.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const resetForm = () => {
+        setSelectedImage(null);
+        setPreviewUrl(null);
+        setResult(null);
     };
 
     return (
-        <div id='#aisuggest' className='max-w-4xl mx-auto'>
+        <div id='aisuggest' className='max-w-4xl mx-auto px-4 py-8'>
             <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-sparkles inline h-8 w-8 text-yellow-500 mr-2"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path><path d="M4 17v2"></path><path d="M5 18H3"></path></svg>
-                    AI Gợi ý cây phù hợp
+                    AI Nhận Diện Bệnh Cây
                 </h2>
-                <p className='text-gray-600'>Mô tả không gian và nhu cầu của bạn để nhận gợi ý cây cảnh phù hợp nhất</p>
+                <p className='text-gray-600'>Tải lên ảnh lá cây để AI phân tích và chẩn đoán bệnh</p>
             </div>
-            <div>
-                <div className='@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6'>
-                    <div class="leading-none font-semibold">
-                        Thông tin không gian của bạn
-                    </div>
+
+            <div className='bg-white rounded-lg shadow-md p-6'>
+                <div className='space-y-6'>
+                    {/* Upload Section */}
                     <div>
-                        <label className='block text-sm font-medium mb-2'>Mô tả không gian</label>
-                        <input data-slot="input" class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive" placeholder="VD: Phòng khách 20m², ánh sáng tự nhiên vừa phải..." />
+                        <label className='block text-sm font-semibold text-gray-700 mb-3'>
+                            Tải ảnh lá cây
+                        </label>
+                        <div className='border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary-400 transition-colors'>
+                            {!previewUrl ? (
+                                <div>
+                                    <CloudUpload className="mx-auto h-12 w-12 text-gray-400" />
+                                    <div className="mt-4">
+                                        <label htmlFor="file-upload" className="cursor-pointer bg-primary-400 text-white px-4 py-2 rounded-md hover:bg-primary-500 transition-colors inline-block">
+                                            Chọn ảnh
+                                        </label>
+                                        <input
+                                            id="file-upload"
+                                            type="file"
+                                            className="hidden"
+                                            accept="image/*"
+                                            onChange={handleImageChange}
+                                        />
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-2">PNG, JPG, JPEG (tối đa 10MB)</p>
+                                </div>
+                            ) : (
+                                <div className='relative'>
+                                    <img
+                                        src={previewUrl}
+                                        alt="Preview"
+                                        className='max-h-80 mx-auto rounded-lg'
+                                    />
+                                    <button
+                                        onClick={resetForm}
+                                        className='absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors'
+                                    >
+                                        <X className="h-5 w-5" />
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-2">Nhu cầu và sở thích</label>
-                        <textarea data-slot="textarea" class="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" placeholder="VD: Muốn cây dễ chăm sóc, tạo không khí trong lành, màu xanh đậm..."></textarea>
-                    </div>
-                    <button data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-color-gray-600 text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[&gt;svg]:px-3 w-full" disabled="" >Nhận gợi ý AI</button>
+
+                    {/* Analyze Button */}
+                    {previewUrl && !result && (
+                        <button
+                            onClick={handleAnalyze}
+                            disabled={loading}
+                            className='w-full bg-primary-400 text-white py-3 rounded-md font-medium hover:bg-primary-500 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2'
+                        >
+                            {loading ? (
+                                <>
+                                    <Loader2 className="animate-spin h-5 w-5" />
+                                    Đang phân tích...
+                                </>
+                            ) : (
+                                <>
+                                    <Sparkles className="h-5 w-5" />
+                                    Phân tích bệnh
+                                </>
+                            )}
+                        </button>
+                    )}
+
+                    {/* Result Section */}
+                    {result && (
+                        <div className='bg-white rounded-lg p-6 space-y-4'>
+                            <h3 className='text-xl font-bold text-gray-800 flex items-center gap-2'>
+                                <CheckCircle className="h-6 w-6 text-primary-400" />
+                                Kết quả phân tích
+                            </h3>
+
+                            <div className='bg-white rounded-lg p-4 space-y-3'>
+                                <div>
+                                    <span className='text-sm font-medium text-gray-600'>Bệnh được phát hiện:</span>
+                                    <p className='text-lg font-bold text-red-600 mt-1'>{result.disease || 'Không xác định'}</p>
+                                </div>
+
+                                <div>
+                                    <span className='text-sm font-medium text-gray-600'>Độ tin cậy:</span>
+                                    <div className='flex items-center gap-2 mt-1'>
+                                        <div className='flex-1 bg-gray-200 rounded-full h-2'>
+                                            <div
+                                                className='bg-primary-400 h-2 rounded-full transition-all'
+                                                style={{ width: `${result.confidence || 0}%` }}
+                                            ></div>
+                                        </div>
+                                        <span className='font-semibold text-primary-400'>{result.confidence || 0}%</span>
+                                    </div>
+                                </div>
+
+                                {result.treatment && (
+                                    <div>
+                                        <span className='text-sm font-medium text-gray-600'>Cách xử lý:</span>
+                                        <p className='text-gray-700 mt-1 whitespace-pre-line'>{result.treatment}</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            <button
+                                onClick={resetForm}
+                                className='w-full bg-gray-600 text-white py-2 rounded-md font-medium hover:bg-gray-700 transition-colors'
+                            >
+                                Phân tích ảnh khác
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

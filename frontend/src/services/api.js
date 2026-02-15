@@ -1,0 +1,72 @@
+import axios from "axios";
+
+const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: backendUrl,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Add token to requests automatically
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.token = token;
+  }
+  return config;
+});
+
+// ==================== USER APIs ====================
+export const userApi = {
+  register: (data) => api.post("/api/user/register", data),
+  login: (data) => api.post("/api/user/login", data),
+  profile: () => api.get("/api/user/profile"),
+  updateProfile: (data) => {
+    const headers =
+      data instanceof FormData ? { "Content-Type": "multipart/form-data" } : {};
+    return api.put("/api/user/profile", data, { headers });
+  },
+  adminLogin: (data) => api.post("/api/user/admin", data),
+};
+
+// ==================== PRODUCT APIs ====================
+export const productApi = {
+  list: () => api.get("/api/product/list"),
+  single: (productId) => api.post("/api/product/single", { productId }),
+  add: (data) => api.post("/api/product/add", data),
+  remove: (id) => api.post("/api/product/remove", { id }),
+  suggest: (data) => api.post("/api/product/suggest", data),
+};
+
+// ==================== CART APIs ====================
+export const cartApi = {
+  get: () => api.post("/api/cart/get", {}),
+  add: (itemId, quantity, size) =>
+    api.post("/api/cart/add", { itemId, quantity, size }),
+  update: (itemId, quantity, size) =>
+    api.post("/api/cart/update", { itemId, quantity, size }),
+};
+
+// ==================== ORDER APIs ====================
+export const orderApi = {
+  place: (data) => api.post("/api/order/place", data),
+  userOrders: () => api.post("/api/order/userorders", {}),
+  allOrders: () => api.post("/api/order/list", {}),
+  updateStatus: (orderId, status) =>
+    api.post("/api/order/status", { orderId, status }),
+};
+
+// ==================== DISEASE DETECTION APIs ====================
+export const diseaseApi = {
+  detect: (formData) =>
+    api.post("/api/disease-detection/detect", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
+};
+
+export default api;

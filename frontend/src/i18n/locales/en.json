@@ -1,0 +1,148 @@
+{
+  "nav": {
+    "home": "Home",
+    "collection": "Collection",
+    "about": "About Us",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register"
+  },
+  "user": {
+    "profile": "My Profile",
+    "orders": "Orders",
+    "logout": "Logout",
+    "welcome": "Welcome back",
+    "createAccount": "Create new account"
+  },
+  "auth": {
+    "loginTitle": "Login",
+    "loginDesc": "Enter your credentials to login",
+    "registerTitle": "Register",
+    "registerDesc": "Fill in the information to create an account",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "name": "Full Name",
+    "forgotPassword": "Forgot password?",
+    "hasAccount": "Already have an account?",
+    "noAccount": "Don't have an account?",
+    "loginNow": "Login",
+    "registerNow": "Register",
+    "or": "Or",
+    "loginWithGoogle": "Login with Google",
+    "loginWithFacebook": "Login with Facebook",
+    "registerWithGoogle": "Register with Google",
+    "registerWithFacebook": "Register with Facebook",
+    "processing": "Processing...",
+    "errors": {
+      "emailRequired": "Please enter email",
+      "emailInvalid": "Invalid email",
+      "passwordRequired": "Please enter password",
+      "passwordMinLength": "Password must be at least 6 characters",
+      "confirmPasswordRequired": "Please confirm password",
+      "passwordNotMatch": "Passwords do not match",
+      "nameRequired": "Please enter full name",
+      "nameMinLength": "Name must be at least 2 characters",
+      "oauthFailed": "Login failed. Please try again.",
+      "noCode": "Authentication code not received. Please try again.",
+      "noEmail": "Could not get email from account. Please try another method.",
+      "authFailed": "Authentication failed. Please try again."
+    }
+  },
+  "product": {
+    "addToCart": "Add to Cart",
+    "selectSize": "Select Size",
+    "description": "Description",
+    "relatedProducts": "Related Products",
+    "bestseller": "Bestseller",
+    "category": {
+      "indoor": "Indoor",
+      "outdoor": "Outdoor"
+    },
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "light": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    }
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Cart is empty",
+    "total": "Total",
+    "checkout": "Checkout",
+    "continueShopping": "Continue Shopping",
+    "size": "Size",
+    "quantity": "Quantity",
+    "price": "Price",
+    "remove": "Remove"
+  },
+  "collection": {
+    "title1": "All",
+    "title2": "collections",
+    "filters": "Filters",
+    "clearFilters": "Clear Filters",
+    "search": "Search",
+    "searchPlaceholder": "Plant name, description...",
+    "category": "Category",
+    "selectCategory": "Select category",
+    "productsFound": "Products found",
+    "noProducts": "No products found",
+    "tryAdjustFilters": "Try adjusting your filters",
+    "difficulty": "Care Difficulty",
+    "selectDifficulty": "Select difficulty",
+    "light": "Light Requirement",
+    "selectLight": "Select light",
+    "priceRange": "Price Range",
+    "sortBy": "Sort by",
+    "sortRelevant": "Relevant",
+    "sortLowHigh": "Price: Low to High",
+    "sortHighLow": "Price: High to Low"
+  },
+  "admin": {
+    "addProduct": "Add New Product",
+    "updateProduct": "Update Product",
+    "productName": "Product Name",
+    "productDescription": "Product Description",
+    "productPrice": "Product Price",
+    "uploadImage": "Upload Image",
+    "updateImage": "Update Image (leave blank to keep current)",
+    "sizes": "Sizes (comma separated)",
+    "sizesPlaceholder": "Example: Small, Medium, Large or 10cm, 15cm, 20cm",
+    "sizesHelper": "Enter sizes, separated by commas",
+    "category": "Category",
+    "difficulty": "Difficulty",
+    "light": "Light",
+    "addToBestseller": "Add to Bestseller",
+    "create": "CREATE",
+    "update": "UPDATE",
+    "refresh": "Refresh",
+    "errors": {
+      "nameRequired": "Please enter product name",
+      "nameMinLength": "Product name must be at least 3 characters",
+      "descriptionRequired": "Please enter product description",
+      "descriptionMinLength": "Description must be at least 10 characters",
+      "sizesRequired": "Please enter at least one size",
+      "priceRequired": "Please enter product price",
+      "priceMin": "Price must be greater than 0"
+    }
+  },
+  "common": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "currency": "$"
+  }
+}
