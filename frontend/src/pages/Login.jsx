@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext';
 import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
@@ -9,11 +9,12 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { useTranslation } from 'react-i18next'
-import { Leaf } from 'lucide-react'
+import { Leaf, Eye, EyeOff } from 'lucide-react'
 const Login = () => {
   const { t } = useTranslation();
   const { token, setToken, navigate, backendUrl } = useContext(ShopContext);
   const [searchParams] = useSearchParams();
+  const [showPassword, setShowPassword] = useState(false);
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     mode: 'onBlur'
@@ -116,19 +117,28 @@ const Login = () => {
               {/* Password Field */}
               <div className="space-y-2">
                 <Label htmlFor="password">{t('auth.password')}</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  {...register('password', {
-                    required: t('auth.errors.passwordRequired'),
-                    minLength: {
-                      value: 6,
-                      message: t('auth.errors.passwordMinLength')
-                    }
-                  })}
-                  className={errors.password ? 'border-red-500' : ''}
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    {...register('password', {
+                      required: t('auth.errors.passwordRequired'),
+                      minLength: {
+                        value: 6,
+                        message: t('auth.errors.passwordMinLength')
+                      }
+                    })}
+                    className={errors.password ? 'border-red-500 pr-10' : 'pr-10'}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
                 {errors.password && (
                   <p className="text-sm text-red-600">{errors.password.message}</p>
                 )}
@@ -136,7 +146,12 @@ const Login = () => {
 
               {/* Footer Links */}
               <div className="flex justify-between items-center text-sm pt-2">
-                <Button type="button" variant="link" className="p-0 h-auto text-primary-700">
+                <Button 
+                  type="button" 
+                  variant="link" 
+                  onClick={() => navigate('/forgot-password')}
+                  className="p-0 h-auto text-primary-700"
+                >
                   {t('auth.forgotPassword')}
                 </Button>
                 <Button

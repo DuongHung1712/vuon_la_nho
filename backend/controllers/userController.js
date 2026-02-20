@@ -6,6 +6,8 @@ import jwt from "jsonwebtoken";
 import axios from "axios";
 import qs from "qs";
 import { v2 as cloudinary } from "cloudinary";
+import crypto from "crypto";
+import { sendEmail, emailTemplates } from "../config/email.js";
 
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET);
@@ -294,6 +296,170 @@ const googleCallback = async (req, res) => {
   }
 };
 
+// Send verification email
+const sendVerificationEmail = async (req, res) => {
+  try {
+    const userId = req.userId || req.body?.userId;
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    if (user.isVerified) {
+      return res.json({ success: false, message: "Email đã được xác thực" });
+    }
+
+    // Generate verification token
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const tokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+    user.verificationToken = verificationToken;
+    user.verificationTokenExpiry = tokenExpiry;
+    await user.save();
+
+    // Send email
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const verificationLink = `${frontendUrl}/verify-email?token=${verificationToken}`;
+    
+    const emailResult = await sendEmail(
+      user.email,
+      "Xác thực email - Vườn Lá Nhỏ",
+      emailTemplates.verifyEmail(verificationLink, user.name)
+    );
+
+    if (emailResult.success) {
+      res.json({ success: true, message: "Email xác thực đã được gửi. Vui lòng kiểm tra hộp thư." });
+    } else {
+      res.json({ success: false, message: "Không thể gửi email. Vui lòng thử lại." });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Verify email with token
+const verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.body;
+    
+    if (!token) {
+      return res.json({ success: false, message: "Token không hợp lệ" });
+    }
+
+    const user = await userModel.findOne({ 
+      verificationToken: token,
+      verificationTokenExpiry: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.json({ success: false, message: "Token không hợp lệ hoặc đã hết hạn" });
+    }
+
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpiry = undefined;
+    await user.save();
+
+    res.json({ success: true, message: "Email đã được xác thực thành công!" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Forgot password - send reset link
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.json({ success: false, message: "Vui lòng nhập email" });
+    }
+
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.json({ success: false, message: "Email không tồn tại trong hệ thống" });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const tokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpiry = tokenExpiry;
+    await user.save();
+
+    // Send email
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const resetLink = `${frontendUrl}/reset-password?token=${resetToken}`;
+    
+    const emailResult = await sendEmail(
+      user.email,
+      "Đặt lại mật khẩu - Vườn Lá Nhỏ",
+      emailTemplates.resetPassword(resetLink, user.name)
+    );
+
+    if (emailResult.success) {
+      res.json({ success: true, message: "Email đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra hộp thư." });
+    } else {
+      res.json({ success: false, message: "Không thể gửi email. Vui lòng thử lại." });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Reset password with token
+const resetPassword = async (req, res) => {
+  try {
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+      return res.json({ success: false, message: "Thiếu thông tin" });
+    }
+
+    if (password.length < 8) {
+      return res.json({ success: false, message: "Mật khẩu phải có ít nhất 8 ký tự" });
+    }
+
+    const user = await userModel.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpiry: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.json({ success: false, message: "Token không hợp lệ hoặc đã hết hạn" });
+    }
+
+    // Hash new password
+    const salt = await bycrypt.genSalt(10);
+    const hashedPassword = await bycrypt.hash(password, salt);
+
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpiry = undefined;
+    await user.save();
+
+    // Send confirmation email
+    await sendEmail(
+      user.email,
+      "Mật khẩu đã được thay đổi - Vườn Lá Nhỏ",
+      emailTemplates.passwordChanged(user.name)
+    );
+
+    res.json({ success: true, message: "Mật khẩu đã được đặt lại thành công!" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 export {
   loginUser,
   updateProfile,
@@ -304,4 +470,8 @@ export {
   facebookcallback,
   googleLogin,
   googleCallback,
+  sendVerificationEmail,
+  verifyEmail,
+  forgotPassword,
+  resetPassword,
 };

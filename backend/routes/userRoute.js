@@ -11,6 +11,10 @@ import {
   googleLogin,
   profileUser,
   updateProfile,
+  sendVerificationEmail,
+  verifyEmail,
+  forgotPassword,
+  resetPassword,
 } from "../controllers/userController.js";
 import authUser from "../middleware/auth.js";
 import upload from "../middleware/multer.js";
@@ -25,6 +29,12 @@ userRouter.get("/auth/facebook/callback", facebookcallback);
 userRouter.get("/auth/google", googleLogin);
 userRouter.get("/auth/google/callback", googleCallback);
 userRouter.get("/profile", authUser, profileUser);
-userRouter.put("/profile", authUser, upload.single('avatar'), updateProfile);
+userRouter.put("/profile", authUser, upload.single("avatar"), updateProfile);
+
+userRouter.post("/send-verification", authUser, sendVerificationEmail);
+userRouter.post("/verify-email", verifyEmail);
+
+userRouter.post("/forgot-password", forgotPassword);
+userRouter.post("/reset-password", resetPassword);
 
 export default userRouter;

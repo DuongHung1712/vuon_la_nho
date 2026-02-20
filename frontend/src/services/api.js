@@ -30,6 +30,10 @@ export const userApi = {
     return api.put("/api/user/profile", data, { headers });
   },
   adminLogin: (data) => api.post("/api/user/admin", data),
+  sendVerificationEmail: () => api.post("/api/user/send-verification"),
+  verifyEmail: (token) => api.post("/api/user/verify-email", { token }),
+  forgotPassword: (email) => api.post("/api/user/forgot-password", { email }),
+  resetPassword: (token, password) => api.post("/api/user/reset-password", { token, password }),
 };
 
 // ==================== PRODUCT APIs ====================
