@@ -18,6 +18,9 @@ import SearchBar from './components/SearchBar'
 import Loading from './components/Loading'
 import { ToastContainer, toast } from 'react-toastify';
 import LoginSuccess from './pages/LoginSuccess'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
+import VerifyEmail from './pages/VerifyEmail'
 
 const App = () => {
   const [isNavigating, setIsNavigating] = useState(false);
@@ -71,6 +74,9 @@ const App = () => {
         <Route path="/success" element={<LoginSuccess />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/profile/edit' element={<ProfileEdit />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route path='/reset-password' element={<ResetPassword />} />
+        <Route path='/verify-email' element={<VerifyEmail />} />
       </Routes>
       <Footer />
     </div>

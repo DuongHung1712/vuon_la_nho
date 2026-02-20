@@ -1,16 +1,21 @@
-const express = require('express');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const express = require("express");
+const { createProxyMiddleware } = require("http-proxy-middleware");
 const app = express();
 
 // Proxy tất cả request bắt đầu bằng /api tới backend service
-app.use('/api', createProxyMiddleware({
-  target: 'http://backend:4000',
-  changeOrigin: true,
-}));
+app.use(
+  "/api",
+  createProxyMiddleware({
+    target: "http://backend:4000",
+    changeOrigin: true,
+    proxyTimeout: 120000,
+    timeout: 120000,
+  }),
+);
 
 // Endpoint test
-app.get('/', (req, res) => {
-  res.send('API Gateway đang chạy');
+app.get("/", (req, res) => {
+  res.send("API Gateway đang chạy");
 });
 
 const PORT = 8000;

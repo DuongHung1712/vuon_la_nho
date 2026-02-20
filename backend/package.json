@@ -23,6 +23,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.1",
     "multer": "^2.0.1",
+    "nodemailer": "^8.0.1",
     "nodemon": "^3.1.10",
     "passport": "0.5.2",
     "passport-facebook": "^3.0.0",

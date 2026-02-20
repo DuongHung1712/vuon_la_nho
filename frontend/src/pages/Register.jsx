@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext';
 import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
@@ -8,13 +8,15 @@ import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
-import { Leaf } from 'lucide-react'
+import { Leaf, Eye, EyeOff } from 'lucide-react'
 
 const Register = () => {
   const { token, setToken, navigate, backendUrl } = useContext(ShopContext);
   const [searchParams] = useSearchParams();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const { register, handleSubmit, formState: { errors, isSubmitting }, watch, reset } = useForm({
+  const { register, handleSubmit, formState: { errors, isSubmitting }, watch } = useForm({
     mode: 'onBlur'
   });
 
@@ -139,38 +141,56 @@ const Register = () => {
               {/* Password Field */}
               <div className="space-y-2">
                 <Label htmlFor="password">Mật khẩu</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  {...register('password', {
-                    required: 'Vui lòng nhập mật khẩu',
-                    minLength: {
-                      value: 6,
-                      message: 'Mật khẩu phải có ít nhất 6 ký tự'
-                    }
-                  })}
-                  className={errors.password ? 'border-red-500' : ''}
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    {...register('password', {
+                      required: 'Vui lòng nhập mật khẩu',
+                      minLength: {
+                        value: 6,
+                        message: 'Mật khẩu phải có ít nhất 6 ký tự'
+                      }
+                    })}
+                    className={errors.password ? 'border-red-500 pr-10' : 'pr-10'}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
                 {errors.password && (
                   <p className="text-sm text-red-600">{errors.password.message}</p>
                 )}
               </div>
 
-              {/* Confirm Password */}
+              {/* Confirm Password Field */}
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword">Xác nhận mật khẩu</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="••••••••"
-                  {...register('confirmPassword', {
-                    required: 'Vui lòng xác nhận mật khẩu',
-                    validate: (value) =>
-                      value === password || 'Mật khẩu không khớp'
-                  })}
-                  className={errors.confirmPassword ? 'border-red-500' : ''}
-                />
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    {...register('confirmPassword', {
+                      required: 'Vui lòng xác nhận mật khẩu',
+                      validate: (value) =>
+                        value === password || 'Mật khẩu không khớp'
+                    })}
+                    className={errors.confirmPassword ? 'border-red-500 pr-10' : 'pr-10'}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
                 {errors.confirmPassword && (
                   <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
                 )}
