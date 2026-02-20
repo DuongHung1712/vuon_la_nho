@@ -1,11 +1,15 @@
 # Use Node.js with Python support
 FROM node:18
 
-# Install Python and pip
+# Install Python and pip 
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     python3-dev \
+    build-essential \
+    libhdf5-dev \
+    libatlas-base-dev \
+    gfortran \
     && rm -rf /var/lib/apt/lists/*
 
 # Create symbolic link for python command
