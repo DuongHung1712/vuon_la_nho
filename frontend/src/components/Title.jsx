@@ -5,8 +5,7 @@ const Title = ({ text1, text2 }) => {
   return (
     <div className='inline-flex items-center gap-3'>
       <div className='flex items-center gap-2'>
-        {/* Leaf Icon */}
-        <Leaf className="w-5 h-5 text-primary-500" strokeWidth={1.5} />
+        
 
         {/* Text */}
         <h2 className='text-gray-600 font-normal'>
