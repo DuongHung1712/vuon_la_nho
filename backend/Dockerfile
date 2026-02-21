@@ -22,7 +22,8 @@ RUN npm install
 
 # Copy Python requirements and install ML dependencies
 COPY ml/requirements.txt ./ml/
-RUN pip3 install --no-cache-dir -r ml/requirements.txt
+RUN pip3 install --break-system-packages --upgrade pip setuptools wheel && \
+    pip3 install --break-system-packages --no-cache-dir -r ml/requirements.txt
 
 # Copy the rest of the application
 COPY . .
