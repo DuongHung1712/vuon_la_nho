@@ -75,13 +75,21 @@ const detectDisease = async (req, res) => {
         fs.unlinkSync(imagePath);
       }
 
+      // Only treat as error if exit code is non-zero
       if (code !== 0) {
-        console.error("Python Error:", errorString);
+        console.error("Python Error (exit code " + code + "):", errorString);
         return res.status(500).json({
           success: false,
           message: "Error processing image",
           error: errorString,
         });
+      }
+
+      if (errorString && errorString.trim()) {
+        console.log(
+          "Python warnings (non-critical):",
+          errorString.substring(0, 200),
+        );
       }
 
       try {
