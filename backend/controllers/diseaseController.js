@@ -75,37 +75,62 @@ const detectDisease = async (req, res) => {
         fs.unlinkSync(imagePath);
       }
 
-      // Only treat as error if exit code is non-zero
-      if (code !== 0) {
-        console.error("Python Error (exit code " + code + "):", errorString);
-        return res.status(500).json({
-          success: false,
-          message: "Error processing image",
-          error: errorString,
-        });
-      }
-
+      // Log stderr warnings (non-critical)
       if (errorString && errorString.trim()) {
         console.log(
-          "Python warnings (non-critical):",
+          "Python warnings:",
           errorString.substring(0, 200),
         );
       }
 
+      // Try to parse stdout data first (even if exit code is non-zero)
       try {
+        if (!dataString || !dataString.trim()) {
+          throw new Error("No output from Python script");
+        }
+
         const result = JSON.parse(dataString);
+
+        // Check if result contains an error field
+        if (result.error !== undefined) {
+          const errorMsg = result.error || "Unknown error occurred during image processing";
+          console.error("Python prediction error:", errorMsg);
+          console.error("Exit code:", code);
+          console.error("Full result object:", JSON.stringify(result));
+          
+          return res.status(500).json({
+            success: false,
+            message: errorMsg || "Error processing image",
+            error: result.error,
+            details: {
+              exitCode: code,
+              disease: result.disease,
+              confidence: result.confidence
+            }
+          });
+        }
+
+        // Success case
         res.json({
           success: true,
           disease: result.disease,
           confidence: result.confidence,
           treatment: result.treatment,
         });
-      } catch (error) {
-        console.error("Parse Error:", error);
-        res.status(500).json({
+      } catch (parseError) {
+        console.error("Parse Error:", parseError.message);
+        console.error("Python exit code:", code);
+        console.error("Stdout:", dataString.substring(0, 200));
+        console.error("Stderr:", errorString.substring(0, 200));
+        
+        return res.status(500).json({
           success: false,
           message: "Error parsing prediction result",
-          data: dataString,
+          error: parseError.message,
+          details: {
+            stdout: dataString.substring(0, 100),
+            stderr: errorString.substring(0, 100),
+          }
         });
       }
     });
