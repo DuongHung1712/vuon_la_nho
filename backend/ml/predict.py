@@ -226,12 +226,20 @@ if __name__ == "__main__":
         image_path = sys.argv[1]
         model_path = sys.argv[2]
         
+        # Validate inputs
+        if not os.path.exists(image_path):
+            raise Exception(f"Image file not found: {image_path}")
+        
+        if not os.path.exists(model_path):
+            raise Exception(f"Model file not found: {model_path}")
+        
         result = predict_disease(image_path, model_path)
         print(json.dumps(result))
         
     except Exception as e:
+        error_message = str(e) if str(e) else "Unknown error occurred in Python script"
         error_result = {
-            "error": str(e),
+            "error": error_message,
             "disease": "Lỗi xử lý",
             "confidence": 0,
             "treatment": "Vui lòng thử lại với ảnh khác."
