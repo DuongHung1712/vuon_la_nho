@@ -20,6 +20,10 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Fetch all history for all branches and tags
+          lfs: true  # Pull Git LFS files (model files)
+      
+      - name: Pull Git LFS files
+        run: git lfs pull
 
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
