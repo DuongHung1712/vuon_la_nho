@@ -11,6 +11,14 @@ os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 import sys
 import json
 import numpy as np
+
+# Log versions for debugging
+try:
+    import tensorflow as tf
+    print(f"[DEBUG] Python: {sys.version.split()[0]}, TensorFlow: {tf.__version__}", file=sys.stderr)
+except Exception as e:
+    print(f"[DEBUG] Version check failed: {e}", file=sys.stderr)
+
 from tensorflow import keras
 from tensorflow.keras.applications.xception import preprocess_input
 from PIL import Image
@@ -188,8 +196,44 @@ def preprocess_image(image_path, target_size=(299, 299)):
 def predict_disease(image_path, model_path):
     """Predict disease from image"""
     try:
-        # Load model
-        model = keras.models.load_model(model_path)
+        # Validate model file
+        if os.path.getsize(model_path) < 1024:  # Less than 1KB is suspicious
+            raise Exception(f"Model file appears to be corrupted or incomplete (size: {os.path.getsize(model_path)} bytes)")
+        
+        # Load model with error handling - try multiple methods
+        import tensorflow as tf
+        model = None
+        load_errors = []
+        
+        print(f"[DEBUG] Attempting to load model with TensorFlow {tf.__version__}", file=sys.stderr)
+        
+        # Method 1: Load with compile=False (fastest, works for most cases)
+        try:
+            model = keras.models.load_model(model_path, compile=False)
+            print(f"[DEBUG] Model loaded successfully (compile=False)", file=sys.stderr)
+        except Exception as e:
+            load_errors.append(f"compile=False: {str(e)[:100]}")
+        
+        # Method 2: Try loading with safe_mode=False (TensorFlow 2.16+)
+        if model is None:
+            try:
+                model = keras.models.load_model(model_path, safe_mode=False)
+                print(f"[DEBUG] Model loaded successfully (safe_mode=False)", file=sys.stderr)
+            except Exception as e:
+                load_errors.append(f"safe_mode=False: {str(e)[:100]}")
+        
+        # Method 3: Standard load_model (last resort)
+        if model is None:
+            try:
+                model = keras.models.load_model(model_path)
+                print(f"[DEBUG] Model loaded successfully (standard)", file=sys.stderr)
+            except Exception as e:
+                load_errors.append(f"standard: {str(e)[:100]}")
+        
+        if model is None:
+            tf_version = tf.__version__
+            error_summary = " || ".join(load_errors)
+            raise Exception(f"Model load failed with TensorFlow {tf_version}. Yêu cầu TensorFlow >= 2.16.1. Errors: {error_summary}")
         
         # Preprocess image
         img_array = preprocess_image(image_path)
