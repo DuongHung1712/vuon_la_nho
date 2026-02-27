@@ -1,0 +1,18 @@
+# robots.txt for Vườn Lá Nhỏ
+User-agent: *
+Allow: /
+Allow: /collection
+Allow: /about
+Allow: /contact
+Allow: /product/
+
+# Disallow admin and user-specific pages
+Disallow: /login
+Disallow: /register
+Disallow: /profile
+Disallow: /cart
+Disallow: /orders
+Disallow: /place-order
+
+# Sitemap
+Sitemap: https://vuonlanho.com/sitemap.xml

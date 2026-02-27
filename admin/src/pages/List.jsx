@@ -70,17 +70,43 @@ const List = ({token}) => {
       searchable: true,
     },
     {
-      header: 'Kích thước',
-      key: 'size',
-      accessor: (item) => item.size?.join(', ') || 'N/A',
+      header: 'Kích thước & Giá',
+      key: 'sizes',
+      accessor: (item) => {
+        if (item.sizes && item.sizes.length > 0) {
+          return item.sizes.map(s => `${s.name}: ${s.price.toLocaleString('vi-VN')}đ`).join(', ');
+        }
+        return item.size?.join(', ') || 'N/A';
+      },
       render: (item) => (
-        <div className="flex flex-wrap gap-1">
-          {item.size && item.size.length > 0 ? (
-            item.size.map((s, idx) => (
-              <span key={idx} className="px-2 py-1 bg-primary-50 text-primary-700 rounded text-xs">
-                {s}
-              </span>
+        <div className="flex flex-col gap-1">
+          {item.sizes && item.sizes.length > 0 ? (
+            item.sizes.map((s, idx) => (
+              <div key={idx} className="flex items-center gap-2">
+                <span className="px-2 py-1 bg-primary-50 text-primary-700 rounded text-xs font-medium">
+                  {s.name}
+                </span>
+                <span className="text-xs text-gray-600">
+                  {s.price.toLocaleString('vi-VN')} {currency}
+                </span>
+                {s.stock !== undefined && (
+                  <span className="text-xs text-gray-400">
+                    (SL: {s.stock})
+                  </span>
+                )}
+              </div>
             ))
+          ) : item.size && item.size.length > 0 ? (
+            <div className="flex flex-wrap gap-1">
+              {item.size.map((s, idx) => (
+                <span key={idx} className="px-2 py-1 bg-primary-50 text-primary-700 rounded text-xs">
+                  {s}
+                </span>
+              ))}
+              <span className="text-xs text-gray-600 ml-2">
+                {item.price?.toLocaleString('vi-VN')} {currency}
+              </span>
+            </div>
           ) : (
             <span className="text-gray-400 text-xs">N/A</span>
           )}
@@ -88,16 +114,6 @@ const List = ({token}) => {
       ),
       sortable: false,
       searchable: true,
-    },
-    {
-      header: 'Giá',
-      key: 'price',
-      accessor: (item) => item.price,
-      render: (item) => (
-        <span className="font-medium">{item.price.toLocaleString('vi-VN')} {currency}</span>
-      ),
-      sortable: true,
-      searchable: false,
     },
   ];
 

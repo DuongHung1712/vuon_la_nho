@@ -11,9 +11,10 @@ const addProduct = async (req, res) => {
       light,
       price,
       bestseller,
+      sizes,
     } = req.body;
 
-    // Xử lý size - có thể là array hoặc string
+    // Xử lý size - có thể là array hoặc string (legacy)
     let size = req.body.size;
     if (typeof size === "string") {
       size = [size];
@@ -35,18 +36,33 @@ const addProduct = async (req, res) => {
         return result.secure_url;
       }),
     );
+
     const productData = {
       name,
       description,
       category,
       difficulty,
       light,
-      price: Number(price),
-      size: size || [],
       bestseller: bestseller === "true" ? true : false,
       image: imagesUrl,
       date: Date.now(),
     };
+
+    if (sizes && typeof sizes === "string") {
+      try {
+        productData.sizes = JSON.parse(sizes);
+      } catch (e) {
+        productData.sizes = sizes;
+      }
+    } else if (sizes) {
+      productData.sizes = sizes;
+    } else {
+      productData.size = size || [];
+      if (price !== undefined && price !== null && price !== '') {
+        productData.price = Number(price);
+      }
+    }
+
     console.log(productData);
     const product = new productModel(productData);
     await product.save();
@@ -91,6 +107,7 @@ const updateProduct = async (req, res) => {
       light,
       price,
       bestseller,
+      sizes,
     } = req.body;
 
     let size = req.body.size;
@@ -104,12 +121,24 @@ const updateProduct = async (req, res) => {
       category,
       difficulty,
       light,
-      price: Number(price),
       bestseller: bestseller === "true" ? true : false,
     };
 
-    if (size && size.length > 0) {
-      updateData.size = size;
+    if (sizes && typeof sizes === "string") {
+      try {
+        updateData.sizes = JSON.parse(sizes);
+      } catch (e) {
+        updateData.sizes = sizes;
+      }
+    } else if (sizes) {
+      updateData.sizes = sizes;
+    } else {
+      if (size && size.length > 0) {
+        updateData.size = size;
+      }
+      if (price) {
+        updateData.price = Number(price);
+      }
     }
 
     const image1 = req.files?.image1 && req.files.image1[0];

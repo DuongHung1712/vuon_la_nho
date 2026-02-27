@@ -1,10 +1,16 @@
 import React from 'react'
 import Title from '../components/Title'
+import SEO from '../components/SEO'
 import { assets } from '../assets/assets'
 
 const About = () => {
   return (
     <div>
+      <SEO 
+        title="Về Chúng Tôi - Vườn Lá Nhỏ | Câu Chuyện Của Chúng Tôi"
+        description="Tìm hiểu về Vườn Lá Nhỏ - đơn vị chuyên cung cấp cây cảnh chất lượng cao. Sứ mệnh, tầm nhìn và cam kết của chúng tôi với khách hàng."
+        keywords="về vườn lá nhỏ, giới thiệu, cây cảnh uy tín, đơn vị cung cấp cây cảnh"
+      />
       <div className='text-2xl text-center pt-8 border-t'>
       <Title text1={'Về '} text2={'Chúng Tôi'}/>
       </div>

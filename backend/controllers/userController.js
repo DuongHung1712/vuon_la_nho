@@ -23,6 +23,15 @@ const loginUser = async (req, res) => {
     const isMatch = await bycrypt.compare(password, user.password);
     if (isMatch) {
       const token = createToken(user._id);
+      
+      // Set cookie cho web app
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000
+      });
+      
       res.json({ success: true, token });
     } else {
       res.json({ success: false, message: "Invalid credentials" });
@@ -68,6 +77,14 @@ const registerUser = async (req, res) => {
     });
     const user = await newUser.save();
     const token = createToken(user._id);
+    
+    // Set cookie cho web app
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
 
     res.json({ success: true, token });
   } catch (error) {
@@ -202,7 +219,17 @@ const facebookcallback = async (req, res) => {
       });
     }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    res.redirect(`${frontendUrl}/success?token=${token}`);
+    
+    // Set token vào HTTP-only cookie (AN TOÀN)
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000  // 7 days
+    });
+    
+    // Redirect về frontend KHÔNG CÓ token trong URL
+    res.redirect(`${frontendUrl}/success`);
   } catch (error) {
     console.error("Error fetching Facebook user info:", error);
     res.redirect(`${frontendUrl}/login?error=auth_failed`);
@@ -286,7 +313,17 @@ const googleCallback = async (req, res) => {
 
     // Tạo JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    res.redirect(`${frontendUrl}/success?token=${token}`);
+    
+    // Set token vào HTTP-only cookie (AN TOÀN)
+    res.cookie('token', token, {
+      httpOnly: true,      // Không thể truy cập từ JavaScript
+      secure: process.env.NODE_ENV === 'production',  // Chỉ HTTPS trên production
+      sameSite: 'lax',     // CSRF protection
+      maxAge: 7 * 24 * 60 * 60 * 1000  // 7 days
+    });
+    
+    // Redirect về frontend KHÔNG CÓ token trong URL
+    res.redirect(`${frontendUrl}/success`);
   } catch (error) {
     console.error(
       "Error in Google OAuth callback:",
@@ -460,6 +497,25 @@ const resetPassword = async (req, res) => {
   }
 };
 
+// Get session token from cookie (for OAuth callbacks)
+const getSessionToken = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    
+    if (!token) {
+      return res.json({ success: false, message: "No session found" });
+    }
+    
+    // Verify token is valid
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    res.json({ success: true, token });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: "Invalid session" });
+  }
+};
+
 export {
   loginUser,
   updateProfile,
@@ -474,4 +530,5 @@ export {
   verifyEmail,
   forgotPassword,
   resetPassword,
+  getSessionToken,
 };

@@ -5,6 +5,7 @@ import {
   cartApi,
   orderApi,
   diseaseApi,
+  reviewApi,
 } from "../services/api";
 import { toast } from "react-toastify";
 
@@ -54,14 +55,16 @@ export const useLogin = () => {
   });
 };
 
-export const useProfile = () => {
+export const useProfile = (token) => {
   return useQuery({
-    queryKey: ["profile"],
+    queryKey: ["profile", token],
     queryFn: async () => {
       const response = await userApi.profile();
       return response.data;
     },
-    enabled: !!localStorage.getItem("token"),
+    enabled: !!token,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: false,
   });
 };
 
@@ -354,3 +357,95 @@ export const useDetectDisease = () => {
     },
   });
 };
+
+// ==================== REVIEW HOOKS ====================
+export const useProductReviews = (productId, page = 1, limit = 10) => {
+  return useQuery({
+    queryKey: ["reviews", productId, page],
+    queryFn: async () => {
+      const response = await reviewApi.list(productId, page, limit);
+      if (response.data.success) {
+        return response.data;
+      }
+      throw new Error(response.data.message);
+    },
+    enabled: !!productId,
+  });
+};
+
+export const useCheckUserReview = (productId) => {
+  const getToken = () => localStorage.getItem("token");
+
+  return useQuery({
+    queryKey: ["userReview", productId],
+    queryFn: async () => {
+      const response = await reviewApi.check(productId);
+      if (response.data.success) {
+        return response.data;
+      }
+      throw new Error(response.data.message);
+    },
+    enabled: !!productId && !!getToken(),
+  });
+};
+
+export const useAddReview = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: reviewApi.add,
+    onSuccess: (response, variables) => {
+      if (response.data.success) {
+        toast.success("Đánh giá thành công!");
+        queryClient.invalidateQueries({ queryKey: ["reviews", variables.productId] });
+        queryClient.invalidateQueries({ queryKey: ["userReview", variables.productId] });
+        queryClient.invalidateQueries({ queryKey: ["products"] });
+      } else {
+        toast.error(response.data.message);
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+};
+
+export const useUpdateReview = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: reviewApi.update,
+    onSuccess: (response, variables) => {
+      if (response.data.success) {
+        toast.success("Cập nhật đánh giá thành công!");
+        queryClient.invalidateQueries({ queryKey: ["reviews"] });
+        queryClient.invalidateQueries({ queryKey: ["userReview"] });
+        queryClient.invalidateQueries({ queryKey: ["products"] });
+      } else {
+        toast.error(response.data.message);
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+};
+
+export const useDeleteReview = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: reviewApi.delete,
+    onSuccess: (response) => {
+      if (response.data.success) {
+        toast.success("Xóa đánh giá thành công!");
+        queryClient.invalidateQueries({ queryKey: ["reviews"] });
+        queryClient.invalidateQueries({ queryKey: ["userReview"] });
+        queryClient.invalidateQueries({ queryKey: ["products"] });
+      } else {
+        toast.error(response.data.message);
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+};
+

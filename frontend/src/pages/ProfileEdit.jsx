@@ -6,7 +6,8 @@ import Loading from '../components/Loading';
 
 const ProfileEdit = () => {
     const navigate = useNavigate();
-    const { data, isLoading: loading } = useProfile();
+    const token = localStorage.getItem('token');
+    const { data, isLoading: loading } = useProfile(token);
     const updateProfileMutation = useUpdateProfile();
 
     const [formData, setFormData] = useState({

@@ -1,10 +1,23 @@
 import React, { useContext } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import { Link } from 'react-router-dom'
-import { Eye, Plus } from 'lucide-react'
+import { Eye, Plus, Star } from 'lucide-react'
 
-const ProductItem = ({ id, image, name, price }) => {
+const ProductItem = ({ id, image, name, price, rating, reviewCount, sizes }) => {
   const { currency } = useContext(ShopContext);
+
+  const getPriceDisplay = () => {
+    if (sizes && sizes.length > 0) {
+      const prices = sizes.map(s => s.price);
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      if (minPrice === maxPrice) {
+        return minPrice.toLocaleString('vi-VN');
+      }
+      return `${minPrice.toLocaleString('vi-VN')} - ${maxPrice.toLocaleString('vi-VN')}`;
+    }
+    return (price || 0).toLocaleString('vi-VN');
+  };
 
   return (
     <Link
@@ -43,10 +56,31 @@ const ProductItem = ({ id, image, name, price }) => {
           {name}
         </h3>
 
+        {/* Rating */}
+        {rating > 0 && (
+          <div className='flex items-center gap-1.5 mb-2'>
+            <div className='flex items-center gap-0.5'>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star
+                  key={star}
+                  className={`w-3 h-3 ${
+                    star <= Math.round(rating)
+                      ? 'text-amber-400 fill-amber-400'
+                      : 'text-gray-200'
+                  }`}
+                />
+              ))}
+            </div>
+            <span className='text-xs text-gray-500'>
+              {rating.toFixed(1)} ({reviewCount || 0})
+            </span>
+          </div>
+        )}
+
         {/* Price */}
         <div className='flex items-center justify-between'>
           <span className='text-base sm:text-lg font-semibold text-primary-600'>
-            {price.toLocaleString('vi-VN')}{currency}
+            {getPriceDisplay()}{currency}
           </span>
 
           {/* Add to Cart Icon */}

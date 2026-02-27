@@ -6,14 +6,15 @@ import Loading from '../components/Loading';
 
 const Profile = () => {
     const navigate = useNavigate();
-    const { data, isLoading: loading, error } = useProfile();
+    const token = localStorage.getItem('token');
+    const { data, isLoading: loading, error } = useProfile(token);
 
     // Redirect if no token
     React.useEffect(() => {
-        if (!localStorage.getItem('token')) {
+        if (!token) {
             navigate('/login');
         }
-    }, [navigate]);
+    }, [navigate, token]);
 
     // Redirect on auth error
     React.useEffect(() => {
@@ -41,27 +42,27 @@ const Profile = () => {
         <div className="container mx-auto px-4 py-8 max-w-4xl">
             <div className="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
                 {/* Header */}
-                <div className="relative h-32 bg-primary-400">
-                    <div className="absolute -bottom-16 left-8">
-                        <div className="w-32 h-32 rounded-full border-4 border-white bg-primary-400 flex items-center justify-center shadow-lg overflow-hidden">
+                <div className="relative h-24 sm:h-32 bg-primary-400">
+                    <div className="absolute -bottom-12 sm:-bottom-16 left-4 sm:left-8">
+                        <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white bg-primary-400 flex items-center justify-center shadow-lg overflow-hidden">
                             {user?.avatar ? (
                                 <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                             ) : (
-                                <User className="w-16 h-16 text-white" />
+                                <User className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
                             )}
                         </div>
                     </div>
                 </div>
                 
-                <div className="px-8 pt-20 pb-8">
+                <div className="px-4 sm:px-8 pt-16 sm:pt-20 pb-6 sm:pb-8">
                     {/* User name */}
-                    <div className="flex items-center gap-3 mb-8">
-                        <h1 className="text-3xl font-bold text-gray-800">{user?.name}</h1>
-                        <Leaf className="w-6 h-6 text-primary-400" />
+                    <div className="flex items-center gap-3 mb-6 sm:mb-8">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">{user?.name}</h1>
+                        <Leaf className="w-5 h-5 sm:w-6 sm:h-6 text-primary-400" />
                     </div>
                     
                     {/* Info section */}
-                    <div className="flex flex-col gap-4 mb-8">
+                    <div className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8">
                         <div className="bg-white rounded-lg p-4 border border-gray-200 hover:border-primary-400 transition">
                             <div className="flex items-center gap-2 mb-2 text-gray-600">
                                 <Mail className="w-5 h-5" />
