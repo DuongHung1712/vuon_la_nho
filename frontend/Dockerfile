@@ -5,7 +5,7 @@ WORKDIR /app
 # Copy mã nguồn và .env.production
 COPY package*.json ./
 COPY .env.production ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 COPY . ./
 RUN npm run build
