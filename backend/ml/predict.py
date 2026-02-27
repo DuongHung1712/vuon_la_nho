@@ -23,12 +23,13 @@ from tensorflow import keras
 from tensorflow.keras.applications.xception import preprocess_input
 from PIL import Image
 
-# Disease labels mapping - 4 classes theo model của bạn
+# Disease labels mapping - 5 classes theo thứ tự của model
 DISEASE_LABELS = {
-    0: "Downey Mildew",
-    1: "Esca",
-    2: "Healthy",
-    3: "LeafBlight"
+    0: "Blackrot",
+    1: "Downey Mildew",
+    2: "Esca",
+    3: "Healthy",
+    4: "LeafBlight"
 }
 
 # Treatment recommendations
@@ -176,7 +177,62 @@ PHÒNG NGỪA:
 • Vệ sinh công cụ bằng Javel 10% sau mỗi lần sử dụng
 
 LƯU Ý:
-Bệnh tái phát nếu không xử lý triệt để. Cần kết hợp nhiều biện pháp liên tục 4-6 tuần. Theo dõi sát sau điều trị."""
+Bệnh tái phát nếu không xử lý triệt để. Cần kết hợp nhiều biện pháp liên tục 4-6 tuần. Theo dõi sát sau điều trị.""",
+
+    "Blackrot": """BỆNH THỐI ĐEN (Black Rot - Guignardia bidwellii)
+
+TRIỆU CHỨNG:
+Đốm nâu nhạt trên lá, viền đen rõ nét, có chấm đen (picnidia) ở trung tâm. Quả non bị nhiễm chuyển màu nâu, sau đó đen hoàn toàn, khô xẹp thành "xác ướp" vẫn bám trên cành. Ảnh hưởng nghiêm trọng đến năng suất và chất lượng.
+
+NGUYÊN NHÂN:
+Nấm Guignardia bidwellii. Bào tử tồn tại trên xác ướp quả, lá bệnh từ năm trước. Lây lan qua mưa, gió. Điều kiện phát triển: Nhiệt độ 20-28°C, độ ẩm >90%, mưa nhiều trong giai đoạn quả non.
+
+PHƯƠNG PHÁP ĐIỀU TRỊ:
+
+1. Vệ sinh nguồn bệnh - Quan trọng nhất:
+   • Thu gom và tiêu hủy hoàn toàn xác ướp quả (đốt hoặc chôn sâu >30cm)
+   • Loại bỏ tất cả lá bệnh, cành chết, mảnh vụn thực vật
+   • Làm sạch gốc cây trong bán kính 1m, không để tàn dư
+   • Thực hiện vào cuối mùa và đầu mùa mới
+
+2. Hóa học - Bảo vệ phòng ngừa:
+   • Giai đoạn đầu mùa: Mancozeb 80% WP (2-2.5g/lít)
+   • Giai đoạn hoa - quả non: Myclobutanil 10% WP (0.5g/lít)
+   • Giai đoạn quả phát triển: Captan 50% WP (2g/lít)
+   • Thuốc toàn thân: Tebuconazole 25% EC (1ml/lít) khi bệnh xuất hiện
+   • Lịch phun: 7-10 ngày/lần, tăng tần suất khi mưa nhiều
+   • Luân phiên 2-3 hoạt chất khác nhau để tránh kháng thuốc
+
+3. Sinh học:
+   • Trichoderma harzianum: Phun trước mùa mưa, ức chế nấm bệnh
+   • Bacillus subtilis: Kích thích kháng bệnh tự nhiên
+   • Nên kết hợp với hóa học để tăng hiệu quả
+
+4. Kiểm soát môi trường:
+   • Cắt tỉa tăng thông gió, giảm độ ẩm vi khí hậu
+   • Tránh tưới phun lên tán lá, chỉ tưới gốc
+   • Dẫn lưu nước tốt, không để úng gốc
+   • Bổ sung K và Ca tăng cường sức đề kháng
+
+PHÒNG NGỪA - Chiến lược tích hợp:
+
+• Thu hoạch sạch cuối mùa, không để quả nhiễm lại trên cây
+
+• Xử lý phòng ngừa bằng đồng Bordeaux 1% trước mùa mưa
+
+• Trồng giống kháng bệnh nếu có điều kiện
+
+• Khoảng cách trồng đủ rộng (tối thiểu 1.5-2m)
+
+• Bón phân cân đối, tránh thừa Đạm (cây mềm dễ nhiễm)
+
+• Kiểm tra hàng tuần trong mùa mưa, xử lý kịp thời
+
+THỜI ĐIỂM QUAN TRỌNG:
+Bảo vệ tốt nhất ở giai đoạn trước hoa và quả non (2-4 tuần sau ra hoa). Đây là giai đoạn cây dễ nhiễm nhất.
+
+LƯU Ý NGHIÊM TRỌNG:
+Black Rot rất khó kiểm soát nếu đã bùng phát. Phòng ngừa là then chốt. Xác ướp quả là nguồn bệnh chính - PHẢI loại bỏ triệt để. Không xử lý được hoàn toàn có thể mất trắng vụ."""
 }
 
 def preprocess_image(image_path, target_size=(299, 299)):

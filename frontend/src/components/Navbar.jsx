@@ -13,7 +13,7 @@ const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { setShowSearch, getCartCount, navigate, token, setToken, setCartItems } = useContext(ShopContext);
-  const { data } = useProfile();
+  const { data } = useProfile(token);
   const user = data?.user;
   const logout = () => {
     navigate('/login')

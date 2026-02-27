@@ -2,6 +2,7 @@ import React, { useContext, useMemo, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import Title from '../components/Title';
 import ProductItem from '../components/ProductItem';
+import SEO from '../components/SEO';
 import { useTranslation } from 'react-i18next'
 import { Filter, RotateCcw, Search, SlidersHorizontal, X, SearchX } from 'lucide-react'
 
@@ -268,6 +269,11 @@ const Collection = () => {
 
   return (
     <div className='pt-6 pb-12'>
+      <SEO 
+        title={`Bộ Sưu Tập Cây Cảnh - Vườn Lá Nhỏ | ${filterProducts.length} Sản Phẩm`}
+        description="Khám phá bộ sưu tập cây cảnh đa dạng: cây trong nhà, cây ngoài trời, sen đá, xương rồng. Lọc theo giá, loại, độ khó chăm sóc. Giao hàng toàn quốc."
+        keywords={`cây cảnh, bộ sưu tập, ${category ? `cây ${category === 'indoor' ? 'trong nhà' : 'ngoài trời'}` : 'cây trang trí'}, mua cây online`}
+      />
       {/* Page Header */}
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -343,6 +349,9 @@ const Collection = () => {
                   id={item._id}
                   price={item.price}
                   image={item.image}
+                  rating={item.rating}
+                  reviewCount={item.reviewCount}
+                  sizes={item.sizes}
                 />
               ))}
             </div>

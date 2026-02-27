@@ -1,14 +1,28 @@
 import mongoose from "mongoose";
 
+const sizeSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    stock: { type: Number, default: 0 },
+  },
+  { _id: false },
+);
+
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
   category: { type: String, required: true },
-  size: { type: Array, required: true },
+
+  sizes: { type: [sizeSchema], required: false },
+
+  size: { type: Array, required: false },
+  price: { type: Number, required: false },
+
   difficulty: { type: String, required: true },
   light: { type: String, required: true },
-  price: { type: Number, required: true },
   rating: { type: Number, required: false, default: 0 },
+  reviewCount: { type: Number, required: false, default: 0 },
   image: { type: Array, required: true },
   bestseller: { type: Boolean },
   date: { type: Number, required: true },

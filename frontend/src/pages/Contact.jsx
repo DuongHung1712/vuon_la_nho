@@ -1,9 +1,15 @@
 import React from 'react'
 import Title from '../components/Title'
+import SEO from '../components/SEO'
 import { assets } from '../assets/assets'
 const Contact = () => {
   return (
     <div>
+      <SEO 
+        title="Liên Hệ - Vườn Lá Nhỏ | Tư Vấn Miễn Phí 24/7"
+        description="Liên hệ với Vườn Lá Nhỏ để được tư vấn miễn phí về cây cảnh. Địa chỉ: 401 Lê Lợi, Sa Đéc, Đồng Tháp. Hotline: 0767925665"
+        keywords="liên hệ vườn lá nhỏ, tư vấn cây cảnh, hotline, địa chỉ cửa hàng"
+      />
       <div className='text-center text-2xl pt-10 border-t'>
         <Title text1={'Liên hệ'} text2={'với chúng tôi'} />
       </div>
