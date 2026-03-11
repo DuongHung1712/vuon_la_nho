@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import logger from "../config/logger.js";
 
 const authUser = async (req, res, next) => {
   const { token } = req.headers;
@@ -15,8 +16,8 @@ const authUser = async (req, res, next) => {
     req.body.userId = token_decode.id;
     next();
   } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: error.message });
+    logger.warn("Auth token verification failed", { error: error.message });
+    res.json({ success: false, message: "Authentication failed" });
   }
 };
 

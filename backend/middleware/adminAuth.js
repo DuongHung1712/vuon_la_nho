@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import logger from "../config/logger.js";
 
 const adminAuth = async (req, res, next) => {
   try {
@@ -18,8 +19,8 @@ const adminAuth = async (req, res, next) => {
     }
     next();
   } catch (error) {
-    console.log(error);
-    return res.json({ success: false, message: error.message });
+    logger.warn("Admin auth failed", { error: error.message });
+    return res.json({ success: false, message: "Authentication failed" });
   }
 };
 export default adminAuth;

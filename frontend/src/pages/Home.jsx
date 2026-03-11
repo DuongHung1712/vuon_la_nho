@@ -19,9 +19,9 @@ const Home = () => {
       <OrganizationSchema />
       <WebsiteSchema />
       <Hero/>
+      <AiSuggest/>
       <LatestCollection />
       <BestSeller/>
-      <AiSuggest/>
       <OurPolicy/>
       <NewsletterBox/>
     </div>

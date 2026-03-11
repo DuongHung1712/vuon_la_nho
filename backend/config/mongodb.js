@@ -1,11 +1,13 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
+import logger from "./logger.js";
+
 const connectDB = async () => {
   mongoose.connection.on("connected", () => {
-    console.log("MongoDB connected successfully");
+    logger.info("MongoDB connected successfully");
   });
 
   mongoose.connection.on("error", (err) => {
-    console.log("MongoDB connection error:", err);
+    logger.error("MongoDB connection error", { error: err.message });
   });
 
   try {
@@ -13,7 +15,7 @@ const connectDB = async () => {
       serverSelectionTimeoutMS: 5000,
     });
   } catch (error) {
-    console.error("Failed to connect to MongoDB:", error.message);
+    logger.error("Failed to connect to MongoDB", { error: error.message });
     process.exit(1);
   }
 };
