@@ -23,12 +23,15 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
+  const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.getItem('token') : '');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const [token, setToken] = useState(localStorage.getItem('token')?localStorage.getItem('token'):'');
-  useEffect(()=>{
+  useEffect(() => {
     localStorage.setItem('token', token)
-  },[token])
-  
+  }, [token])
+
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className='bg-gray-50 min-h-screen'>
@@ -36,17 +39,18 @@ const App = () => {
         {token === ""
           ? <Login setToken={setToken} />
           : <>
-            <Navbar setToken={setToken} />
-            <hr />
+            <Navbar setToken={setToken} toggleSidebar={toggleSidebar} />
             <div className='flex w-full'>
-              <Sidebar />
-              <div className='w-[70%] mx-auto ml-[max(5vw,25px)] my-8 text-gray-600 text-base'>
-                <Routes>
-                  <Route path='/add' element={<Add token={token} />} />
-                  <Route path='/list' element={<List token={token} />} />
-                  <Route path='/orders' element={<Orders token={token} />} />
-                </Routes>
-              </div>
+              <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+              <main className='flex-1 w-full lg:w-auto p-4 sm:p-6 lg:p-8 overflow-x-auto'>
+                <div className='max-w-7xl mx-auto'>
+                  <Routes>
+                    <Route path='/add' element={<Add token={token} />} />
+                    <Route path='/list' element={<List token={token} />} />
+                    <Route path='/orders' element={<Orders token={token} />} />
+                  </Routes>
+                </div>
+              </main>
             </div>
           </>
         }

@@ -8,6 +8,7 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 // Add token to requests automatically
@@ -33,7 +34,8 @@ export const userApi = {
   sendVerificationEmail: () => api.post("/api/user/send-verification"),
   verifyEmail: (token) => api.post("/api/user/verify-email", { token }),
   forgotPassword: (email) => api.post("/api/user/forgot-password", { email }),
-  resetPassword: (token, password) => api.post("/api/user/reset-password", { token, password }),
+  resetPassword: (token, password) =>
+    api.post("/api/user/reset-password", { token, password }),
 };
 
 // ==================== PRODUCT APIs ====================
@@ -71,6 +73,16 @@ export const diseaseApi = {
         "Content-Type": "multipart/form-data",
       },
     }),
+};
+
+// ==================== REVIEW APIs ====================
+export const reviewApi = {
+  list: (productId, page = 1, limit = 10) =>
+    api.post(`/api/review/list?page=${page}&limit=${limit}`, { productId }),
+  add: (data) => api.post("/api/review/add", data),
+  update: (data) => api.post("/api/review/update", data),
+  delete: (reviewId) => api.post("/api/review/delete", { reviewId }),
+  check: (productId) => api.post("/api/review/check", { productId }),
 };
 
 export default api;

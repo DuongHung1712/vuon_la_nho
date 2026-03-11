@@ -21,12 +21,14 @@ import LoginSuccess from './pages/LoginSuccess'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import VerifyEmail from './pages/VerifyEmail'
+import ZaloChat from './components/ZaloChat'
 
 const App = () => {
   const [isNavigating, setIsNavigating] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
     setIsNavigating(true);
     const timer = setTimeout(() => {
       setIsNavigating(false);
@@ -79,6 +81,7 @@ const App = () => {
         <Route path='/verify-email' element={<VerifyEmail />} />
       </Routes>
       <Footer />
+      <ZaloChat />
     </div>
   )
 }

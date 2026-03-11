@@ -13,7 +13,7 @@ const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { setShowSearch, getCartCount, navigate, token, setToken, setCartItems } = useContext(ShopContext);
-  const { data } = useProfile();
+  const { data } = useProfile(token);
   const user = data?.user;
   const logout = () => {
     navigate('/login')
@@ -147,16 +147,16 @@ const Navbar = () => {
         <Menu onClick={() => setVisible(true)} className='w-5 h-5 cursor-pointer sm:hidden text-gray-700' />
       </div>
       {/* Sidebar for small screens */}
-      <div className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${visible ? 'w-full' : 'w-0'} `}>
+      <div className={`fixed top-0 right-0 bottom-0 overflow-hidden bg-white transition-all duration-300 z-50 shadow-xl ${visible ? 'w-full' : 'w-0'} `}>
         <div className='flex flex-col text-gray-600'>
           <div onClick={() => setVisible(false)} className='flex items-center gap-4 p-3 cursor-pointer '>
             <ChevronLeft className='h-4 w-4 text-gray-600' />
-            <p>Back</p>
+            <p>{t('nav.back', 'Back')}</p>
           </div>
-          <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/'>HOME</NavLink>
-          <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/collection'>COLLECTION</NavLink>
-          <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/about'>ABOUT</NavLink>
-          <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/contact'>CONTACT</NavLink>
+          <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/'>{t('nav.home')}</NavLink>
+          <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/collection'>{t('nav.collection')}</NavLink>
+          <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/about'>{t('nav.about')}</NavLink>
+          <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/contact'>{t('nav.contact')}</NavLink>
         </div>
       </div>
     </div>
