@@ -15,4 +15,4 @@ Disallow: /orders
 Disallow: /place-order
 
 # Sitemap
-Sitemap: https://vuonlanho.com/sitemap.xml
+Sitemap: https://vuonlanho.store/sitemap.xml
