@@ -92,6 +92,42 @@ const Product = () => {
     return [];
   };
 
+  const handleSizeSelect = (sizeItem) => {
+    if (typeof sizeItem === 'object') {
+      setSize(sizeItem.name);
+      setSelectedPrice(sizeItem.price);
+    } else {
+      setSize(sizeItem);
+      setSelectedPrice(productData.price);
+    }
+  };
+
+  const getPriceDisplay = () => {
+    if (productData.sizes && productData.sizes.length > 0) {
+      if (selectedPrice > 0) {
+        return selectedPrice.toLocaleString('vi-VN');
+      }
+      const prices = productData.sizes.map(s => s.price);
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      if (minPrice === maxPrice) {
+        return minPrice.toLocaleString('vi-VN');
+      }
+      return `${minPrice.toLocaleString('vi-VN')} - ${maxPrice.toLocaleString('vi-VN')}`;
+    }
+    return (productData.price || 0).toLocaleString('vi-VN');
+  };
+
+  const getSizesArray = () => {
+    if (productData.sizes && productData.sizes.length > 0) {
+      return productData.sizes;
+    }
+    if (productData.size && productData.size.length > 0) {
+      return productData.size.map(s => ({ name: s, price: productData.price }));
+    }
+    return [];
+  };
+
   if (!productData) {
     return <Loading />;
   }
