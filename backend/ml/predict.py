@@ -44,7 +44,7 @@ Không phát hiện dấu hiệu bệnh. Duy trì chăm sóc tốt để phòng 
 • Phun đồng phòng ngừa (Bordeaux 0.5–1%) trước mùa mưa
 • Kiểm tra lá và thân mỗi tuần — phát hiện sớm là yếu tố then chốt""",
 
-    "Downey Mildew": """ SƯƠNG MAI (Downy Mildew — Plasmopara viticola)
+    " Downey Mildew": """ SƯƠNG MAI (Downy Mildew — Plasmopara viticola)
 
 NHẬN BIẾT: Đốm dầu màu vàng nhạt mặt trên lá; lớp nấm trắng xốp đặc trưng ở mặt dưới lá; lá rụng sớm, quả non thối.
 
