@@ -85,6 +85,7 @@ jobs:
               git config user.email "github-actions@github.com"
               git add $service/VERSION
               git commit -m "ci($service): bump version to $image_tag"
+              git pull --rebase origin dev
               git push origin dev
 
               # Build & push image
