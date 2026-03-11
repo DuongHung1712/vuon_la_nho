@@ -92,42 +92,6 @@ const Product = () => {
     return [];
   };
 
-  const handleSizeSelect = (sizeItem) => {
-    if (typeof sizeItem === 'object') {
-      setSize(sizeItem.name);
-      setSelectedPrice(sizeItem.price);
-    } else {
-      setSize(sizeItem);
-      setSelectedPrice(productData.price);
-    }
-  };
-
-  const getPriceDisplay = () => {
-    if (productData.sizes && productData.sizes.length > 0) {
-      if (selectedPrice > 0) {
-        return selectedPrice.toLocaleString('vi-VN');
-      }
-      const prices = productData.sizes.map(s => s.price);
-      const minPrice = Math.min(...prices);
-      const maxPrice = Math.max(...prices);
-      if (minPrice === maxPrice) {
-        return minPrice.toLocaleString('vi-VN');
-      }
-      return `${minPrice.toLocaleString('vi-VN')} - ${maxPrice.toLocaleString('vi-VN')}`;
-    }
-    return (productData.price || 0).toLocaleString('vi-VN');
-  };
-
-  const getSizesArray = () => {
-    if (productData.sizes && productData.sizes.length > 0) {
-      return productData.sizes;
-    }
-    if (productData.size && productData.size.length > 0) {
-      return productData.size.map(s => ({ name: s, price: productData.price }));
-    }
-    return [];
-  };
-
   if (!productData) {
     return <Loading />;
   }
@@ -386,20 +350,40 @@ const Product = () => {
             {/* Delivery + Policies ngang hàng */}
             <div className="bg-white px-4 py-3 grid grid-cols-2 gap-x-4 gap-y-2">
               <div className="flex items-start gap-2 text-xs text-gray-600">
-                <Clock className="w-4 h-4 text-primary-400 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
-                <span>Giao hàng <strong className="text-gray-700">1–2 ngày</strong></span>
+                <Clock
+                  className="w-4 h-4 text-primary-400 flex-shrink-0 mt-0.5"
+                  strokeWidth={1.5}
+                />
+                <span>
+                  Giao hàng <strong className="text-gray-700">1–2 ngày</strong>
+                </span>
               </div>
               <div className="flex items-start gap-2 text-xs text-gray-600">
-                <Truck className="w-4 h-4 text-primary-400 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
-                <span><strong className="text-gray-700">TP.HCM:</strong> COD / CK</span>
+                <Truck
+                  className="w-4 h-4 text-primary-400 flex-shrink-0 mt-0.5"
+                  strokeWidth={1.5}
+                />
+                <span>
+                  <strong className="text-gray-700">TP.HCM:</strong> COD / CK
+                </span>
               </div>
               <div className="flex items-start gap-2 text-xs text-gray-600">
-                <Shield className="w-4 h-4 text-primary-400 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
-                <a href="/about" className="hover:text-primary-700">Chính sách bảo hành</a>
+                <Shield
+                  className="w-4 h-4 text-primary-400 flex-shrink-0 mt-0.5"
+                  strokeWidth={1.5}
+                />
+                <a href="/about" className="hover:text-primary-700">
+                  Chính sách bảo hành
+                </a>
               </div>
               <div className="flex items-start gap-2 text-xs text-gray-600">
-                <Truck className="w-4 h-4 text-primary-400 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
-                <span><strong className="text-gray-700">Tỉnh:</strong> cọc 50%</span>
+                <Truck
+                  className="w-4 h-4 text-primary-400 flex-shrink-0 mt-0.5"
+                  strokeWidth={1.5}
+                />
+                <span>
+                  <strong className="text-gray-700">Tỉnh:</strong> cọc 50%
+                </span>
               </div>
             </div>
           </div>
