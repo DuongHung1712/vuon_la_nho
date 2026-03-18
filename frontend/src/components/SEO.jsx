@@ -2,10 +2,10 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 
 const SEO = ({
-  title = "Vườn Lá Nhỏ - Cây Cảnh Chất Lượng Cao",
-  description = "Vườn Lá Nhỏ cung cấp cây cảnh trong nhà và ngoài trời chất lượng cao. Đa dạng loại cây, giá tốt, giao hàng tận nơi. Tư vấn chăm sóc tận tình.",
+  title = "Vườn Lá Nhỏ - Cây Cảnh Chất Lượng Cao | Giao Hàng Toàn Quốc",
+  description = "Vườn Lá Nhỏ cung cấp cây cảnh trong nhà, cây ngoài trời chất lượng cao. Đa dạng loại cây, giá cả hợp lý, giao hàng tận nơi, tư vấn chăm sóc tận tình chu đáo.",
   keywords = "cây cảnh, cây kiểng, lá kiểng, kiểng lá, thanh xuân, trầu bà thanh xuân, cây trong nhà, cây ngoài trời, mua cây cảnh online, vườn lá nhỏ, cây trang trí",
-  ogImage = "/favicon.png",
+  ogImage = "/og-banner.png",
   ogUrl,
   ogType = "website",
   article = false,

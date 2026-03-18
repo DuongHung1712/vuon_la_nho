@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useProfile } from '../hooks/useApi';
 import { Mail, Phone, MapPin, Edit, LogOut, User, Leaf } from 'lucide-react';
 import Loading from '../components/Loading';
+import SEO from '../components/SEO';
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -40,6 +41,7 @@ const Profile = () => {
 
     return (
         <div className="container mx-auto px-4 py-8 max-w-4xl">
+            <SEO noindex={true} title="Hồ sơ cá nhân - Vườn Lá Nhỏ" />
             <div className="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
                 {/* Header */}
                 <div className="relative h-24 sm:h-32 bg-primary-400">

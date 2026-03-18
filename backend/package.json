@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js",
-    "seed": "node scripts/seedPlants.js"
+    "seed": "node scripts/seedPlants.js",
+    "sitemap": "node scripts/generateSitemap.js"
   },
   "author": "",
   "license": "ISC",

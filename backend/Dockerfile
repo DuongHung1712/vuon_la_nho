@@ -33,12 +33,12 @@ COPY . .
 # Verify model file exists and is not a Git LFS pointer
 RUN MODEL_SIZE=$(stat -c%s /app/ml/xception_best.keras 2>/dev/null || echo "0") && \
     if [ "$MODEL_SIZE" -lt 1048576 ]; then \
-        echo "ERROR: Model file is too small ($MODEL_SIZE bytes). Likely a Git LFS pointer!" && \
-        echo "Please run 'git lfs pull' before building the Docker image." && \
-        exit 1; \
+    echo "ERROR: Model file is too small ($MODEL_SIZE bytes). Likely a Git LFS pointer!" && \
+    echo "Please run 'git lfs pull' before building the Docker image." && \
+    exit 1; \
     else \
-        SIZE_MB=$((MODEL_SIZE / 1024 / 1024)) && \
-        echo "✓ Model file verified: ${SIZE_MB}MB"; \
+    SIZE_MB=$((MODEL_SIZE / 1024 / 1024)) && \
+    echo "Model file verified: ${SIZE_MB}MB"; \
     fi
 
 EXPOSE 4000

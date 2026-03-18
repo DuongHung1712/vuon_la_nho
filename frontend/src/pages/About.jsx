@@ -1,29 +1,33 @@
-import React from 'react'
-import Title from '../components/Title'
-import SEO from '../components/SEO'
-import { assets } from '../assets/assets'
+import React from "react";
+import Title from "../components/Title";
+import SEO from "../components/SEO";
+import { assets } from "../assets/assets";
 
 const About = () => {
   return (
     <div>
-      <SEO 
+      <SEO
         title="Về Chúng Tôi - Vườn Lá Nhỏ | Câu Chuyện Của Chúng Tôi"
         description="Tìm hiểu về Vườn Lá Nhỏ - đơn vị chuyên cung cấp cây cảnh chất lượng cao. Sứ mệnh, tầm nhìn và cam kết của chúng tôi với khách hàng."
         keywords="về vườn lá nhỏ, giới thiệu, cây cảnh uy tín, đơn vị cung cấp cây cảnh"
+        ogUrl="https://vuonlanho.store/about"
       />
-      <div className='text-2xl text-center pt-8 border-t'>
-      <Title text1={'Về '} text2={'Chúng Tôi'}/>
+      <div className="text-2xl text-center pt-8 border-t">
+        <Title text1={"Về "} text2={"Chúng Tôi"} />
       </div>
-      <div className='my-10 flex flex-col md:flex-row gap-16'>
-        <img className='w-full md:max-w-[450px]' src={assets.about_img} alt="" />
-        <div className='flex flex-col justify-center gap-6 md:w-2/4 text-gray-600'>
-
-          <p>Website Vườn Lá Nhỏ  </p>
-          <p>Contact: Dương Quốc Hưng - duonghung171204sd@gmail.com</p> 
+      <div className="my-10 flex flex-col md:flex-row gap-16">
+        <img
+          className="w-full md:max-w-[450px]"
+          src={assets.about_img}
+          alt=""
+        />
+        <div className="flex flex-col justify-center gap-6 md:w-2/4 text-gray-600">
+          <p>Website Vườn Lá Nhỏ </p>
+          <p>Contact: Dương Quốc Hưng - duonghung171204sd@gmail.com</p>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default About
+export default About;
