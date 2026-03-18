@@ -1,44 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Homepage -->
+
   <url>
     <loc>https://vuonlanho.store/</loc>
-    <lastmod>2026-03-11</lastmod>
+    <lastmod>2026-03-18T04:45:24.245Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-  
-  <!-- Collection Page -->
   <url>
     <loc>https://vuonlanho.store/collection</loc>
-    <lastmod>2026-03-11</lastmod>
+    <lastmod>2026-03-18T04:45:24.245Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
-  
-  <!-- About Page -->
   <url>
     <loc>https://vuonlanho.store/about</loc>
-    <lastmod>2026-03-11</lastmod>
+    <lastmod>2026-03-18T04:45:24.245Z</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
-  
-  <!-- Contact Page -->
   <url>
     <loc>https://vuonlanho.store/contact</loc>
-    <lastmod>2026-03-11</lastmod>
+    <lastmod>2026-03-18T04:45:24.245Z</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
-  
-  <!-- Note: Add individual product URLs here when you have them -->
-  <!-- Example:
   <url>
-    <loc>https://vuonlanho.store/product/product-id-here</loc>
-    <lastmod>2026-03-11</lastmod>
+    <loc>https://vuonlanho.store/product/697790ba7ea71aacc3938364</loc>
+    <lastmod>2026-01-26T16:05:13.681Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  -->
+  <url>
+    <loc>https://vuonlanho.store/product/697790ba7ea71aacc3938365</loc>
+    <lastmod>2026-01-26T16:05:13.681Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vuonlanho.store/product/697790ba7ea71aacc3938366</loc>
+    <lastmod>2026-01-26T16:05:13.681Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vuonlanho.store/product/697790ba7ea71aacc393836b</loc>
+    <lastmod>2026-01-26T16:05:13.681Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vuonlanho.store/product/697790ba7ea71aacc3938370</loc>
+    <lastmod>2026-01-26T16:05:13.681Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vuonlanho.store/product/6981c5104c0512f6151b2650</loc>
+    <lastmod>2026-02-03T09:51:12.625Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vuonlanho.store/product/69821dc613afcb0eb4117836</loc>
+    <lastmod>2026-02-03T16:09:42.970Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vuonlanho.store/product/6982f2484bf3eae7aca1997d</loc>
+    <lastmod>2026-02-04T07:16:24.342Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>
