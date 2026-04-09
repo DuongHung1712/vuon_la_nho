@@ -6,6 +6,37 @@ import fs from "fs";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const resolvePythonRuntime = () => {
+  const projectRoot = path.resolve(__dirname, "../..");
+  const pythonFromEnv = process.env.PYTHON_PATH;
+
+  const pythonCandidates = process.platform === "win32"
+    ? [
+        pythonFromEnv,
+        path.join(projectRoot, ".venv", "Scripts", "python.exe"),
+        path.join(projectRoot, "backend", ".venv", "Scripts", "python.exe"),
+      ]
+    : [
+        pythonFromEnv,
+        path.join(projectRoot, ".venv", "bin", "python"),
+        path.join(projectRoot, "backend", ".venv", "bin", "python"),
+      ];
+
+  const resolvedPath = pythonCandidates.find(
+    (candidate) => candidate && fs.existsSync(candidate),
+  );
+
+  if (resolvedPath) {
+    return { command: resolvedPath, args: [] };
+  }
+
+  if (process.platform === "win32") {
+    return { command: "py", args: ["-3"] };
+  }
+
+  return { command: "python3", args: [] };
+};
+
 // Disease detection using Python model
 const detectDisease = async (req, res) => {
   try {
@@ -17,7 +48,7 @@ const detectDisease = async (req, res) => {
 
     const imagePath = req.file.path;
     const pythonScriptPath = path.join(__dirname, "../ml/predict.py");
-    const modelPath = path.join(__dirname, "../ml/xception_best.keras");
+    const modelPath = path.join(__dirname, "../ml/xception_cbam_best.keras");
 
     // Check if model exists
     if (!fs.existsSync(modelPath)) {
@@ -28,8 +59,13 @@ const detectDisease = async (req, res) => {
     }
 
     // Call Python script to make prediction
-    const pythonCmd = process.platform === "win32" ? "python" : "python3";
-    const python = spawn(pythonCmd, [pythonScriptPath, imagePath, modelPath]);
+    const pythonRuntime = resolvePythonRuntime();
+    const python = spawn(pythonRuntime.command, [
+      ...pythonRuntime.args,
+      pythonScriptPath,
+      imagePath,
+      modelPath,
+    ]);
 
     let dataString = "";
     let errorString = "";
@@ -59,6 +95,7 @@ const detectDisease = async (req, res) => {
         fs.unlinkSync(imagePath);
       }
       console.error("Python spawn error:", error);
+      if (res.headersSent) return;
       return res.status(500).json({
         success: false,
         message:
@@ -75,12 +112,11 @@ const detectDisease = async (req, res) => {
         fs.unlinkSync(imagePath);
       }
 
+      if (res.headersSent) return;
+
       // Log stderr warnings (non-critical)
       if (errorString && errorString.trim()) {
-        console.log(
-          "Python warnings:",
-          errorString.substring(0, 200),
-        );
+        console.log("Python warnings:", errorString.substring(0, 200));
       }
 
       // Try to parse stdout data first (even if exit code is non-zero)
@@ -93,20 +129,25 @@ const detectDisease = async (req, res) => {
 
         // Check if result contains an error field
         if (result.error !== undefined) {
-          const errorMsg = result.error || "Unknown error occurred during image processing";
+          const errorMsg =
+            result.error || "Unknown error occurred during image processing";
+          const isMissingCv2 = /No module named ['\"]cv2['\"]/.test(errorMsg);
           console.error("Python prediction error:", errorMsg);
           console.error("Exit code:", code);
           console.error("Full result object:", JSON.stringify(result));
-          
+
           return res.status(500).json({
             success: false,
-            message: errorMsg || "Error processing image",
+            message: isMissingCv2
+              ? "Missing Python dependency: cv2. Install backend/ml/requirements.txt in the Python runtime used by backend."
+              : errorMsg || "Error processing image",
             error: result.error,
             details: {
               exitCode: code,
+              pythonCommand: pythonRuntime.command,
               disease: result.disease,
-              confidence: result.confidence
-            }
+              confidence: result.confidence,
+            },
           });
         }
 
@@ -122,16 +163,18 @@ const detectDisease = async (req, res) => {
         console.error("Python exit code:", code);
         console.error("Stdout:", dataString.substring(0, 200));
         console.error("Stderr:", errorString.substring(0, 200));
-        
-        return res.status(500).json({
-          success: false,
-          message: "Error parsing prediction result",
-          error: parseError.message,
-          details: {
-            stdout: dataString.substring(0, 100),
-            stderr: errorString.substring(0, 100),
-          }
-        });
+
+        if (!res.headersSent) {
+          return res.status(500).json({
+            success: false,
+            message: "Error parsing prediction result",
+            error: parseError.message,
+            details: {
+              stdout: dataString.substring(0, 100),
+              stderr: errorString.substring(0, 100),
+            },
+          });
+        }
       }
     });
   } catch (error) {

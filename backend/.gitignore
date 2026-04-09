@@ -3,6 +3,7 @@
 
 # Env files
 **/.env
+**/.env.production
 
 # Logs
 *.log
