@@ -6,7 +6,80 @@
     "contact": "Liên hệ",
     "back": "Quay lại",
     "login": "Đăng nhập",
-    "register": "Đăng ký"
+    "register": "Đăng ký",
+    "searchPlaceholder": "Ở đây có cây bạn cần...",
+    "viewAllResults": "Xem tất cả kết quả",
+    "noResults": "Không tìm thấy sản phẩm"
+  },
+  "hero": {
+    "tagline": "Vườn Lá Nhỏ — Nghệ thuật sống xanh",
+    "heading1": "Khơi nguồn",
+    "headingAccent": "Life",
+    "heading2": "Trong Không Gian",
+    "description": "Biến ngôi nhà thành một ốc đảo yên bình với những loại cây tuyển chọn, dễ chăm sóc và đầy tính thẩm mỹ.",
+    "ctaExplore": "Khám phá bộ sưu tập",
+    "ctaEasy": "Tư vấn bệnh với AI",
+    "statsDelivered": "Cây đã giao",
+    "statsRating": "Đánh giá",
+    "statsVarieties": "Giống cây",
+    "badgeLabel": "Chất lượng",
+    "badgeValue": "Giá tốt nhất tại vườn",
+    "deliveryBadge": "Giao nhanh 2h",
+    "deliveryArea": "Nội thành HCM"
+  },
+  "latest": {
+    "title1": "Bộ Sưu Tập",
+    "title2": "Mới Nhất",
+    "description": "Khám phá những sắc xanh tinh khôi vừa cập bến Vườn Lá Nhỏ, mang hơi thở thiên nhiên vào tổ ấm của bạn.",
+    "viewAll": "Xem tất cả sản phẩm"
+  },
+  "product": {
+    "reviews": "Đánh giá",
+    "selectSize": "Chọn kích thước",
+    "addToCart": "Thêm vào giỏ hàng",
+    "buyNow": "Mua ngay",
+    "category": {
+      "indoor": "Trong nhà",
+      "outdoor": "Ngoài trời"
+    },
+    "airPurifying": "Lọc không khí",
+    "indoor": "Trong nhà",
+    "outdoor": "Ngoài trời",
+    "difficulty_label": "Độ khó",
+    "difficulty": {
+      "easy": "Dễ",
+      "medium": "Trung bình",
+      "hard": "Khó"
+    },
+    "light_label": "Ánh sáng",
+    "light": {
+      "low": "Ít",
+      "medium": "Trung bình",
+      "high": "Nhiều",
+      "semi": "Bán phần"
+    },
+    "water_label": "Nước",
+    "water_weekly": "1-2 lần/tuần",
+    "trust_guarantee": "Đảm bảo sống 7 ngày",
+    "trust_advice": "Tư vấn 1-1 miễn phí",
+    "trust_delivery": "Giao hàng an toàn, bảo hiểm cây",
+    "hotline_title": "Đặt hàng qua Hotline",
+    "retail": "Mua lẻ",
+    "wholesale": "Mua sỉ",
+    "delivery_time": "Giao hàng 1–2 ngày",
+    "delivery_hcm": "TP.HCM: COD / CK",
+    "delivery_province": "Tỉnh: cọc 50%",
+    "warranty_policy": "Chính sách bảo hành",
+    "tab_description": "Mô tả",
+    "tab_reviews": "Đánh giá",
+    "tab_care": "Chăm sóc",
+    "care_water_title": "Tưới nước",
+    "care_water_desc": "Tưới 1-2 lần/tuần khi thấy đất bề mặt khô hoàn toàn. Tránh tưới quá nhiều gây úng rễ.",
+    "care_light_title": "Ánh sáng",
+    "care_light_desc": "Ưa ánh sáng gián tiếp hoặc bóng râm bán phần. Tránh nắng gắt trực tiếp làm cháy lá.",
+    "relatedProducts": "Sản phẩm liên quan",
+    "bestseller": "Bán chạy",
+    "description": "Mô tả"
   },
   "user": {
     "profile": "Hồ sơ của tôi",
@@ -47,29 +120,78 @@
       "oauthFailed": "Đăng nhập thất bại. Vui lòng thử lại.",
       "noCode": "Không nhận được mã xác thực. Vui lòng thử lại.",
       "noEmail": "Không thể lấy email từ tài khoản. Vui lòng thử phương thức khác.",
-      "authFailed": "Xác thực thất bại. Vui lòng thử lại."
+      "authFailed": "Xác thực thất bại. Vui lòng thử lại.",
+      "passwordMinLength8": "Mật khẩu phải có ít nhất 8 ký tự"
+    },
+    "tags": {
+      "createNewAccount": "Tạo tài khoản mới",
+      "createNewPassword": "Tạo mật khẩu mới",
+      "verifyEmail": "Xác thực email",
+      "welcomeBack": "Chào mừng bạn quay trở lại",
+      "resetPassword": "Đặt lại mật khẩu",
+      "forgotPasswordTitle": "Quên mật khẩu"
     }
   },
-  "product": {
-    "addToCart": "Thêm vào giỏ hàng",
-    "selectSize": "Chọn kích thước",
-    "description": "Mô tả",
-    "relatedProducts": "Sản phẩm liên quan",
-    "bestseller": "Bán chạy",
-    "category": {
-      "indoor": "Trong nhà",
-      "outdoor": "Ngoài trời"
-    },
-    "difficulty": {
-      "easy": "Dễ",
-      "medium": "Trung bình",
-      "hard": "Khó"
-    },
-    "light": {
-      "low": "Ít",
-      "medium": "Trung bình",
-      "high": "Nhiều"
+  "profile": {
+    "title": "Hồ sơ của tôi",
+    "editTitle": "Chỉnh sửa thông tin",
+    "editButton": "Chỉnh sửa thông tin",
+    "logoutButton": "Đăng xuất",
+    "saveChanges": "Lưu thay đổi",
+    "cancel": "Hủy",
+    "email": "Email",
+    "emailCannotChange": "Email không thể thay đổi",
+    "fullName": "Họ tên",
+    "phone": "Số điện thoại",
+    "address": "Địa chỉ",
+    "notUpdated": "Chưa cập nhật",
+    "changeAvatar": "Nhấp để thay đổi ảnh đại diện",
+    "saving": "Đang lưu...",
+    "loading": "Đang tải...",
+    "errors": {
+      "loadFailed": "Không thể tải thông tin người dùng"
     }
+  },
+  "passwordReset": {
+    "forgotTitle": "Quên mật khẩu",
+    "forgotDesc": "Nhập email để nhận link đặt lại mật khẩu",
+    "resetTitle": "Đặt Lại Mật Khẩu",
+    "resetDesc": "Nhập mật khẩu mới của bạn",
+    "newPassword": "Mật khẩu mới",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "sendEmail": "Gửi Email Đặt Lại",
+    "sendAgain": "Gửi lại",
+    "backToLogin": "Quay lại đăng nhập",
+    "emailSentTitle": "Email đã được gửi!",
+    "emailSentDesc": "Chúng tôi đã gửi link đặt lại mật khẩu đến",
+    "linkExpires": "Link sẽ hết hạn sau 1 giờ",
+    "didNotReceive": "Không nhận được email?",
+    "successTitle": "Thành công!",
+    "successDesc": "Mật khẩu của bạn đã được đặt lại thành công.",
+    "loginNow": "Đăng Nhập Ngay",
+    "redirecting": "Đang chuyển hướng đến trang đăng nhập...",
+    "verifying": "Đang xác thực email...",
+    "verifyingDesc": "Vui lòng đợi trong giây lát",
+    "verifySuccess": "Xác thực thành công!",
+    "verifySuccessDesc": "Email của bạn đã được xác thực. Bạn có thể sử dụng đầy đủ các tính năng của Vườn Lá Nhỏ.",
+    "verifyFailed": "Xác thực thất bại",
+    "verifyFailedDesc": "Link xác thực không hợp lệ hoặc đã hết hạn.",
+    "resendEmail": "Gửi lại email xác thực",
+    "goHome": "Về Trang Chủ",
+    "backHome": "Về Trang Chủ",
+    "processing": "Đang xử lý...",
+    "errors": {
+      "passwordRequired": "Vui lòng nhập mật khẩu",
+      "passwordMinLength": "Mật khẩu phải có ít nhất 8 ký tự",
+      "confirmPasswordRequired": "Vui lòng xác nhận mật khẩu",
+      "passwordNotMatch": "Mật khẩu không khớp"
+    }
+  },
+  "verify": {
+    "verifyingEmail": "Đang xác thực email...",
+    "verifySuccess": "Email đã được xác thực thành công!",
+    "verifyFailed": "Xác thực thất bại",
+    "invalidOrExpired": "Link xác thực không hợp lệ hoặc đã hết hạn."
   },
   "cart": {
     "title": "Giỏ hàng của bạn",
@@ -103,6 +225,66 @@
     "sortRelevant": "Liên quan",
     "sortLowHigh": "Giá: Thấp đến Cao",
     "sortHighLow": "Giá: Cao đến Thấp"
+  },
+  "placeOrder": {
+    "title1": "Thông tin",
+    "title2": "vận chuyển",
+    "firstName": "Họ",
+    "lastName": "Tên",
+    "email": "Email",
+    "address": "Địa chỉ",
+    "city": "Phường",
+    "state": "Tỉnh",
+    "zipcode": "Mã bưu chính",
+    "country": "Đất nước",
+    "phone": "Số điện thoại",
+    "paymentMethod": "Phương thức thanh toán",
+    "paymentMethodCOD": "Thanh Toán Khi Nhận Hàng",
+    "placeOrder": "Đặt Hàng",
+    "processing": "Đang xử lý...",
+    "orderSummary": "Tóm tắt đơn hàng",
+    "subtotal": "Tạm tính",
+    "deliveryFee": "Phí vận chuyển",
+    "totalAmount": "Tổng cộng",
+    "continueShop": "Tiếp tục mua sắm",
+    "errors": {
+      "firstNameRequired": "Vui lòng nhập họ",
+      "firstNameMinLength": "Họ phải có ít nhất 2 ký tự",
+      "lastNameRequired": "Vui lòng nhập tên",
+      "lastNameMinLength": "Tên phải có ít nhất 2 ký tự",
+      "emailRequired": "Vui lòng nhập email",
+      "emailInvalid": "Email không hợp lệ",
+      "addressRequired": "Vui lòng nhập địa chỉ",
+      "addressMinLength": "Địa chỉ phải có ít nhất 5 ký tự",
+      "cityRequired": "Vui lòng nhập phường",
+      "stateRequired": "Vui lòng nhập tỉnh",
+      "phoneRequired": "Vui lòng nhập số điện thoại",
+      "phoneInvalid": "Số điện thoại phải có 10-11 chữ số"
+    }
+  },
+  "orders": {
+    "title1": "Đơn hàng",
+    "title2": "của tôi",
+    "itemsOrdered": "sản phẩm đã đặt",
+    "loading": "Đang tải...",
+    "refresh": "Cập nhật",
+    "price": "Giá",
+    "quantity": "Số lượng",
+    "date": "Ngày",
+    "paymentMethod": "Phương thức thanh toán",
+    "status": "Trạng thái",
+    "paid": "Đã thanh toán",
+    "pendingPayment": "Chờ thanh toán",
+    "noOrdersTitle": "Chưa có đơn hàng nào",
+    "noOrdersDesc": "Hãy khám phá bộ sưu tập cây cảnh của chúng tôi!",
+    "viewProducts": "Xem sản phẩm",
+    "statuses": {
+      "orderReceived": "Đã nhận đơn",
+      "packing": "Đang đóng gói",
+      "shipped": "Đã gửi đi",
+      "inTransit": "Đang trên đường",
+      "delivered": "Đã giao hàng thành công"
+    }
   },
   "admin": {
     "addProduct": "Thêm sản phẩm mới",
@@ -144,6 +326,114 @@
     "loading": "Đang tải...",
     "error": "Đã có lỗi xảy ra",
     "success": "Thành công",
+    "viewDetail": "Xem chi tiết",
     "currency": "đ"
+  },
+  "homePage": {
+    "seoTitle": "Vườn Lá Nhỏ - Cây cảnh cho không gian sống thêm xanh",
+    "seoDescription": "Vườn Lá Nhỏ mang đến các lựa chọn cây cảnh trong nhà và ngoài trời được chọn lọc kỹ, dễ chăm, dễ sống và phù hợp nhiều không gian.",
+    "seoKeywords": "cây cảnh, cây trong nhà, cây ngoài trời, mua cây online, vườn lá nhỏ"
+  },
+  "aboutPage": {
+    "seoTitle": "Vườn Lá Nhỏ - Về Chúng Tôi",
+    "seoDescription": "Tìm hiểu về Vườn Lá Nhỏ, triết lý sống xanh, bộ sưu tập cây cảnh chọn lọc và cam kết đồng hành cùng khách hàng.",
+    "seoKeywords": "vườn lá nhỏ, giới thiệu cửa hàng cây, cây cảnh chất lượng",
+    "eyebrow": "Cau chuyen thuong hieu",
+    "title1": "Ve",
+    "title2": "Vuon La Nho",
+    "description": "Mot thuong hieu xanh nho nhung duoc xay dung de mang lai cam giac binh yen, mem mai va song dong hon cho khong gian song.",
+    "imageAlt": "Bo suu tap cay canh Vuon La Nho",
+    "story": "Vuon La Nho chon loc cay dua tren suc song, tinh tham my va kha nang phu hop voi nhieu kieu nha o hien dai. Chung toi muon moi don hang deu tao duoc cam giac duoc cham chut tu luc ban lua chon den khi cay ve toi nha.",
+    "contactLabel": "Liên hệ trực tiếp",
+    "contactName": "Duong Quoc Hung",
+    "contactEmail": "duonghung171204sd@gmail.com",
+    "highlights": {
+      "curatedTitle": "Tuyển chọn kỹ lưỡng",
+      "curatedDesc": "Mỗi bộ sưu tập được chọn theo tính thẩm mỹ, độ cân bằng và khả năng ứng dụng trong nhà ở hiện đại.",
+      "careTitle": "Hướng dẫn dễ hiểu",
+      "careDesc": "Thông tin chăm sóc được trình bày rõ ràng để người mới bắt đầu cũng có thể tự tin giữ cây khỏe.",
+      "serviceTitle": "Đồng hành tận tâm",
+      "serviceDesc": "Từ khâu chọn cây phù hợp đến giải đáp sau mua, đội ngũ hỗ trợ luôn giữ sự gần gũi và kịp thời."
+    }
+  },
+  "contactPage": {
+    "seoTitle": "Liên Hệ - Vườn Lá Nhỏ",
+    "seoDescription": "Liên hệ Vườn Lá Nhỏ để được tư vấn chọn cây, hỗ trợ đơn hàng và hướng dẫn chăm sóc.",
+    "seoKeywords": "liên hệ vườn lá nhỏ, tư vấn cây cảnh, hỗ trợ đơn hàng",
+    "eyebrow": "Kết nối cùng Vườn Lá Nhỏ",
+    "title1": "Liên hệ",
+    "title2": "đội ngũ",
+    "description": "Cần tư vấn chọn cây, kiểm tra đơn hàng hay nhận hướng dẫn chăm sóc? Đội ngũ của Vườn Lá Nhỏ sẵn sàng hỗ trợ.",
+    "cards": {
+      "addressTitle": "Địa chỉ cửa hàng",
+      "addressContent": "401 Lê Lợi, khóm Tân Mỹ,\nphường Sa Đéc, tỉnh Đồng Tháp",
+      "phoneTitle": "Số điện thoại",
+      "phoneContent": "0767925665",
+      "emailTitle": "Email",
+      "emailContent": "duonghung171204sd@gmail.com",
+      "hoursTitle": "Thời gian hỗ trợ",
+      "hoursContent": "Mỗi ngày\n08:00 - 20:00"
+    }
+  },
+  "forgotPasswordPage": {
+    "seoTitle": "Quên mật khẩu - Vườn Lá Nhỏ",
+    "heroTitle": "Khôi phục tài khoản",
+    "heroDescription": "Nhập email của bạn, chúng tôi sẽ gửi liên kết đặt lại mật khẩu một cách an toàn.",
+    "sending": "Đang gửi..."
+  },
+  "verifyEmailPage": {
+    "seoTitle": "Xác thực email - Vườn Lá Nhỏ",
+    "heroTitle": "Xác thực email",
+    "heroDescription": "Hệ thống đang kiểm tra liên kết xác nhận và hoàn tất kích hoạt tài khoản cho bạn.",
+    "cardTitle": "Xác thực email",
+    "cardStates": {
+      "verifying": "Đang kiểm tra trạng thái xác thực...",
+      "success": "Email đã được xác thực",
+      "error": "Không thể hoàn tất xác thực"
+    }
+  },
+  "loginSuccessPage": {
+    "seoTitle": "Đăng nhập thành công - Vườn Lá Nhỏ",
+    "badge": "Đăng nhập an toàn",
+    "processingTitle": "Đang xử lý đăng nhập",
+    "processingDescription": "Vui lòng đợi trong giây lát để hệ thống đồng bộ tài khoản của bạn.",
+    "errorTitle": "Đăng nhập bị gián đoạn",
+    "error": "Đã xảy ra lỗi trong quá trình xử lý đăng nhập.",
+    "redirectDescription": "Đang chuyển bạn về trang đăng nhập..."
+  },
+  "loginPage": {
+    "seoTitle": "Đăng Nhập - Vườn Lá Nhỏ",
+    "heroTitle": "Chào mừng bạn trở lại"
+  },
+  "registerPage": {
+    "seoTitle": "Đăng Ký - Vườn Lá Nhỏ",
+    "heroTitle": "Tạo tài khoản xanh",
+    "heroDescription": "Lưu sản phẩm yêu thích, theo dõi đơn hàng và mua sắm thuận tiện hơn cùng Vườn Lá Nhỏ.",
+    "placeholders": {
+      "name": "Nguyễn Văn A"
+    }
+  },
+  "resetPasswordPage": {
+    "seoTitle": "Đặt Lại Mật Khẩu - Vườn Lá Nhỏ",
+    "heroTitle": "Tạo mật khẩu mới",
+    "heroDescription": "Chọn mật khẩu mới an toàn để tiếp tục sử dụng tài khoản và mua sắm một cách yên tâm."
+  },
+  "profilePage": {
+    "seoTitle": "Hồ Sơ Cá Nhân - Vườn Lá Nhỏ",
+    "title1": "Hồ sơ",
+    "title2": "của tôi",
+    "description": "Xem lại thông tin tài khoản và cập nhật dữ liệu giao hàng để các đơn sau được xử lý nhanh hơn.",
+    "memberSince": "Thông tin tài khoản"
+  },
+  "profileEditPage": {
+    "seoTitle": "Chỉnh Sửa Hồ Sơ - Vườn Lá Nhỏ",
+    "title1": "Chỉnh sửa",
+    "title2": "hồ sơ",
+    "description": "Cập nhật thông tin liên hệ và ảnh đại diện để đơn hàng của bạn luôn chính xác.",
+    "placeholders": {
+      "name": "Nhập họ tên của bạn",
+      "phone": "Nhập số điện thoại",
+      "address": "Nhập địa chỉ"
+    }
   }
 }

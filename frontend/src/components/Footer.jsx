@@ -3,8 +3,8 @@ import { assets } from '../assets/assets'
 
 const Footer = () => {
   return (
-    <div>
-      <div className='flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 my-10 mt-14 text-sm'> 
+    <footer className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] border-t border-gray-100'>
+      <div className='flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 my-10 mt-14 text-sm max-w-7xl mx-auto'> 
         <div>
             <img src={assets.logo} className='mb-5 w-32' alt="" />
             <p className='w-full md:w-2/3 text-gray-600'>
@@ -32,7 +32,7 @@ const Footer = () => {
         <hr />
         <p className='py-5 text-sm text-center'>Copyright 2025@UniversityofInformationTechnology.</p>
       </div>
-    </div>
+    </footer>
   )
 }
 

@@ -6,7 +6,78 @@
     "contact": "Contact",
     "back": "Back",
     "login": "Login",
-    "register": "Register"
+    "register": "Register",
+    "searchPlaceholder": "Everything you need...",
+    "viewAllResults": "View all results",
+    "noResults": "No products found"
+  },
+  "hero": {
+    "tagline": "Vườn Lá Nhỏ — The Art of Green Living",
+    "heading1": "Bring",
+    "headingAccent": "Life",
+    "heading2": "Into Your Space",
+    "description": "Transform your home into a peaceful oasis with hand-picked plants that are easy to care for and aesthetically stunning.",
+    "ctaExplore": "Explore Collection",
+    "ctaEasy": "Advice diseases from AI",
+    "statsDelivered": "Plants Delivered",
+    "statsRating": "Rating",
+    "statsVarieties": "Varieties",
+    "badgeLabel": "Quality",
+    "badgeValue": "Best price at garden",
+    "deliveryBadge": "Fast 2h Delivery",
+    "deliveryArea": "HCM City Area"
+  },
+  "latest": {
+    "title1": "Latest",
+    "title2": "Collection",
+    "description": "Discover the fresh greens that just arrived at Vườn Lá Nhỏ, bringing nature's breath into your home.",
+    "viewAll": "View all products"
+  },
+  "product": {
+    "reviews": "Reviews",
+    "selectSize": "Select Size",
+    "addToCart": "Add to Cart",
+    "buyNow": "Buy Now",
+    "airPurifying": "Air Purifying",
+    "category": {
+      "indoor": "Indoor",
+      "outdoor": "Outdoor"
+    },
+    "difficulty_label": "Difficulty",
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "light_label": "Light",
+    "light": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "semi": "Partial Shade"
+    },
+    "water_label": "Water",
+    "water_weekly": "1-2 times/week",
+    "trust_guarantee": "7-day guarantee",
+    "trust_advice": "Free 1-1 advice",
+    "trust_delivery": "Safe delivery, plant insurance",
+    "hotline_title": "Order via Hotline",
+    "retail": "Retail",
+    "wholesale": "Wholesale",
+    "delivery_time": "Delivery 1–2 days",
+    "delivery_hcm": "HCM: COD / Bank Transfer",
+    "delivery_province": "Province: 50% deposit",
+    "warranty_policy": "Warranty Policy",
+    "tab_description": "Description",
+    "tab_reviews": "Reviews",
+    "tab_care": "Care Guide",
+    "care_water_title": "Watering",
+    "care_water_desc": "Water 1-2 times a week when the topsoil is completely dry. Avoid overwatering to prevent root rot.",
+    "care_light_title": "Light",
+    "care_light_desc": "Prefer indirect light or partial shade. Avoid direct harsh sunlight which can burn leaves.",
+    "relatedProducts": "Related Products",
+    "bestseller": "Bestseller",
+    "description": "Description"
   },
   "user": {
     "profile": "My Profile",
@@ -47,29 +118,78 @@
       "oauthFailed": "Login failed. Please try again.",
       "noCode": "Authentication code not received. Please try again.",
       "noEmail": "Could not get email from account. Please try another method.",
-      "authFailed": "Authentication failed. Please try again."
+      "authFailed": "Authentication failed. Please try again.",
+      "passwordMinLength8": "Password must be at least 8 characters"
+    },
+    "tags": {
+      "createNewAccount": "Create new account",
+      "createNewPassword": "Create a new password",
+      "verifyEmail": "Verify email",
+      "welcomeBack": "Welcome back",
+      "resetPassword": "Reset password",
+      "forgotPasswordTitle": "Forgot Password"
     }
   },
-  "product": {
-    "addToCart": "Add to Cart",
-    "selectSize": "Select Size",
-    "description": "Description",
-    "relatedProducts": "Related Products",
-    "bestseller": "Bestseller",
-    "category": {
-      "indoor": "Indoor",
-      "outdoor": "Outdoor"
-    },
-    "difficulty": {
-      "easy": "Easy",
-      "medium": "Medium",
-      "hard": "Hard"
-    },
-    "light": {
-      "low": "Low",
-      "medium": "Medium",
-      "high": "High"
+  "profile": {
+    "title": "My Profile",
+    "editTitle": "Edit Information",
+    "editButton": "Edit Information",
+    "logoutButton": "Logout",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel",
+    "email": "Email",
+    "emailCannotChange": "Email cannot be changed",
+    "fullName": "Full Name",
+    "phone": "Phone Number",
+    "address": "Address",
+    "notUpdated": "Not updated",
+    "changeAvatar": "Click to change avatar",
+    "saving": "Saving...",
+    "loading": "Loading...",
+    "errors": {
+      "loadFailed": "Could not load user information"
     }
+  },
+  "passwordReset": {
+    "forgotTitle": "Forgot Password",
+    "forgotDesc": "Enter your email to receive a password reset link",
+    "resetTitle": "Reset Password",
+    "resetDesc": "Enter your new password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "sendEmail": "Send Reset Email",
+    "sendAgain": "Send Again",
+    "backToLogin": "Back to Login",
+    "emailSentTitle": "Email Sent!",
+    "emailSentDesc": "We sent a password reset link to",
+    "linkExpires": "Link will expire in 1 hour",
+    "didNotReceive": "Did not receive email?",
+    "successTitle": "Success!",
+    "successDesc": "Your password has been reset successfully.",
+    "loginNow": "Login Now",
+    "redirecting": "Redirecting to login...",
+    "verifying": "Verifying email...",
+    "verifyingDesc": "Please wait a moment",
+    "verifySuccess": "Email Verified!",
+    "verifySuccessDesc": "Your email has been verified. You can now use all features of Vườn Lá Nhỏ.",
+    "verifyFailed": "Verification Failed",
+    "verifyFailedDesc": "The verification link is invalid or has expired.",
+    "resendEmail": "Resend verification email",
+    "goHome": "Go Home",
+    "backHome": "Back Home",
+    "processing": "Processing...",
+    "errors": {
+      "passwordRequired": "Please enter password",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "confirmPasswordRequired": "Please confirm password",
+      "passwordNotMatch": "Passwords do not match"
+    }
+  },
+  "verify": {
+    "verifyingEmail": "Verifying email...",
+    "verifySuccess": "Email verified successfully!",
+    "verifyFailed": "Verification failed",
+    "invalidOrExpired": "The verification link is invalid or has expired."
   },
   "cart": {
     "title": "Your Cart",
@@ -104,6 +224,66 @@
     "sortLowHigh": "Price: Low to High",
     "sortHighLow": "Price: High to Low"
   },
+  "placeOrder": {
+    "title1": "Delivery",
+    "title2": "Information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "address": "Address",
+    "city": "Ward",
+    "state": "Province",
+    "zipcode": "Zip Code",
+    "country": "Country",
+    "phone": "Phone Number",
+    "paymentMethod": "Payment Method",
+    "paymentMethodCOD": "Cash on Delivery",
+    "placeOrder": "Place Order",
+    "processing": "Processing...",
+    "orderSummary": "Order Summary",
+    "subtotal": "Subtotal",
+    "deliveryFee": "Delivery Fee",
+    "totalAmount": "Total Amount",
+    "continueShop": "Continue Shopping",
+    "errors": {
+      "firstNameRequired": "Please enter first name",
+      "firstNameMinLength": "First name must be at least 2 characters",
+      "lastNameRequired": "Please enter last name",
+      "lastNameMinLength": "Last name must be at least 2 characters",
+      "emailRequired": "Please enter email",
+      "emailInvalid": "Invalid email address",
+      "addressRequired": "Please enter address",
+      "addressMinLength": "Address must be at least 5 characters",
+      "cityRequired": "Please enter ward",
+      "stateRequired": "Please enter province",
+      "phoneRequired": "Please enter phone number",
+      "phoneInvalid": "Phone number must be 10-11 digits"
+    }
+  },
+  "orders": {
+    "title1": "My",
+    "title2": "Orders",
+    "itemsOrdered": "items ordered",
+    "loading": "Loading...",
+    "refresh": "Refresh",
+    "price": "Price",
+    "quantity": "Quantity",
+    "date": "Date",
+    "paymentMethod": "Payment Method",
+    "status": "Status",
+    "paid": "Paid",
+    "pendingPayment": "Pending Payment",
+    "noOrdersTitle": "No Orders Yet",
+    "noOrdersDesc": "Explore our plant collection and start shopping!",
+    "viewProducts": "View Products",
+    "statuses": {
+      "orderReceived": "Order Received",
+      "packing": "Packing",
+      "shipped": "Shipped",
+      "inTransit": "In Transit",
+      "delivered": "Delivered"
+    }
+  },
   "admin": {
     "addProduct": "Add New Product",
     "updateProduct": "Update Product",
@@ -132,6 +312,113 @@
       "priceMin": "Price must be greater than 0"
     }
   },
+  "homePage": {
+    "seoTitle": "Vuon La Nho - Premium Plant Store | Nationwide Delivery",
+    "seoDescription": "Vuon La Nho offers curated indoor and outdoor plants with dependable care advice, elegant presentation, and delivery across Vietnam.",
+    "seoKeywords": "plant store, indoor plants, outdoor plants, premium plants, buy plants online, vuon la nho"
+  },
+  "aboutPage": {
+    "seoTitle": "About Us - Vuon La Nho",
+    "seoDescription": "Learn more about Vuon La Nho, our green philosophy, curated plant collections, and customer care commitment.",
+    "seoKeywords": "about vuon la nho, plant shop story, premium plant care",
+    "eyebrow": "Our Story",
+    "title1": "About",
+    "title2": "Vuon La Nho",
+    "description": "A calm green brand built for people who want their homes to feel softer, fresher, and more alive.",
+    "imageAlt": "Vuon La Nho garden collection",
+    "story": "Vuon La Nho selects plants with a focus on healthy form, easy care guidance, and styling that works in real homes. We want every order to feel thoughtful from the first browse to the moment your plant settles into its new corner.",
+    "contactLabel": "Direct Contact",
+    "contactName": "Duong Quoc Hung",
+    "contactEmail": "duonghung171204sd@gmail.com",
+    "highlights": {
+      "curatedTitle": "Curated Selection",
+      "curatedDesc": "Collections are chosen for beauty, balance, and suitability for modern living spaces.",
+      "careTitle": "Clear Care Guidance",
+      "careDesc": "We pair each plant with practical care information so customers can keep it thriving.",
+      "serviceTitle": "Warm Support",
+      "serviceDesc": "From picking the right plant to after-purchase questions, support stays personal and timely."
+    }
+  },
+  "contactPage": {
+    "seoTitle": "Contact - Vuon La Nho",
+    "seoDescription": "Reach Vuon La Nho for plant consultation, order support, and care guidance.",
+    "seoKeywords": "contact vuon la nho, plant consultation, plant support",
+    "eyebrow": "Let's Talk Green",
+    "title1": "Contact",
+    "title2": "Our Team",
+    "description": "Need help choosing the right plant, checking an order, or planning a greener corner? We are here to help.",
+    "cards": {
+      "addressTitle": "Store Address",
+      "addressContent": "401 Le Loi, Tan My Hamlet,\nSa Dec Ward, Dong Thap Province",
+      "phoneTitle": "Phone",
+      "phoneContent": "0767925665",
+      "emailTitle": "Email",
+      "emailContent": "duonghung171204sd@gmail.com",
+      "hoursTitle": "Support Hours",
+      "hoursContent": "Every day\n08:00 - 20:00"
+    }
+  },
+  "forgotPasswordPage": {
+    "seoTitle": "Forgot Password - Vuon La Nho",
+    "heroTitle": "Recover Access",
+    "heroDescription": "We will send a secure reset link so you can get back to your account quickly.",
+    "sending": "Sending..."
+  },
+  "verifyEmailPage": {
+    "seoTitle": "Verify Email - Vuon La Nho",
+    "heroTitle": "Email Verification",
+    "heroDescription": "We are checking your confirmation link and preparing your account access.",
+    "cardTitle": "Verify Email",
+    "cardStates": {
+      "verifying": "Checking verification status...",
+      "success": "Email verified successfully",
+      "error": "Verification could not be completed"
+    }
+  },
+  "loginSuccessPage": {
+    "seoTitle": "Signing In - Vuon La Nho",
+    "badge": "Secure Sign In",
+    "processingTitle": "Processing your sign in",
+    "processingDescription": "Please wait a moment while we finish syncing your account.",
+    "errorTitle": "Sign in interrupted",
+    "error": "Something went wrong while processing your sign in.",
+    "redirectDescription": "Redirecting you back to the login page..."
+  },
+  "loginPage": {
+    "seoTitle": "Login - Vuon La Nho",
+    "heroTitle": "Welcome Back"
+  },
+  "registerPage": {
+    "seoTitle": "Register - Vuon La Nho",
+    "heroTitle": "Create Your Green Account",
+    "heroDescription": "Save your favorite plants, track orders, and enjoy a smoother shopping experience.",
+    "placeholders": {
+      "name": "Nguyen Van A"
+    }
+  },
+  "resetPasswordPage": {
+    "seoTitle": "Reset Password - Vuon La Nho",
+    "heroTitle": "Set a New Password",
+    "heroDescription": "Choose a strong new password to secure your account and continue shopping with confidence."
+  },
+  "profilePage": {
+    "seoTitle": "My Profile - Vuon La Nho",
+    "title1": "My",
+    "title2": "Profile",
+    "description": "Review your account information and keep your delivery details up to date.",
+    "memberSince": "Customer profile"
+  },
+  "profileEditPage": {
+    "seoTitle": "Edit Profile - Vuon La Nho",
+    "title1": "Edit",
+    "title2": "Profile",
+    "description": "Update your contact details and profile image so future orders stay smooth.",
+    "placeholders": {
+      "name": "Enter your full name",
+      "phone": "Enter your phone number",
+      "address": "Enter your address"
+    }
+  },
   "common": {
     "submit": "Submit",
     "cancel": "Cancel",
@@ -144,6 +431,7 @@
     "loading": "Loading...",
     "error": "An error occurred",
     "success": "Success",
+    "viewDetail": "View Detail",
     "currency": "$"
   }
 }

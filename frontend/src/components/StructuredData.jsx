@@ -57,7 +57,7 @@ export const ProductSchema = ({ product, currency = 'VND' }) => {
     return { minPrice: product.price, maxPrice: product.price };
   };
 
-  const { minPrice, maxPrice } = getPriceRange();
+  const { minPrice } = getPriceRange();
 
   const schema = {
     "@context": "https://schema.org",

@@ -20,7 +20,7 @@ const RelatedProducts = ({category,subCategory}) => {
             
         }
 
-    },[products])
+    },[products, category, subCategory])
   return (
     <div className='my-24'>
       <div className='text-center text-3xl py-2'>

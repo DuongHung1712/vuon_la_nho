@@ -297,7 +297,7 @@ const Collection = () => {
   }, [products, search, category, difficulty, light, price, sortType]);
 
   return (
-    <div className="pt-6 pb-12">
+    <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] pt-6 pb-12">
       <SEO
         title="Bộ Sưu Tập Cây Cảnh - Vườn Lá Nhỏ | Cây Trong Nhà & Ngoài Trời"
         description="Khám phá bộ sưu tập cây cảnh đa dạng: cây trong nhà, cây ngoài trời, sen đá, xương rồng. Lọc theo giá, loại, độ khó chăm sóc. Giao hàng toàn quốc."

@@ -157,6 +157,7 @@ const detectDisease = async (req, res) => {
           disease: result.disease,
           confidence: result.confidence,
           treatment: result.treatment,
+          focusMap: result.focusMap ?? null,
         });
       } catch (parseError) {
         console.error("Parse Error:", parseError.message);

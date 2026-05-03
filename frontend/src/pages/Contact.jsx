@@ -1,33 +1,69 @@
 import React from "react";
-import Title from "../components/Title";
+import { MapPin, Phone, Mail, Clock4 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+
+import PageIntro from "../components/PageIntro";
 import SEO from "../components/SEO";
-import { assets } from "../assets/assets";
+
 const Contact = () => {
+  const { t } = useTranslation();
+
+  const contactCards = [
+    {
+      icon: <MapPin className="h-5 w-5" />,
+      title: t("contactPage.cards.addressTitle"),
+      content: t("contactPage.cards.addressContent"),
+    },
+    {
+      icon: <Phone className="h-5 w-5" />,
+      title: t("contactPage.cards.phoneTitle"),
+      content: t("contactPage.cards.phoneContent"),
+    },
+    {
+      icon: <Mail className="h-5 w-5" />,
+      title: t("contactPage.cards.emailTitle"),
+      content: t("contactPage.cards.emailContent"),
+    },
+    {
+      icon: <Clock4 className="h-5 w-5" />,
+      title: t("contactPage.cards.hoursTitle"),
+      content: t("contactPage.cards.hoursContent"),
+    },
+  ];
+
   return (
-    <div>
+    <div className="page-content-shell py-8 md:py-10">
       <SEO
-        title="Liên Hệ - Vườn Lá Nhỏ | Tư Vấn Miễn Phí 24/7"
-        description="Liên hệ với Vườn Lá Nhỏ để được tư vấn miễn phí về cây cảnh. Địa chỉ: 401 Lê Lợi, Sa Đéc, Đồng Tháp. Hotline: 0767925665"
-        keywords="liên hệ vườn lá nhỏ, tư vấn cây cảnh, hotline, địa chỉ cửa hàng"
+        title={t("contactPage.seoTitle")}
+        description={t("contactPage.seoDescription")}
+        keywords={t("contactPage.seoKeywords")}
         ogUrl="https://vuonlanho.store/contact"
       />
-      <div className="text-center text-2xl pt-10 border-t">
-        <Title text1={"Liên hệ"} text2={"với chúng tôi"} />
-      </div>
-      <div className="my-10 flex flex-col justify-center md:flex-row gap-10 mb-28">
-        <div className="flex flex-col justify-center items-start gap-6">
-          <p className="font-semibold text-xl text-gray-600">
-            Cửa hàng của chúng tôi{" "}
-          </p>
-          <p className="text-gray-500">
-            {" "}
-            401 Lê Lợi, khóm Tân Mỹ, phường Sa Đéc <br /> Tỉnh Đồng Tháp{" "}
-          </p>
-          <p className="text-gray-500">
-            SĐT : 0767925665 <br /> Email: duonghung171204sd@gmail.com
-          </p>
+
+      <section className="page-section">
+        <div className="page-section-inner space-y-10">
+          <PageIntro
+            eyebrow={t("contactPage.eyebrow")}
+            title1={t("contactPage.title1")}
+            title2={t("contactPage.title2")}
+            description={t("contactPage.description")}
+          />
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            {contactCards.map(({ icon, title, content }) => (
+              <div key={title} className="page-surface-card">
+                <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-secondary-100 text-secondary-700">
+                  {icon}
+                </div>
+                <h3 className="text-base font-semibold text-primary-900">{title}</h3>
+                <p className="mt-2 whitespace-pre-line text-sm leading-6 text-gray-600">
+                  {content}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 };
