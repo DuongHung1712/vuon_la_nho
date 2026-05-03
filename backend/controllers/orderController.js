@@ -5,7 +5,7 @@ import userModel from "../models/userModel.js";
 // Placing Order using  COD Method
 const placeOrder = async (req,res) => {
     try {
-        const {userId, items, amount, address} = req.body;
+        const {userId, items, amount, address, isBuyNow} = req.body;
 
         const orderData = {
             userId,
@@ -19,7 +19,11 @@ const placeOrder = async (req,res) => {
         }
         const newOrder = new orderModel(orderData)
         await newOrder.save()
-        await userModel.findByIdAndUpdate(userId,{cartData:{}})
+        
+        if (!isBuyNow) {
+            await userModel.findByIdAndUpdate(userId,{cartData:{}})
+        }
+        
         res.json({success:true,message:"Order Placed"})
         
 
