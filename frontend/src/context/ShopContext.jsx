@@ -62,7 +62,14 @@ const ShopContextProvider = (props) => {
             const sizes = cartItems[itemId];
             for (const size in sizes) {
                 const quantity = sizes[size];
-                totalAmount += itemInfo.price * quantity;
+                let price = itemInfo.price || 0;
+                if (itemInfo.sizes && itemInfo.sizes.length > 0) {
+                    const matchedSize = itemInfo.sizes.find(s => s.name == size);
+                    if (matchedSize) {
+                        price = matchedSize.price;
+                    }
+                }
+                totalAmount += price * quantity;
             }
         }
 

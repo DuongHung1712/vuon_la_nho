@@ -1,4 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import Title from "../components/Title";
@@ -11,10 +12,13 @@ import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
 import SEO from "../components/SEO";
 import { Truck, CreditCard, Check, Loader2 } from "lucide-react";
+import { useProfile } from "../hooks/useApi";
 
 const PlaceOrder = () => {
   const { t } = useTranslation();
   const [method, setMethod] = useState("cod");
+  const location = useLocation();
+  const buyNowItem = location.state?.buyNowItem;
   const {
     navigate,
     backendUrl,
@@ -27,9 +31,31 @@ const PlaceOrder = () => {
     currency,
   } = useContext(ShopContext);
 
+  const { data } = useProfile(token);
+  const user = data?.user;
+
+  const subtotal = React.useMemo(() => {
+    if (buyNowItem) {
+      const itemInfo = products.find((product) => product._id === buyNowItem._id);
+      if (itemInfo) {
+        let price = itemInfo.price || 0;
+        if (itemInfo.sizes && itemInfo.sizes.length > 0) {
+          const matchedSize = itemInfo.sizes.find((s) => s.name === buyNowItem.size);
+          if (matchedSize) {
+            price = matchedSize.price;
+          }
+        }
+        return price * buyNowItem.quantity;
+      }
+      return 0;
+    }
+    return getCartAmount();
+  }, [buyNowItem, products, getCartAmount]);
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
@@ -45,18 +71,57 @@ const PlaceOrder = () => {
     },
   });
 
+  useEffect(() => {
+    if (user) {
+      let firstName = "";
+      let lastName = "";
+      if (user.name) {
+        const nameParts = user.name.trim().split(" ");
+        if (nameParts.length > 1) {
+          lastName = nameParts.pop();
+          firstName = nameParts.join(" ");
+        } else {
+          firstName = user.name;
+        }
+      }
+      
+      reset({
+        firstName: firstName || "",
+        lastName: lastName || "",
+        email: user.email || "",
+        street: user.address || "",
+        city: "",
+        state: "",
+        zipcode: "",
+        country: "",
+        phone: user.phone || "",
+      });
+    }
+  }, [user, reset]);
+
   const onSubmit = async (formData) => {
     try {
       let orderItems = [];
-      for (const items in cartItems) {
-        for (const item in cartItems[items]) {
-          if (cartItems[items][item] > 0) {
-            const itemInfo = structuredClone(
-              products.find((product) => product._id == items),
-            );
-            if (itemInfo) {
-              itemInfo.quantity = cartItems[items][item];
-              orderItems.push(itemInfo);
+      
+      if (buyNowItem) {
+        const itemInfo = structuredClone(products.find((product) => product._id == buyNowItem._id));
+        if (itemInfo) {
+          itemInfo.size = buyNowItem.size;
+          itemInfo.quantity = buyNowItem.quantity;
+          orderItems.push(itemInfo);
+        }
+      } else {
+        for (const items in cartItems) {
+          for (const item in cartItems[items]) {
+            if (cartItems[items][item] > 0) {
+              const itemInfo = structuredClone(
+                products.find((product) => product._id == items),
+              );
+              if (itemInfo) {
+                itemInfo.size = item;
+                itemInfo.quantity = cartItems[items][item];
+                orderItems.push(itemInfo);
+              }
             }
           }
         }
@@ -65,7 +130,8 @@ const PlaceOrder = () => {
       let orderData = {
         address: formData,
         items: orderItems,
-        amount: getCartAmount() + delivery_fee,
+        amount: subtotal + delivery_fee,
+        isBuyNow: !!buyNowItem
       };
       switch (method) {
         case "cod": {
@@ -340,13 +406,13 @@ const PlaceOrder = () => {
                   <div className="flex justify-between text-gray-600">
                     <span className="text-sm">{t("placeOrder.subtotal")}</span>
                     <span className="text-sm font-medium">
-                      {getCartAmount()} {currency}
+                      {subtotal.toLocaleString("vi-VN")} {currency}
                     </span>
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span className="text-sm">{t("placeOrder.deliveryFee")}</span>
                     <span className="text-sm font-medium">
-                      {delivery_fee} {currency}
+                      {delivery_fee.toLocaleString("vi-VN")} {currency}
                     </span>
                   </div>
                 </div>
@@ -356,7 +422,7 @@ const PlaceOrder = () => {
                     {t("placeOrder.totalAmount")}
                   </span>
                   <span className="font-bold text-lg text-primary-700">
-                    {getCartAmount() + delivery_fee} {currency}
+                    {(subtotal + delivery_fee).toLocaleString("vi-VN")} {currency}
                   </span>
                 </div>
 

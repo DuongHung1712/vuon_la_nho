@@ -61,7 +61,15 @@ const Cart = () => {
                   const productData = products.find((product) => product._id === item._id);
                   if (!productData) return null;
 
-                  const itemTotal = productData.price * item.quantity;
+                  let currentPrice = productData.price || 0;
+                  if (productData.sizes && productData.sizes.length > 0) {
+                    const matchedSize = productData.sizes.find(s => s.name === item.size);
+                    if (matchedSize) {
+                      currentPrice = matchedSize.price;
+                    }
+                  }
+
+                  const itemTotal = currentPrice * item.quantity;
 
                   return (
                     <div
@@ -80,7 +88,7 @@ const Cart = () => {
                             {productData.name}
                           </h3>
                           <p className='text-primary-600 font-semibold text-sm sm:text-base'>
-                            {productData.price.toLocaleString('vi-VN')}{currency}
+                            {currentPrice.toLocaleString('vi-VN')}{currency}
                           </p>
                           <span className='inline-flex items-center mt-2 px-2.5 py-1 bg-secondary-50 text-secondary-700 text-xs font-medium rounded-md border border-secondary-200'>
                             <Leaf className="w-3 h-3 mr-1" /> {item.size}

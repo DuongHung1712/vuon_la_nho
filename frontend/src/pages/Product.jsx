@@ -7,6 +7,7 @@ import Loading from "../components/Loading";
 import SEO from "../components/SEO";
 import { ProductSchema, BreadcrumbSchema } from "../components/StructuredData";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import {
   Star,
   Minus,
@@ -26,7 +27,7 @@ import {
 
 const Product = () => {
   const { productId } = useParams();
-  const { products, currency, addToCart } = useContext(ShopContext);
+  const { products, currency, addToCart, token, navigate } = useContext(ShopContext);
   const { t } = useTranslation();
   
   const [image, setImage] = useState(null);
@@ -64,6 +65,27 @@ const Product = () => {
       setSize(sizeItem);
       setSelectedPrice(productData.price);
     }
+  };
+
+  const handleBuyNow = () => {
+    if (!size) {
+      toast.error(t('product.selectSizeError', 'Vui lòng chọn kích thước'));
+      return;
+    }
+    if (!token) {
+      toast.error(t('product.loginRequired', 'Vui lòng đăng nhập để mua hàng'));
+      navigate('/login');
+      return;
+    }
+    navigate('/place-order', {
+      state: {
+        buyNowItem: {
+          _id: productData._id,
+          size: size,
+          quantity: quantity
+        }
+      }
+    });
   };
 
   const getPriceDisplay = () => {
@@ -241,9 +263,7 @@ const Product = () => {
               </button>
               
               <button
-                onClick={() => {
-                  addToCart(productData._id, quantity, size);
-                }}
+                onClick={handleBuyNow}
                 className="flex-1 py-4 px-8 rounded-xl bg-primary-600 text-white font-bold text-sm hover:bg-primary-800 shadow-lg shadow-primary-900/20 transition-all"
               >
                 {t('product.buyNow')}
