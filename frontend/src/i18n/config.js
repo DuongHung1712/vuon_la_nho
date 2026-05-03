@@ -12,6 +12,9 @@ i18n
       vi: {
         translation: vi
       },
+      vn: {
+        translation: vi
+      },
       en: {
         translation: en
       }

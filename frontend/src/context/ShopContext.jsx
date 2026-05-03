@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useProducts, useCart, useAddToCart, useUpdateCart } from '../hooks/useApi';
 import Loading from '../components/Loading';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
@@ -75,7 +76,7 @@ const ShopContextProvider = (props) => {
             setToken(storedToken);
             refetchCart();
         }
-    }, []);
+    }, [refetchCart]);
 
     const value = {
         products,

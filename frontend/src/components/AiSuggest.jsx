@@ -1,8 +1,15 @@
 import React, { useContext, useState } from "react";
-import { ShopContext } from "../context/ShopContext";
 import { toast } from "react-toastify";
 import { CloudUpload, X, Loader2, Sparkles, CheckCircle } from "lucide-react";
+
+import { ShopContext } from "../context/ShopContext";
 import Title from "./Title";
+
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png"];
+const ALLOWED_IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png"];
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
+const MIN_IMAGE_DIMENSION = 32;
+
 const AiSuggest = () => {
   const { backendUrl } = useContext(ShopContext);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -10,15 +17,81 @@ const AiSuggest = () => {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleImageChange = (e) => {
+  const resetForm = () => {
+    setSelectedImage(null);
+    setPreviewUrl(null);
+    setResult(null);
+  };
+
+  const getImageDimensions = (file) =>
+    new Promise((resolve, reject) => {
+      const objectUrl = URL.createObjectURL(file);
+      const img = new window.Image();
+
+      img.onload = () => {
+        resolve({ width: img.width, height: img.height });
+        URL.revokeObjectURL(objectUrl);
+      };
+
+      img.onerror = () => {
+        reject(new Error("invalid-image"));
+        URL.revokeObjectURL(objectUrl);
+      };
+
+      img.src = objectUrl;
+    });
+
+  const validateImageFile = async (file) => {
+    if (!file) {
+      throw new Error("Vui lòng chọn ảnh trước khi phân tích.");
+    }
+
+    const extension = `.${file.name.split(".").pop()?.toLowerCase() || ""}`;
+    if (!ALLOWED_IMAGE_EXTENSIONS.includes(extension)) {
+      throw new Error("Chỉ hỗ trợ ảnh JPG, JPEG hoặc PNG.");
+    }
+
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      throw new Error("Định dạng ảnh không hợp lệ. Vui lòng chọn ảnh JPG hoặc PNG.");
+    }
+
+    if (file.size === 0) {
+      throw new Error("Ảnh đang rỗng hoặc bị lỗi. Vui lòng chọn ảnh khác.");
+    }
+
+    if (file.size > MAX_IMAGE_SIZE) {
+      throw new Error("Ảnh vượt quá 10MB. Vui lòng chọn ảnh nhỏ hơn.");
+    }
+
+    const { width, height } = await getImageDimensions(file);
+    if (width < MIN_IMAGE_DIMENSION || height < MIN_IMAGE_DIMENSION) {
+      throw new Error(
+        `Ảnh quá nhỏ. Kích thước tối thiểu là ${MIN_IMAGE_DIMENSION}x${MIN_IMAGE_DIMENSION}px.`,
+      );
+    }
+  };
+
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      await validateImageFile(file);
+      setResult(null);
       setSelectedImage(file);
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewUrl(reader.result);
       };
       reader.readAsDataURL(file);
+    } catch (error) {
+      resetForm();
+      e.target.value = "";
+      toast.error(error.message || "Ảnh không hợp lệ. Vui lòng chọn ảnh khác.");
     }
   };
 
@@ -30,61 +103,50 @@ const AiSuggest = () => {
     formData.append("image", selectedImage);
 
     try {
-      const res = await fetch(backendUrl + "/api/disease-detection/detect", {
+      const res = await fetch(`${backendUrl}/api/disease-detection/detect`, {
         method: "POST",
         body: formData,
       });
 
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-
       const data = await res.json();
 
-      if (data.success) {
-        setResult(data);
-        toast.success("Phân tích thành công!");
-      } else {
-        toast.error(data.message || "Có lỗi xảy ra khi phân tích");
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || `HTTP error! status: ${res.status}`);
       }
+
+      setResult(data);
+      toast.success("Phân tích thành công!");
     } catch (error) {
       console.error("Error analyzing image:", error);
-      toast.error("Không thể kết nối đến server. Vui lòng thử lại.");
+      toast.error(error.message || "Không thể kết nối đến server. Vui lòng thử lại.");
     } finally {
       setLoading(false);
     }
   };
 
-  const resetForm = () => {
-    setSelectedImage(null);
-    setPreviewUrl(null);
-    setResult(null);
-  };
-
   return (
-    <div id="aisuggest" className="max-w-4xl mx-auto px-4 py-8">
-      <div className="text-center py-8 text-3xl">
-        <Title text1={"AI"} text2={"nhận diện bệnh trên lá cây"} />
-        <p className="w-3/4 m-auto text-xs sm:text-sm md:text-base text-gray-600">
+    <div id="ai-suggest" className="mx-auto max-w-4xl px-4 py-8">
+      <div className="py-8 text-center text-3xl">
+        <Title text1="AI" text2="nhận diện bệnh trên lá cây" />
+        <p className="m-auto w-3/4 text-xs text-gray-600 sm:text-sm md:text-base">
           Tải lên ảnh lá cây để AI phân tích và chẩn đoán bệnh
         </p>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="rounded-lg bg-white p-6 shadow-md">
         <div className="space-y-6">
-          {/* Upload Section */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-3">
+            <label className="mb-3 block text-sm font-semibold text-gray-700">
               Tải ảnh lá cây
             </label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary-400 transition-colors">
+            <div className="rounded-lg border-2 border-dashed border-gray-300 p-6 text-center transition-colors hover:border-primary-400">
               {!previewUrl ? (
                 <div>
                   <CloudUpload className="mx-auto h-12 w-12 text-gray-400" />
                   <div className="mt-4">
                     <label
                       htmlFor="file-upload"
-                      className="cursor-pointer bg-primary-400 text-white px-4 py-2 rounded-md hover:bg-primary-500 transition-colors inline-block"
+                      className="inline-block cursor-pointer rounded-md bg-primary-400 px-4 py-2 text-white transition-colors hover:bg-primary-500"
                     >
                       Chọn ảnh
                     </label>
@@ -92,11 +154,11 @@ const AiSuggest = () => {
                       id="file-upload"
                       type="file"
                       className="hidden"
-                      accept="image/*"
+                      accept=".jpg,.jpeg,.png,image/jpeg,image/png"
                       onChange={handleImageChange}
                     />
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p className="mt-2 text-xs text-gray-500">
                     PNG, JPG, JPEG (tối đa 10MB)
                   </p>
                 </div>
@@ -105,11 +167,11 @@ const AiSuggest = () => {
                   <img
                     src={previewUrl}
                     alt="Preview"
-                    className="max-h-80 mx-auto rounded-lg"
+                    className="mx-auto max-h-80 rounded-lg"
                   />
                   <button
                     onClick={resetForm}
-                    className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors"
+                    className="absolute right-2 top-2 rounded-full bg-red-500 p-2 text-white transition-colors hover:bg-red-600"
                   >
                     <X className="h-5 w-5" />
                   </button>
@@ -118,16 +180,15 @@ const AiSuggest = () => {
             </div>
           </div>
 
-          {/* Analyze Button */}
           {previewUrl && !result && (
             <button
               onClick={handleAnalyze}
               disabled={loading}
-              className="w-full bg-primary-400 text-white py-3 rounded-md font-medium hover:bg-primary-500 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex w-full items-center justify-center gap-2 rounded-md bg-primary-400 py-3 font-medium text-white transition-colors hover:bg-primary-500 disabled:cursor-not-allowed disabled:bg-gray-400"
             >
               {loading ? (
                 <>
-                  <Loader2 className="animate-spin h-5 w-5" />
+                  <Loader2 className="h-5 w-5 animate-spin" />
                   Đang phân tích...
                 </>
               ) : (
@@ -139,20 +200,19 @@ const AiSuggest = () => {
             </button>
           )}
 
-          {/* Result Section */}
           {result && (
-            <div className="bg-white rounded-lg p-6 space-y-4">
-              <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+            <div className="space-y-4 rounded-lg bg-white p-6">
+              <h3 className="flex items-center gap-2 text-xl font-bold text-gray-800">
                 <CheckCircle className="h-6 w-6 text-primary-400" />
                 Kết quả phân tích
               </h3>
 
-              <div className="bg-white rounded-lg p-4 space-y-3">
+              <div className="space-y-4 rounded-lg bg-white p-4">
                 <div>
                   <span className="text-sm font-medium text-gray-600">
                     Bệnh được phát hiện:
                   </span>
-                  <p className="text-lg font-bold text-red-600 mt-1">
+                  <p className="mt-1 text-lg font-bold text-red-600">
                     {result.disease || "Không xác định"}
                   </p>
                 </div>
@@ -161,12 +221,12 @@ const AiSuggest = () => {
                   <span className="text-sm font-medium text-gray-600">
                     Độ tin cậy:
                   </span>
-                  <div className="flex items-center gap-2 mt-1">
-                    <div className="flex-1 bg-gray-200 rounded-full h-2">
+                  <div className="mt-1 flex items-center gap-2">
+                    <div className="h-2 flex-1 rounded-full bg-gray-200">
                       <div
-                        className="bg-primary-400 h-2 rounded-full transition-all"
+                        className="h-2 rounded-full bg-primary-400 transition-all"
                         style={{ width: `${result.confidence || 0}%` }}
-                      ></div>
+                      />
                     </div>
                     <span className="font-semibold text-primary-400">
                       {result.confidence || 0}%
@@ -179,16 +239,40 @@ const AiSuggest = () => {
                     <span className="text-sm font-medium text-gray-600">
                       Cách xử lý:
                     </span>
-                    <p className="text-gray-700 mt-1 whitespace-pre-line">
+                    <p className="mt-1 whitespace-pre-line text-gray-700">
                       {result.treatment}
                     </p>
                   </div>
                 )}
+
+                <div>
+                  <span className="text-sm font-medium text-gray-600">
+                    Vùng AI tập trung phân tích:
+                  </span>
+                  {result.focusMap ? (
+                    <>
+                      <div className="mt-3 overflow-hidden rounded-lg border border-gray-200 bg-gray-50 p-3">
+                        <img
+                          src={result.focusMap}
+                          alt="AI focus map"
+                          className="mx-auto max-h-96 rounded-lg"
+                        />
+                      </div>
+                      <p className="mt-2 text-xs text-gray-500">
+                        Vùng màu nóng cho thấy khu vực model chú ý nhiều hơn khi đưa ra kết quả.
+                      </p>
+                    </>
+                  ) : (
+                    <p className="mt-2 text-sm text-gray-500">
+                      Chưa tạo được bản đồ vùng chú ý cho ảnh này.
+                    </p>
+                  )}
+                </div>
               </div>
 
               <button
                 onClick={resetForm}
-                className="w-full bg-gray-600 text-white py-2 rounded-md font-medium hover:bg-gray-700 transition-colors"
+                className="w-full rounded-md bg-gray-600 py-2 font-medium text-white transition-colors hover:bg-gray-700"
               >
                 Phân tích ảnh khác
               </button>

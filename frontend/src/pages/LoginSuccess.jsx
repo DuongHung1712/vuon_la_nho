@@ -1,69 +1,85 @@
 import { useEffect, useContext, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { ShopContext } from "../context/ShopContext";
 import axios from "axios";
+import { Loader2, ShieldCheck, TriangleAlert } from "lucide-react";
+import { useTranslation } from "react-i18next";
+
+import AuthShell from "../components/AuthShell";
+import SEO from "../components/SEO";
+import { ShopContext } from "../context/ShopContext";
 
 export default function LoginSuccess() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { setToken, refetchCart, backendUrl } = useContext(ShopContext);
   const [error, setError] = useState(null);
 
-useEffect(() => {
+  useEffect(() => {
     const processLogin = async () => {
       try {
         const response = await axios.get(`${backendUrl}/api/user/session`, {
-          withCredentials: true  
+          withCredentials: true,
         });
-        
+
         if (!response.data.success) {
           navigate("/login");
           return;
         }
-        
-        const token = response.data.token;
 
+        const token = response.data.token;
         localStorage.setItem("token", token);
-        
         setToken(token);
-        
+
         await queryClient.invalidateQueries({ queryKey: ["profile"] });
-        
         await refetchCart();
-        
+
         navigate("/");
-      } catch (error) {
-        console.error("Login processing error:", error);
-        setError("Có lỗi xảy ra khi xử lý đăng nhập");
+      } catch (requestError) {
+        console.error("Login processing error:", requestError);
+        setError(t("loginSuccessPage.error"));
         setTimeout(() => navigate("/login"), 2000);
       }
     };
 
     processLogin();
-  }, [navigate, setToken, refetchCart, queryClient, backendUrl]);
+  }, [backendUrl, navigate, queryClient, refetchCart, setToken, t, searchParams]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-primary-50 to-white">
-      <div className="text-center">
-        {error ? (
-          <>
-            <p className="text-sm text-gray-500">Đang chuyển về trang đăng nhập...</p>
-          </>
-        ) : (
-          <>
-            <div className="relative mb-6">
-              <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-200 border-t-primary-500 mx-auto"></div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-8 h-8 bg-primary-500 rounded-full animate-pulse"></div>
-              </div>
+    <>
+      <SEO noindex title={t("loginSuccessPage.seoTitle")} />
+      <AuthShell
+        badge={t("loginSuccessPage.badge")}
+        title={error ? t("loginSuccessPage.errorTitle") : t("loginSuccessPage.processingTitle")}
+        description={
+          error ? t("loginSuccessPage.redirectDescription") : t("loginSuccessPage.processingDescription")
+        }
+      >
+        <div className="py-6 text-center">
+          {error ? (
+            <div className="space-y-4 rounded-2xl border border-red-100 bg-red-50 p-6">
+              <TriangleAlert className="mx-auto h-14 w-14 text-red-500" />
+              <p className="text-base font-medium text-red-700">{error}</p>
+              <p className="text-sm text-red-600">{t("loginSuccessPage.redirectDescription")}</p>
             </div>
-            <p className="text-lg font-medium text-gray-700 mb-2">Đang xử lý đăng nhập...</p>
-            <p className="text-sm text-gray-500">Vui lòng đợi trong giây lát</p>
-          </>
-        )}
-      </div>
-    </div>
+          ) : (
+            <div className="space-y-4 rounded-2xl border border-primary-100 bg-primary-50/80 p-6">
+              <div className="relative mx-auto h-16 w-16">
+                <Loader2 className="h-16 w-16 animate-spin text-primary-500" />
+                <ShieldCheck className="absolute inset-0 m-auto h-7 w-7 text-secondary-600" />
+              </div>
+              <p className="text-lg font-medium text-primary-900">
+                {t("loginSuccessPage.processingTitle")}
+              </p>
+              <p className="text-sm text-gray-600">
+                {t("loginSuccessPage.processingDescription")}
+              </p>
+            </div>
+          )}
+        </div>
+      </AuthShell>
+    </>
   );
 }

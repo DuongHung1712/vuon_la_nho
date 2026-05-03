@@ -16,7 +16,7 @@ import ProfileEdit from './pages/ProfileEdit'
 import Footer from './components/Footer'
 import SearchBar from './components/SearchBar'
 import Loading from './components/Loading'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import LoginSuccess from './pages/LoginSuccess'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
@@ -37,7 +37,7 @@ const App = () => {
   }, [location.pathname]);
 
   return (
-    <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'>  
+    <div className='relative min-h-screen'>  
       {isNavigating && (
         <div className="fixed inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center transition-opacity duration-300">
           <div className="flex flex-col items-center gap-4">

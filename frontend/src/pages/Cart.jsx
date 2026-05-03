@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { ShopContext } from '../context/ShopContext';
 import Title from '../components/Title';
 import CartTotal from '../components/CartTotal';
@@ -32,7 +32,7 @@ const Cart = () => {
   };
 
   return (
-    <div className='py-8'>
+    <div className='py-8 px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'>
       <SEO noindex={true} title="Giỏ hàng của bạn - Vườn Lá Nhỏ" />
       {/* Header */}
       <div className='mb-8'>

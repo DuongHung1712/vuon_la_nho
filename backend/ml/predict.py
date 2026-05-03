@@ -1,13 +1,10 @@
 import os
+import base64
 # Suppress TensorFlow warnings and info messages
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # 0=all, 1=info, 2=warning, 3=error
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
-import os
-# Suppress TensorFlow warnings and info messages
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # 0=all, 1=info, 2=warning, 3=error
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-
+import io
 import sys
 import json
 import numpy as np
@@ -23,6 +20,11 @@ from tensorflow import keras
 from tensorflow.keras.applications.xception import preprocess_input
 from PIL import Image
 import models
+
+SUPPORTED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png"}
+SUPPORTED_IMAGE_FORMATS = {"JPEG", "PNG"}
+MIN_IMAGE_DIMENSION = 32
+MODEL_IMAGE_SIZE = (299, 299)
 
 # Disease labels mapping - 6 classes theo thứ tự của model
 DISEASE_LABELS = {
@@ -162,9 +164,198 @@ def preprocess_image(image_path, target_size=(299, 299)):
     except Exception as e:
         raise Exception(f"Error preprocessing image: {str(e)}")
 
-def predict_disease(image_path, model_path):
-    """Predict disease from image"""
+def validate_image_input(image_path):
+    """Validate the uploaded image before passing it to the model."""
+    if not os.path.exists(image_path):
+        raise Exception(f"Image file not found: {image_path}")
+
+    if not os.path.isfile(image_path):
+        raise Exception("Input image path is not a file")
+
+    file_extension = os.path.splitext(image_path)[1].lower()
+    if file_extension not in SUPPORTED_IMAGE_EXTENSIONS:
+        allowed_extensions = ", ".join(sorted(SUPPORTED_IMAGE_EXTENSIONS))
+        raise Exception(
+            f"Invalid image extension '{file_extension or '[none]'}'. Allowed formats: {allowed_extensions}"
+        )
+
+    if os.path.getsize(image_path) == 0:
+        raise Exception("Image file is empty")
+
     try:
+        with Image.open(image_path) as img:
+            img.verify()
+    except Exception as e:
+        raise Exception(f"Invalid image file. The file cannot be decoded as an image: {str(e)}")
+
+    try:
+        with Image.open(image_path) as img:
+            image_format = (img.format or "").upper()
+            if image_format not in SUPPORTED_IMAGE_FORMATS:
+                allowed_formats = ", ".join(sorted(SUPPORTED_IMAGE_FORMATS))
+                raise Exception(
+                    f"Unsupported image format '{image_format or 'UNKNOWN'}'. Allowed formats: {allowed_formats}"
+                )
+
+            width, height = img.size
+            if width < MIN_IMAGE_DIMENSION or height < MIN_IMAGE_DIMENSION:
+                raise Exception(
+                    f"Image is too small ({width}x{height}). Minimum size is "
+                    f"{MIN_IMAGE_DIMENSION}x{MIN_IMAGE_DIMENSION}"
+                )
+
+            if width == 0 or height == 0:
+                raise Exception("Image has invalid dimensions")
+
+            # Xception preprocessing expects a standard 3-channel RGB image.
+            if img.mode not in {"RGB", "RGBA", "L"}:
+                raise Exception(
+                    f"Unsupported image mode '{img.mode}'. Expected RGB-compatible image"
+                )
+    except Exception as e:
+        if str(e).startswith("Unsupported") or "Image is too small" in str(e) or "invalid dimensions" in str(e):
+            raise
+        raise Exception(f"Image validation failed: {str(e)}")
+
+def reject_non_leaf_image(img_cv):
+    """Reject obvious non-leaf images before sending them to the classifier."""
+    import cv2
+
+    resized = cv2.resize(img_cv, MODEL_IMAGE_SIZE)
+    hsv = cv2.cvtColor(resized, cv2.COLOR_BGR2HSV)
+
+    green_mask = cv2.inRange(hsv, np.array([25, 25, 25]), np.array([95, 255, 255]))
+    yellow_brown_mask = cv2.inRange(hsv, np.array([8, 35, 30]), np.array([35, 255, 255]))
+    foliage_mask = cv2.bitwise_or(green_mask, yellow_brown_mask)
+
+    kernel = np.ones((5, 5), np.uint8)
+    foliage_mask = cv2.morphologyEx(foliage_mask, cv2.MORPH_OPEN, kernel)
+    foliage_mask = cv2.morphologyEx(foliage_mask, cv2.MORPH_CLOSE, kernel)
+
+    total_pixels = float(MODEL_IMAGE_SIZE[0] * MODEL_IMAGE_SIZE[1])
+    foliage_ratio = float(np.sum(foliage_mask > 0) / total_pixels)
+    green_ratio = float(np.sum(green_mask > 0) / total_pixels)
+
+    skin_mask = cv2.inRange(hsv, np.array([0, 20, 60]), np.array([25, 200, 255]))
+    skin_ratio = float(np.sum(skin_mask > 0) / total_pixels)
+
+    contours, _ = cv2.findContours(foliage_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    largest_component_ratio = 0.0
+    if contours:
+        largest_component_ratio = max(cv2.contourArea(contour) for contour in contours) / total_pixels
+
+    center_crop = foliage_mask[75:224, 75:224]
+    center_foliage_ratio = float(np.sum(center_crop > 0) / float(center_crop.size))
+
+    print(
+        "[DEBUG] leaf-check "
+        f"foliage={foliage_ratio:.3f} green={green_ratio:.3f} "
+        f"skin={skin_ratio:.3f} largest={largest_component_ratio:.3f} "
+        f"center={center_foliage_ratio:.3f}",
+        file=sys.stderr,
+    )
+
+    invalid_leaf_image = (
+        foliage_ratio < 0.12 or
+        largest_component_ratio < 0.05 or
+        (foliage_ratio < 0.22 and center_foliage_ratio < 0.12) or
+        (foliage_ratio < 0.28 and skin_ratio > 0.18 and green_ratio < 0.08)
+    )
+
+    if invalid_leaf_image:
+        return {
+            "disease": "Không phải lá nho hợp lệ",
+            "confidence": 0.0,
+            "treatment": (
+                "Hệ thống nhận diện đây không phải là ảnh lá nho hợp lệ. Vui lòng chụp lại ảnh với các lưu ý sau:\n"
+                "1. Chụp ảnh lá nho rõ ràng, cận cảnh.\n"
+                "2. Đảm bảo lá nho chiếm phần lớn khung hình.\n"
+                "3. Tránh chụp ảnh người hoặc vật cản."
+            ),
+        }
+
+    return None
+
+def get_last_conv_layer(model):
+    """Find the deepest convolution-like layer for Grad-CAM."""
+    for layer in reversed(model.layers):
+        if isinstance(layer, keras.Model):
+            nested_layer = get_last_conv_layer(layer)
+            if nested_layer is not None:
+                return nested_layer
+
+        tensor_shape = getattr(getattr(layer, "output", None), "shape", None)
+        if tensor_shape is not None and len(tensor_shape) == 4:
+            return layer
+
+    return None
+
+def generate_focus_map(model, img_array, img_cv, pred_idx):
+    """Generate a Grad-CAM overlay as a base64 data URL."""
+    import cv2
+    import tensorflow as tf
+
+    base_model = model.get_layer("xception") if "xception" in [layer.name for layer in model.layers] else model
+    last_conv_layer = get_last_conv_layer(base_model)
+    if last_conv_layer is None:
+        raise Exception("Could not find a convolutional layer for Grad-CAM")
+
+    base_output_tensor = base_model.output[0] if isinstance(base_model.output, list) else base_model.output
+    feature_extractor = keras.models.Model(
+        inputs=base_model.inputs,
+        outputs=[last_conv_layer.output, base_output_tensor],
+    )
+
+    gap_layer = model.get_layer("gap")
+    head_bn_layer = model.get_layer("head_bn")
+    head_dropout_layer = model.get_layer("head_dropout")
+    prediction_layer = model.get_layer("predictions")
+
+    input_tensor = tf.convert_to_tensor(img_array)
+
+    with tf.GradientTape() as tape:
+        conv_outputs, base_outputs = feature_extractor(input_tensor, training=False)
+        x = gap_layer(base_outputs, training=False)
+        x = head_bn_layer(x, training=False)
+        x = head_dropout_layer(x, training=False)
+        predictions = prediction_layer(x, training=False)
+        class_channel = predictions[:, pred_idx]
+
+    grads = tape.gradient(class_channel, conv_outputs)
+    pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
+    conv_outputs = conv_outputs[0]
+
+    heatmap = tf.reduce_sum(conv_outputs * pooled_grads, axis=-1)
+    heatmap = tf.maximum(heatmap, 0)
+
+    max_value = tf.reduce_max(heatmap)
+    if float(max_value.numpy()) == 0.0:
+        heatmap = tf.math.abs(tf.reduce_sum(conv_outputs * pooled_grads, axis=-1))
+        max_value = tf.reduce_max(heatmap)
+        if float(max_value.numpy()) == 0.0:
+            return None
+
+    heatmap = heatmap / max_value
+    heatmap = heatmap.numpy()
+
+    original_height, original_width = img_cv.shape[:2]
+    heatmap = cv2.resize(heatmap, (original_width, original_height))
+    heatmap_uint8 = np.uint8(255 * heatmap)
+    colored_heatmap = cv2.applyColorMap(heatmap_uint8, cv2.COLORMAP_JET)
+
+    overlay = cv2.addWeighted(img_cv, 0.55, colored_heatmap, 0.45, 0)
+    overlay_rgb = cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB)
+
+    image_buffer = io.BytesIO()
+    Image.fromarray(overlay_rgb).save(image_buffer, format="PNG")
+    encoded_image = base64.b64encode(image_buffer.getvalue()).decode("utf-8")
+    return f"data:image/png;base64,{encoded_image}"
+
+def predict_disease(image_path, model_path):
+    """Predict disease from image using model only."""
+    try:
+        validate_image_input(image_path)
+
         # Validate model file
         if os.path.getsize(model_path) < 1024:  # Less than 1KB is suspicious
             raise Exception(f"Model file appears to be corrupted or incomplete (size: {os.path.getsize(model_path)} bytes)")
@@ -210,9 +401,8 @@ def predict_disease(image_path, model_path):
         # Preprocess image
         img_array = preprocess_image(image_path)
         
-        # 1. OUT-OF-DISTRIBUTION (OOD) CHECK: Is this even a leaf?
+        # OOD CHECK: Is this a grape leaf?
         import cv2
-        import numpy as np
         
         # Sửa lỗi cv2.imread không đọc được đường dẫn tiếng Việt trên Windows
         img_array_data = np.fromfile(image_path, np.uint8)
@@ -223,61 +413,37 @@ def predict_disease(image_path, model_path):
                 "disease": "Lỗi định dạng ảnh",
                 "confidence": 0.0,
                 "treatment": "Hệ thống không thể mở được ảnh này. Vui lòng thử lại bằng một ảnh chuẩn (JPG, PNG).",
-                "rule_flags": ["INVALID_IMAGE_FORMAT"],
-                "model_adjusted": False
             }
-            
-        hsv = cv2.cvtColor(cv2.resize(img_cv, (299, 299)), cv2.COLOR_BGR2HSV)
-        # Phạm vi phổ màu của thực vật (Lá xanh, lá úa vàng, đóm nâu bệnh)
-        # Hue từ 5 đến 95, Saturation > 15 (bỏ xám/trắng), Value > 20 (bỏ đen)
-        lower_foliage = np.array([5, 15, 20])
-        upper_foliage = np.array([95, 255, 255])
-        mask = cv2.inRange(hsv, lower_foliage, upper_foliage)
-        foliage_ratio = np.sum(mask > 0) / (299.0 * 299.0)
-        
-        if foliage_ratio < 0.15: # Dưới 15% màu lá là ảnh không hợp lệ
-            return {
-                "disease": "Không phải lá nho / Ảnh không rõ",
-                "confidence": 0.0,
-                "treatment": "Hệ thống không tìm thấy đặc điểm của lá thực vật trong ảnh. Vui lòng chụp rõ lá nho cận cảnh và thử lại.",
-                "rule_flags": ["OOD_REJECTED_NOT_A_LEAF"],
-                "model_adjusted": False
-            }
+        invalid_leaf_result = reject_non_leaf_image(img_cv)
+        if invalid_leaf_result is not None:
+            return invalid_leaf_result
 
-        # 2. Hybrid prediction (Model + Rules)
-        from post_processing import hybrid_predict
-        disease_list = [DISEASE_LABELS[i] for i in range(len(DISEASE_LABELS))]
+        # Model prediction (pure model, no rule-based hybrid)
+        probs = model.predict(img_array, verbose=0)[0]
+        pred_idx = int(np.argmax(probs))
+        confidence = float(probs[pred_idx]) * 100
+        predicted_class_name = DISEASE_LABELS[pred_idx]
+        try:
+            focus_map = generate_focus_map(model, img_array, img_cv, pred_idx)
+        except Exception as focus_map_error:
+            print(f"[DEBUG] Focus map generation failed: {focus_map_error}", file=sys.stderr)
+            focus_map = None
         
-        # Using a rule_weight of 0.2 means OpenCV confidence influences 20% of final confidence
-        hybrid_res = hybrid_predict(
-            img_path=image_path,
-            model=model,
-            disease_names=disease_list,
-            preprocess_fn=preprocess_input,
-            img_size=299,
-            rule_weight=0.2
-        )
-        
-        confidence = hybrid_res.confidence * 100
-        predicted_class_name = hybrid_res.predicted_class
-        
-        # 3. Update treatment using the final adjusted prediction
-        # Trả lại mức confidence chuẩn là 70% để tránh đoán bừa
+        # Confidence threshold check
         if confidence < 30:
             disease_name = "Không xác định được"
-            treatment = "Độ tin cậy quá thấp (dưới 70%). Vui lòng chụp ảnh rõ lề lá, đủ sáng hoặc tham khảo chuyên gia."
+            treatment = "Độ tin cậy quá thấp (dưới 30%). Vui lòng chụp ảnh rõ lề lá, đủ sáng hoặc tham khảo chuyên gia."
             confidence = 0.0
         else:
             disease_name = predicted_class_name
             treatment = TREATMENTS.get(disease_name, "Vui lòng tham khảo chuyên gia.")
             
-        # Output result mapping
+        # Output result
         result = {
             "disease": str(disease_name),
             "confidence": round(float(confidence), 2),
             "treatment": str(treatment),
-            "rule_flags": [str(flag) for flag in hybrid_res.rule_flags],            
-            "model_adjusted": bool(hybrid_res.adjusted_class is not None)
+            "focusMap": focus_map,
         }
         
         return result
@@ -294,8 +460,7 @@ if __name__ == "__main__":
         model_path = sys.argv[2]
         
         # Validate inputs
-        if not os.path.exists(image_path):
-            raise Exception(f"Image file not found: {image_path}")
+        validate_image_input(image_path)
         
         if not os.path.exists(model_path):
             raise Exception(f"Model file not found: {model_path}")
