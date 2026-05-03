@@ -3,7 +3,8 @@ import { ShopContext } from '../context/ShopContext'
 import Title from '../components/Title';
 import Loading from '../components/Loading';
 import { useUserOrders } from '../hooks/useApi';
-import { Leaf, RefreshCw, Package, Calendar, CreditCard, CheckCircle, Clock, ShoppingBag, ClipboardList, Truck, Bike } from 'lucide-react'
+import { Leaf, RefreshCw, Package, Calendar, CreditCard, CheckCircle, Clock, ShoppingBag, ClipboardList, Truck, Bike } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const Orders = () => {
   const { currency } = useContext(ShopContext);
@@ -66,6 +67,7 @@ const Orders = () => {
 
   return (
     <div className='py-8'>
+      <SEO noindex={true} title="Đơn hàng của tôi - Vườn Lá Nhỏ" />
       {/* Header */}
       <div className='mb-8'>
         <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>

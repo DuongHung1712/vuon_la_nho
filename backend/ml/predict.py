@@ -22,14 +22,16 @@ except Exception as e:
 from tensorflow import keras
 from tensorflow.keras.applications.xception import preprocess_input
 from PIL import Image
+import models
 
-# Disease labels mapping - 5 classes theo thứ tự của model
+# Disease labels mapping - 6 classes theo thứ tự của model
 DISEASE_LABELS = {
     0: "Blackrot",
-    1: "Downey Mildew",
+    1: "Downy Mildew",
     2: "Esca",
     3: "Healthy",
-    4: "LeafBlight"
+    4: "LeafBlight",
+    5: "Leaf Roll"
 }
 
 # Treatment recommendations
@@ -44,7 +46,7 @@ Không phát hiện dấu hiệu bệnh. Duy trì chăm sóc tốt để phòng 
 • Phun đồng phòng ngừa (Bordeaux 0.5–1%) trước mùa mưa
 • Kiểm tra lá và thân mỗi tuần — phát hiện sớm là yếu tố then chốt""",
 
-    " Downey Mildew": """ SƯƠNG MAI (Downy Mildew — Plasmopara viticola)
+    "Downy Mildew": """ SƯƠNG MAI (Downy Mildew — Plasmopara viticola)
 
 NHẬN BIẾT: Đốm dầu màu vàng nhạt mặt trên lá; lớp nấm trắng xốp đặc trưng ở mặt dưới lá; lá rụng sớm, quả non thối.
 
@@ -125,18 +127,35 @@ PHÒNG NGỪA:
 • Tỉa tán thông thoáng; không để ẩm đọng trong tán
 • Phun Bordeaux 1% phòng ngừa trước mùa mưa
 
- Black Rot rất khó kiểm soát khi đã bùng phát — phòng ngừa và vệ sinh vườn là then chốt tuyệt đối"""
+ Black Rot rất khó kiểm soát khi đã bùng phát — phòng ngừa và vệ sinh vườn là then chốt tuyệt đối""",
+
+    "Leaf Roll": """ XOĂN LÁ (Leaf Roll)
+
+NHẬN BIẾT: Lá cuộn mép xuống (hoặc cong bất thường), phiến lá dày/cứng hơn, màu lá nhạt dần hoặc loang vàng-đỏ tùy giống; sinh trưởng chậm.
+
+NGUYÊN NHÂN THƯỜNG GẶP: stress nước, mất cân đối dinh dưỡng (đặc biệt K, Mg), tổn thương rễ, hoặc nhiễm virus liên quan nhóm grapevine leafroll.
+
+HƯỚNG XỬ LÝ:
+• Điều chỉnh tưới ổn định, tránh khô hạn rồi tưới dồn đột ngột
+• Kiểm tra và bổ sung dinh dưỡng cân đối (ưu tiên K, Mg, Ca-B theo kết quả đất/lá)
+• Tỉa cành thông thoáng, giảm tải quả nếu cây suy
+• Theo dõi côn trùng chích hút (rệp sáp, bọ phấn), quản lý sớm để hạn chế nguy cơ lây truyền virus
+• Nếu biểu hiện kéo dài nhiều vụ: lấy mẫu xét nghiệm virus để xác định nguyên nhân chính xác
+
+Lưu ý: Cần theo dõi liên tục 2-4 tuần sau khi điều chỉnh chăm sóc để đánh giá đáp ứng của cây."""
 }
 
 
 def preprocess_image(image_path, target_size=(299, 299)):
     """Preprocess image for Xception model prediction"""
     try:
-        img = Image.open(image_path)
-        img = img.convert('RGB')
-        img = img.resize(target_size)
-        img_array = np.array(img, dtype=np.float32)
-        img_array = np.expand_dims(img_array, axis=0)
+        from tensorflow.keras.utils import load_img, img_to_array
+        
+        # Consistent with Keras dataset logic
+        img = load_img(image_path, target_size=target_size)
+        img_array = img_to_array(img)
+        img_array = np.expand_dims(img_array, axis=0).astype(np.float32)
+        
         # Apply Xception preprocessing
         img_array = preprocess_input(img_array)
         return img_array
@@ -155,27 +174,30 @@ def predict_disease(image_path, model_path):
         model = None
         load_errors = []
         
-        print(f"[DEBUG] Attempting to load model with TensorFlow {tf.__version__}", file=sys.stderr)
+        print(f"Attempting to load model with TensorFlow {tf.__version__}", file=sys.stderr)
         
+        # Set up custom objects
+        custom_objs = {'CBAM': models.CBAM}
+
         # Method 1: Load with compile=False (fastest, works for most cases)
         try:
-            model = keras.models.load_model(model_path, compile=False)
-            print(f"[DEBUG] Model loaded successfully (compile=False)", file=sys.stderr)
+            model = keras.models.load_model(model_path, custom_objects=custom_objs, compile=False)
+            print(f"Model loaded successfully (compile=False)", file=sys.stderr)
         except Exception as e:
             load_errors.append(f"compile=False: {str(e)[:100]}")
         
         # Method 2: Try loading with safe_mode=False (TensorFlow 2.16+)
         if model is None:
             try:
-                model = keras.models.load_model(model_path, safe_mode=False)
-                print(f"[DEBUG] Model loaded successfully (safe_mode=False)", file=sys.stderr)
+                model = keras.models.load_model(model_path, custom_objects=custom_objs, safe_mode=False)
+                print(f"Model loaded successfully (safe_mode=False)", file=sys.stderr)
             except Exception as e:
                 load_errors.append(f"safe_mode=False: {str(e)[:100]}")
         
         # Method 3: Standard load_model (last resort)
         if model is None:
             try:
-                model = keras.models.load_model(model_path)
+                model = keras.models.load_model(model_path, custom_objects=custom_objs)
                 print(f"[DEBUG] Model loaded successfully (standard)", file=sys.stderr)
             except Exception as e:
                 load_errors.append(f"standard: {str(e)[:100]}")
@@ -188,29 +210,80 @@ def predict_disease(image_path, model_path):
         # Preprocess image
         img_array = preprocess_image(image_path)
         
-        # Make prediction
-        predictions = model.predict(img_array, verbose=0)
-        predicted_class = np.argmax(predictions[0])
-        confidence = float(predictions[0][predicted_class] * 100)
+        # 1. OUT-OF-DISTRIBUTION (OOD) CHECK: Is this even a leaf?
+        import cv2
+        import numpy as np
         
-        # Get disease name and treatment
-        if confidence < 70:
+        # Sửa lỗi cv2.imread không đọc được đường dẫn tiếng Việt trên Windows
+        img_array_data = np.fromfile(image_path, np.uint8)
+        img_cv = cv2.imdecode(img_array_data, cv2.IMREAD_COLOR)
+        
+        if img_cv is None:
+            return {
+                "disease": "Lỗi định dạng ảnh",
+                "confidence": 0.0,
+                "treatment": "Hệ thống không thể mở được ảnh này. Vui lòng thử lại bằng một ảnh chuẩn (JPG, PNG).",
+                "rule_flags": ["INVALID_IMAGE_FORMAT"],
+                "model_adjusted": False
+            }
+            
+        hsv = cv2.cvtColor(cv2.resize(img_cv, (299, 299)), cv2.COLOR_BGR2HSV)
+        # Phạm vi phổ màu của thực vật (Lá xanh, lá úa vàng, đóm nâu bệnh)
+        # Hue từ 5 đến 95, Saturation > 15 (bỏ xám/trắng), Value > 20 (bỏ đen)
+        lower_foliage = np.array([5, 15, 20])
+        upper_foliage = np.array([95, 255, 255])
+        mask = cv2.inRange(hsv, lower_foliage, upper_foliage)
+        foliage_ratio = np.sum(mask > 0) / (299.0 * 299.0)
+        
+        if foliage_ratio < 0.15: # Dưới 15% màu lá là ảnh không hợp lệ
+            return {
+                "disease": "Không phải lá nho / Ảnh không rõ",
+                "confidence": 0.0,
+                "treatment": "Hệ thống không tìm thấy đặc điểm của lá thực vật trong ảnh. Vui lòng chụp rõ lá nho cận cảnh và thử lại.",
+                "rule_flags": ["OOD_REJECTED_NOT_A_LEAF"],
+                "model_adjusted": False
+            }
+
+        # 2. Hybrid prediction (Model + Rules)
+        from post_processing import hybrid_predict
+        disease_list = [DISEASE_LABELS[i] for i in range(len(DISEASE_LABELS))]
+        
+        # Using a rule_weight of 0.2 means OpenCV confidence influences 20% of final confidence
+        hybrid_res = hybrid_predict(
+            img_path=image_path,
+            model=model,
+            disease_names=disease_list,
+            preprocess_fn=preprocess_input,
+            img_size=299,
+            rule_weight=0.2
+        )
+        
+        confidence = hybrid_res.confidence * 100
+        predicted_class_name = hybrid_res.predicted_class
+        
+        # 3. Update treatment using the final adjusted prediction
+        # Trả lại mức confidence chuẩn là 70% để tránh đoán bừa
+        if confidence < 30:
             disease_name = "Không xác định được"
-            treatment = "Độ tin cậy quá thấp. Vui lòng chụp ảnh rõ hơn hoặc tham khảo chuyên gia."
+            treatment = "Độ tin cậy quá thấp (dưới 70%). Vui lòng chụp ảnh rõ lề lá, đủ sáng hoặc tham khảo chuyên gia."
+            confidence = 0.0
         else:
-            disease_name = DISEASE_LABELS.get(predicted_class, "Không xác định")
+            disease_name = predicted_class_name
             treatment = TREATMENTS.get(disease_name, "Vui lòng tham khảo chuyên gia.")
-        
+            
+        # Output result mapping
         result = {
-            "disease": disease_name,
-            "confidence": round(confidence, 2),
-            "treatment": treatment
+            "disease": str(disease_name),
+            "confidence": round(float(confidence), 2),
+            "treatment": str(treatment),
+            "rule_flags": [str(flag) for flag in hybrid_res.rule_flags],            
+            "model_adjusted": bool(hybrid_res.adjusted_class is not None)
         }
         
         return result
     
     except Exception as e:
-        raise Exception(f"Error in prediction: {str(e)}")
+        raise Exception(f"{str(e)}")
 
 if __name__ == "__main__":
     try:

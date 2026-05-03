@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState, useMemo } from 'react'
 import { ShopContext } from '../context/ShopContext';
 import Title from '../components/Title';
 import CartTotal from '../components/CartTotal';
-import { Minus, Plus, Trash2, ArrowLeft, ShoppingCart, Package, Truck, RotateCcw, Leaf } from 'lucide-react'
-
+import { Minus, Plus, Trash2, ArrowLeft, ShoppingCart, Package, Truck, RotateCcw, Leaf } from 'lucide-react';
+import SEO from '../components/SEO';
 const Cart = () => {
   const { products, currency, cartItems, updateQuantity, navigate } = useContext(ShopContext);
 
@@ -33,6 +33,7 @@ const Cart = () => {
 
   return (
     <div className='py-8'>
+      <SEO noindex={true} title="Giỏ hàng của bạn - Vườn Lá Nhỏ" />
       {/* Header */}
       <div className='mb-8'>
         <Title text1={'Giỏ Hàng'} text2={'của bạn'} />

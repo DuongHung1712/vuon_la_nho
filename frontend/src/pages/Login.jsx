@@ -8,8 +8,10 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { useTranslation } from 'react-i18next'
-import { Leaf, Eye, EyeOff } from 'lucide-react'
+import { useTranslation } from 'react-i18next';
+import { Leaf, Eye, EyeOff } from 'lucide-react';
+import SEO from '../components/SEO';
+
 const Login = () => {
   const { t } = useTranslation();
   const { token, setToken, navigate, backendUrl } = useContext(ShopContext);
@@ -75,6 +77,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+      <SEO noindex={true} title="Đăng nhập - Vườn Lá Nhỏ" />
       <div className="w-full max-w-md">
         {/* Logo & Header */}
         <div className="text-center mb-8">

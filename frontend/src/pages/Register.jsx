@@ -7,8 +7,9 @@ import { useRegister } from '../hooks/useApi';
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
-import { Leaf, Eye, EyeOff } from 'lucide-react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Leaf, Eye, EyeOff } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const Register = () => {
   const { token, setToken, navigate, backendUrl } = useContext(ShopContext);
@@ -78,6 +79,7 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+      <SEO noindex={true} title="Đăng ký - Vườn Lá Nhỏ" />
       <div className="w-full max-w-md">
         {/* Logo & Header */}
         <div className="text-center mb-8">
