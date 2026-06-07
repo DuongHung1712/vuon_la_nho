@@ -127,7 +127,7 @@ const FilterSection = React.memo(
                   : "bg-white text-gray-600 border-secondary-200 hover:border-secondary-400"
               }`}
             >
-              {item.icon} {item.label}
+              {item.label}
             </button>
           ))}
         </div>
@@ -154,7 +154,7 @@ const FilterSection = React.memo(
                   : "bg-white text-gray-600 border-primary-200 hover:border-primary-400"
               }`}
             >
-              {item.icon} {item.label}
+              {item.label}
             </button>
           ))}
         </div>
@@ -232,6 +232,29 @@ const FilterSection = React.memo(
   ),
 );
 
+const normalizeText = (value = "") =>
+  value
+    .toString()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+
+const getEffectivePrice = (product) => {
+  if (Array.isArray(product?.sizes) && product.sizes.length > 0) {
+    const prices = product.sizes
+      .map((size) => Number(size?.price))
+      .filter((price) => Number.isFinite(price) && price >= 0);
+
+    if (prices.length > 0) {
+      return Math.min(...prices);
+    }
+  }
+
+  const basePrice = Number(product?.price);
+  return Number.isFinite(basePrice) && basePrice >= 0 ? basePrice : 0;
+};
+
 const Collection = () => {
   const { t } = useTranslation();
   const { products, search, setSearch } = useContext(ShopContext);
@@ -267,7 +290,7 @@ const Collection = () => {
 
     if (search) {
       filtered = filtered.filter((p) =>
-        p.name.toLowerCase().includes(search.toLowerCase()),
+        normalizeText(p.name).includes(normalizeText(search)),
       );
     }
 
@@ -284,13 +307,18 @@ const Collection = () => {
     }
 
     filtered = filtered.filter(
-      (p) => p.price >= price[0] && p.price <= price[1],
+      (p) =>
+        getEffectivePrice(p) >= price[0] && getEffectivePrice(p) <= price[1],
     );
 
     if (sortType === "low-high") {
-      filtered = [...filtered].sort((a, b) => a.price - b.price);
+      filtered = [...filtered].sort(
+        (a, b) => getEffectivePrice(a) - getEffectivePrice(b),
+      );
     } else if (sortType === "high-low") {
-      filtered = [...filtered].sort((a, b) => b.price - a.price);
+      filtered = [...filtered].sort(
+        (a, b) => getEffectivePrice(b) - getEffectivePrice(a),
+      );
     }
 
     return filtered;

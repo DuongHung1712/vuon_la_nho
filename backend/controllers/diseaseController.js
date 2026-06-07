@@ -5,22 +5,46 @@ import fs from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const DEFAULT_MODEL_FILENAME = "xception_cbam_best.keras";
+
+const mojibakePattern = /(Ã.|Ä.|Â|áº|á»|á¼|á¾)/;
+
+const normalizePredictionText = (value) => {
+  if (typeof value !== "string" || !mojibakePattern.test(value)) {
+    return value;
+  }
+
+  try {
+    const normalized = Buffer.from(value, "latin1").toString("utf8");
+    return normalized.includes("�") ? value : normalized;
+  } catch {
+    return value;
+  }
+};
+
+const normalizePredictionPayload = (payload) => ({
+  ...payload,
+  disease: normalizePredictionText(payload?.disease),
+  treatment: normalizePredictionText(payload?.treatment),
+  error: normalizePredictionText(payload?.error),
+});
 
 const resolvePythonRuntime = () => {
   const projectRoot = path.resolve(__dirname, "../..");
   const pythonFromEnv = process.env.PYTHON_PATH;
 
-  const pythonCandidates = process.platform === "win32"
-    ? [
-        pythonFromEnv,
-        path.join(projectRoot, ".venv", "Scripts", "python.exe"),
-        path.join(projectRoot, "backend", ".venv", "Scripts", "python.exe"),
-      ]
-    : [
-        pythonFromEnv,
-        path.join(projectRoot, ".venv", "bin", "python"),
-        path.join(projectRoot, "backend", ".venv", "bin", "python"),
-      ];
+  const pythonCandidates =
+    process.platform === "win32"
+      ? [
+          pythonFromEnv,
+          path.join(projectRoot, ".venv", "Scripts", "python.exe"),
+          path.join(projectRoot, "backend", ".venv", "Scripts", "python.exe"),
+        ]
+      : [
+          pythonFromEnv,
+          path.join(projectRoot, ".venv", "bin", "python"),
+          path.join(projectRoot, "backend", ".venv", "bin", "python"),
+        ];
 
   const resolvedPath = pythonCandidates.find(
     (candidate) => candidate && fs.existsSync(candidate),
@@ -37,6 +61,21 @@ const resolvePythonRuntime = () => {
   return { command: "python3", args: [] };
 };
 
+const resolveModelPath = () => {
+  const modelFilename =
+    process.env.DISEASE_MODEL_FILENAME || DEFAULT_MODEL_FILENAME;
+  const directModelPath = process.env.DISEASE_MODEL_PATH;
+
+  const modelCandidates = [
+    directModelPath,
+    path.join(__dirname, "../ml", modelFilename),
+  ];
+
+  return modelCandidates.find(
+    (candidate) => candidate && fs.existsSync(candidate),
+  );
+};
+
 // Disease detection using Python model
 const detectDisease = async (req, res) => {
   try {
@@ -48,13 +87,14 @@ const detectDisease = async (req, res) => {
 
     const imagePath = req.file.path;
     const pythonScriptPath = path.join(__dirname, "../ml/predict.py");
-    const modelPath = path.join(__dirname, "../ml/xception_cbam_best.keras");
-
+    const modelPath = resolveModelPath();
+    console.log("Using model:", modelPath);
     // Check if model exists
-    if (!fs.existsSync(modelPath)) {
+    if (!modelPath) {
       return res.status(500).json({
         success: false,
-        message: "Model file not found",
+        message:
+          "Model file not found. Set DISEASE_MODEL_FILENAME or DISEASE_MODEL_PATH to a valid .keras file.",
       });
     }
 
@@ -125,7 +165,8 @@ const detectDisease = async (req, res) => {
           throw new Error("No output from Python script");
         }
 
-        const result = JSON.parse(dataString);
+        const rawResult = JSON.parse(dataString);
+        const result = normalizePredictionPayload(rawResult);
 
         // Check if result contains an error field
         if (result.error !== undefined) {

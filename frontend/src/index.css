@@ -12,6 +12,14 @@ a.active hr {
   font-family: 'Be Vietnam Pro', sans-serif;
 }
 
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 .rounded-xl {
   border-radius: calc(var(--radius) + 4px);
 }
@@ -121,6 +129,10 @@ input[type=number] {
 @layer components {
   .page-content-shell {
     @apply px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw];
+  }
+
+  .page-shell-wide {
+    @apply mx-auto w-full max-w-7xl;
   }
 
   .page-section {

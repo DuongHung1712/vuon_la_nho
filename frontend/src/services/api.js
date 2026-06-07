@@ -67,11 +67,12 @@ export const orderApi = {
 
 // ==================== DISEASE DETECTION APIs ====================
 export const diseaseApi = {
-  detect: (formData) =>
+  detect: (formData, config = {}) =>
     api.post("/api/disease-detection/detect", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      ...config,
     }),
 };
 

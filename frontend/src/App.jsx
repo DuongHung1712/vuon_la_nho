@@ -37,7 +37,7 @@ const App = () => {
   }, [location.pathname]);
 
   return (
-    <div className='relative min-h-screen'>  
+    <div className='relative min-h-screen w-full max-w-full overflow-x-hidden bg-white'>
       {isNavigating && (
         <div className="fixed inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center transition-opacity duration-300">
           <div className="flex flex-col items-center gap-4">
