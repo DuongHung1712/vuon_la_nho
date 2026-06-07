@@ -12,12 +12,12 @@ import numpy as np
 # Log versions for debugging
 try:
     import tensorflow as tf
-    print(f"[DEBUG] Python: {sys.version.split()[0]}, TensorFlow: {tf.__version__}", file=sys.stderr)
 except Exception as e:
     print(f"[DEBUG] Version check failed: {e}", file=sys.stderr)
 
 from tensorflow import keras
-from tensorflow.keras.applications.xception import preprocess_input
+from tensorflow.keras.applications.xception import preprocess_input as xception_preprocess_input
+from tensorflow.keras.applications.resnet50 import preprocess_input as resnet50_preprocess_input
 from PIL import Image
 import models
 
@@ -147,9 +147,38 @@ HƯỚNG XỬ LÝ:
 Lưu ý: Cần theo dõi liên tục 2-4 tuần sau khi điều chỉnh chăm sóc để đánh giá đáp ứng của cây."""
 }
 
+TREATMENTS = {
+    "Healthy": (
+        "Không thấy dấu hiệu bệnh rõ trên ảnh. Tiếp tục theo dõi, giữ tán lá khô thoáng và tưới vào gốc."
+    ),
+    "Downy Mildew": (
+        "Có thể là sương mai. Nên tách lá bệnh, giữ vườn thông thoáng, tránh làm ướt lá và kiểm tra thêm nếu bệnh lan nhanh."
+    ),
+    "Esca": (
+        "Có thể là bệnh gỗ Esca. Nên kiểm tra thêm thân và cành, cắt bỏ phần nghi nhiễm nếu đã rõ và tham khảo kỹ thuật viên."
+    ),
+    "LeafBlight": (
+        "Có thể là cháy lá. Nên loại bỏ lá bệnh, giảm ẩm trên tán lá và theo dõi thêm trước khi xử lý sâu hơn."
+    ),
+    "Blackrot": (
+        "Có thể là thối đen. Nên thu gom lá hoặc quả bệnh, giữ vườn khô thoáng và kiểm tra sớm nếu xuất hiện trên quả non."
+    ),
+    "Leaf Roll": (
+        "Có thể là xoăn lá. Nên kiểm tra nước tưới, dinh dưỡng và côn trùng chích hút; nếu kéo dài, cần kiểm tra thực địa."
+    ),
+}
 
-def preprocess_image(image_path, target_size=(299, 299)):
-    """Preprocess image for Xception model prediction"""
+INVALID_LEAF_TREATMENT = (
+    "Ảnh chưa phù hợp để nhận diện. Hãy chụp cận lá nho rõ nét, đủ sáng và tránh vật cản."
+)
+INVALID_IMAGE_TREATMENT = "Không thể mở ảnh. Vui lòng thử lại bằng ảnh JPG hoặc PNG rõ nét."
+LOW_CONFIDENCE_TREATMENT = (
+    "Độ tin cậy thấp. Hãy chụp lại ảnh rõ hơn hoặc kiểm tra thực tế trước khi xử lý."
+)
+
+
+def preprocess_image(image_path, target_size=(299, 299), backbone_name="xception"):
+    """Load an image and preprocess it for the detected backbone."""
     try:
         from tensorflow.keras.utils import load_img, img_to_array
         
@@ -158,11 +187,32 @@ def preprocess_image(image_path, target_size=(299, 299)):
         img_array = img_to_array(img)
         img_array = np.expand_dims(img_array, axis=0).astype(np.float32)
         
-        # Apply Xception preprocessing
-        img_array = preprocess_input(img_array)
+        img_array = apply_model_preprocessing(img_array, backbone_name)
         return img_array
     except Exception as e:
         raise Exception(f"Error preprocessing image: {str(e)}")
+
+def detect_backbone_name(model):
+    """Infer the backbone family from top-level layer names."""
+    layer_names = {layer.name.lower() for layer in model.layers}
+    if "xception" in layer_names:
+        return "xception"
+    if "resnet50" in layer_names:
+        return "resnet50"
+    return "generic"
+
+def apply_model_preprocessing(img_array, backbone_name="xception"):
+    """Apply the preprocessing that matches the model backbone."""
+    if backbone_name == "resnet50":
+        return resnet50_preprocess_input(img_array)
+    return xception_preprocess_input(img_array)
+
+def get_backbone_model(model):
+    """Return the nested feature extractor used by the classifier head."""
+    backbone_name = detect_backbone_name(model)
+    if backbone_name in {"xception", "resnet50"}:
+        return model.get_layer(backbone_name), backbone_name
+    return model, backbone_name
 
 def validate_image_input(image_path):
     """Validate the uploaded image before passing it to the model."""
@@ -217,12 +267,32 @@ def validate_image_input(image_path):
             raise
         raise Exception(f"Image validation failed: {str(e)}")
 
+def is_grayscale_like_image(hsv_image):
+    """Detect grayscale or near-grayscale images so color heuristics can be skipped."""
+    saturation = hsv_image[:, :, 1].astype(np.float32)
+    low_saturation_ratio = float(np.mean(saturation < 18))
+    saturation_p95 = float(np.percentile(saturation, 95))
+    saturation_mean = float(np.mean(saturation))
+
+    return (
+        low_saturation_ratio > 0.95 and
+        saturation_p95 < 25.0
+    ), {
+        "low_saturation_ratio": low_saturation_ratio,
+        "saturation_p95": saturation_p95,
+        "saturation_mean": saturation_mean,
+    }
+
 def reject_non_leaf_image(img_cv):
     """Reject obvious non-leaf images before sending them to the classifier."""
     import cv2
 
     resized = cv2.resize(img_cv, MODEL_IMAGE_SIZE)
     hsv = cv2.cvtColor(resized, cv2.COLOR_BGR2HSV)
+    grayscale_like, saturation_stats = is_grayscale_like_image(hsv)
+
+    if grayscale_like:
+        return None
 
     green_mask = cv2.inRange(hsv, np.array([25, 25, 25]), np.array([95, 255, 255]))
     yellow_brown_mask = cv2.inRange(hsv, np.array([8, 35, 30]), np.array([35, 255, 255]))
@@ -247,13 +317,6 @@ def reject_non_leaf_image(img_cv):
     center_crop = foliage_mask[75:224, 75:224]
     center_foliage_ratio = float(np.sum(center_crop > 0) / float(center_crop.size))
 
-    print(
-        "[DEBUG] leaf-check "
-        f"foliage={foliage_ratio:.3f} green={green_ratio:.3f} "
-        f"skin={skin_ratio:.3f} largest={largest_component_ratio:.3f} "
-        f"center={center_foliage_ratio:.3f}",
-        file=sys.stderr,
-    )
 
     invalid_leaf_image = (
         foliage_ratio < 0.12 or
@@ -263,6 +326,11 @@ def reject_non_leaf_image(img_cv):
     )
 
     if invalid_leaf_image:
+        return {
+            "disease": "Không phải lá nho hợp lệ",
+            "confidence": 0.0,
+            "treatment": INVALID_LEAF_TREATMENT,
+        }
         return {
             "disease": "Không phải lá nho hợp lệ",
             "confidence": 0.0,
@@ -295,7 +363,7 @@ def generate_focus_map(model, img_array, img_cv, pred_idx):
     import cv2
     import tensorflow as tf
 
-    base_model = model.get_layer("xception") if "xception" in [layer.name for layer in model.layers] else model
+    base_model, _ = get_backbone_model(model)
     last_conv_layer = get_last_conv_layer(base_model)
     if last_conv_layer is None:
         raise Exception("Could not find a convolutional layer for Grad-CAM")
@@ -315,7 +383,10 @@ def generate_focus_map(model, img_array, img_cv, pred_idx):
 
     with tf.GradientTape() as tape:
         conv_outputs, base_outputs = feature_extractor(input_tensor, training=False)
-        x = gap_layer(base_outputs, training=False)
+        if len(base_outputs.shape) == 4:
+            x = gap_layer(base_outputs, training=False)
+        else:
+            x = base_outputs
         x = head_bn_layer(x, training=False)
         x = head_dropout_layer(x, training=False)
         predictions = prediction_layer(x, training=False)
@@ -389,7 +460,6 @@ def predict_disease(image_path, model_path):
         if model is None:
             try:
                 model = keras.models.load_model(model_path, custom_objects=custom_objs)
-                print(f"[DEBUG] Model loaded successfully (standard)", file=sys.stderr)
             except Exception as e:
                 load_errors.append(f"standard: {str(e)[:100]}")
         
@@ -398,8 +468,10 @@ def predict_disease(image_path, model_path):
             error_summary = " || ".join(load_errors)
             raise Exception(f"Model load failed with TensorFlow {tf_version}. Yêu cầu TensorFlow >= 2.16.1. Errors: {error_summary}")
         
+        _, backbone_name = get_backbone_model(model)
+
         # Preprocess image
-        img_array = preprocess_image(image_path)
+        img_array = preprocess_image(image_path, backbone_name=backbone_name)
         
         # OOD CHECK: Is this a grape leaf?
         import cv2
@@ -409,6 +481,11 @@ def predict_disease(image_path, model_path):
         img_cv = cv2.imdecode(img_array_data, cv2.IMREAD_COLOR)
         
         if img_cv is None:
+            return {
+                "disease": "Lỗi định dạng ảnh",
+                "confidence": 0.0,
+                "treatment": INVALID_IMAGE_TREATMENT,
+            }
             return {
                 "disease": "Lỗi định dạng ảnh",
                 "confidence": 0.0,
@@ -426,11 +503,20 @@ def predict_disease(image_path, model_path):
         try:
             focus_map = generate_focus_map(model, img_array, img_cv, pred_idx)
         except Exception as focus_map_error:
-            print(f"[DEBUG] Focus map generation failed: {focus_map_error}", file=sys.stderr)
             focus_map = None
         
         # Confidence threshold check
         if confidence < 30:
+            disease_name = "Không xác định được"
+            treatment = LOW_CONFIDENCE_TREATMENT
+            confidence = 0.0
+            result = {
+                "disease": str(disease_name),
+                "confidence": round(float(confidence), 2),
+                "treatment": str(treatment),
+                "focusMap": focus_map,
+            }
+            return result
             disease_name = "Không xác định được"
             treatment = "Độ tin cậy quá thấp (dưới 30%). Vui lòng chụp ảnh rõ lề lá, đủ sáng hoặc tham khảo chuyên gia."
             confidence = 0.0

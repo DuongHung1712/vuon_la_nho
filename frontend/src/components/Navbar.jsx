@@ -7,6 +7,21 @@ import { User, ShoppingBag, LogOut, ChevronDown, ShoppingCart, Menu, ChevronLeft
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from './LanguageSwitcher'
 
+const getEffectivePrice = (product) => {
+  if (Array.isArray(product?.sizes) && product.sizes.length > 0) {
+    const prices = product.sizes
+      .map((size) => Number(size?.price))
+      .filter((price) => Number.isFinite(price) && price >= 0);
+
+    if (prices.length > 0) {
+      return Math.min(...prices);
+    }
+  }
+
+  const basePrice = Number(product?.price);
+  return Number.isFinite(basePrice) && basePrice >= 0 ? basePrice : 0;
+};
+
 const Navbar = () => {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
@@ -90,7 +105,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className='sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-100'>
+      <nav className='sticky top-0 z-40 border-b border-gray-100 bg-white/95 backdrop-blur-sm'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='flex items-center justify-between h-16'>
 
@@ -100,7 +115,7 @@ const Navbar = () => {
             </Link>
 
             {/* Navigation Links - Center */}
-            <ul className='hidden md:flex items-center gap-8 ml-10'>
+            <ul className='ml-10 hidden items-center gap-8 xl:flex'>
               <li>
                 <NavLink to='/' end className={navLinkClass}>
                   {t('nav.home')}
@@ -119,14 +134,14 @@ const Navbar = () => {
             </ul>
 
             {/* Right Section: Search + Actions */}
-            <div className='flex items-center gap-3 sm:gap-4'>
+            <div className='flex items-center gap-2 sm:gap-3 lg:gap-4'>
 
               {/* Search Bar with Suggestions */}
-              <div className='hidden sm:block relative' ref={searchContainerRef}>
+              <div className='relative hidden lg:block' ref={searchContainerRef}>
                 <form
                   onSubmit={handleSearchSubmit}
                   className={`flex items-center gap-2 border rounded-full px-4 py-2 
-                             transition-all duration-200 w-48 lg:w-64
+                             transition-all duration-200 w-52 xl:w-64
                              ${searchFocused 
                                ? 'bg-white border-primary-400 shadow-md ring-1 ring-primary-200' 
                                : 'bg-gray-50 border-gray-200 hover:border-gray-300'}`}
@@ -172,7 +187,7 @@ const Navbar = () => {
                               {product.name}
                             </p>
                             <p className='text-xs text-primary-600 font-semibold'>
-                              {product.price.toLocaleString()}{currency}
+                              {getEffectivePrice(product).toLocaleString('vi-VN')}{currency}
                             </p>
                           </div>
                           <Search className='w-3.5 h-3.5 text-gray-300 group-hover:text-primary-400 transition-colors flex-shrink-0' />
@@ -210,7 +225,7 @@ const Navbar = () => {
                   setShowSearch(true);
                   navigate('/collection');
                 }}
-                className='sm:hidden p-2 text-gray-500 hover:text-gray-700 transition-colors'
+                className='p-2 text-gray-500 transition-colors hover:text-gray-700 lg:hidden'
               >
                 <Search className='w-5 h-5' />
               </button>
@@ -218,7 +233,7 @@ const Navbar = () => {
               <LanguageSwitcher />
 
               {token ? (
-                <div className='flex items-center gap-3 relative'>
+                <div className='relative flex items-center gap-2 sm:gap-3'>
 
                   {/* Cart Icon */}
                   <Link to='/cart' className='relative p-1.5 text-gray-600 hover:text-gray-900 transition-colors'>
@@ -298,16 +313,16 @@ const Navbar = () => {
                 </div>
 
               ) : (
-                <div className='flex items-center gap-2.5'>
+                <div className='hidden items-center gap-2 sm:flex'>
                   <button
                     onClick={() => navigate('/login')}
-                    className='px-4 py-2 text-sm border border-primary-300 text-primary-700 rounded-full hover:bg-primary-50 transition-all font-medium'
+                    className='rounded-full border border-primary-300 px-3 py-2 text-sm font-medium text-primary-700 transition-all hover:bg-primary-50 lg:px-4'
                   >
                     {t('nav.login')}
                   </button>
                   <button
                     onClick={() => navigate('/register')}
-                    className='px-4 py-2 text-sm bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-all font-medium shadow-sm'
+                    className='rounded-full bg-primary-500 px-3 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-primary-600 lg:px-4'
                   >
                     {t('nav.register')}
                   </button>
@@ -315,7 +330,7 @@ const Navbar = () => {
               )}
 
               {/* Mobile menu toggle */}
-              <button onClick={() => setVisible(true)} className='md:hidden p-1.5 text-gray-600 hover:text-gray-900 transition-colors'>
+              <button onClick={() => setVisible(true)} className='p-1.5 text-gray-600 transition-colors hover:text-gray-900 xl:hidden'>
                 <Menu className='w-5 h-5' />
               </button>
             </div>
@@ -332,7 +347,7 @@ const Navbar = () => {
             onClick={() => setVisible(false)}
           />
           {/* Panel */}
-          <div className='fixed top-0 right-0 bottom-0 w-72 bg-white z-50 shadow-2xl animate-slide-in-right'>
+          <div className='fixed top-0 right-0 bottom-0 w-full max-w-[22rem] bg-white z-50 shadow-2xl animate-slide-in-right'>
             <div className='flex flex-col h-full'>
               {/* Mobile Header */}
               <div className='flex items-center justify-between p-4 border-b border-gray-100'>
@@ -389,6 +404,28 @@ const Navbar = () => {
                     {item.label}
                   </NavLink>
                 ))}
+                {!token && (
+                  <div className='mt-5 space-y-3 px-2'>
+                    <button
+                      onClick={() => {
+                        navigate('/login');
+                        setVisible(false);
+                      }}
+                      className='w-full rounded-xl border border-primary-300 px-4 py-3 text-sm font-medium text-primary-700 transition-all hover:bg-primary-50'
+                    >
+                      {t('nav.login')}
+                    </button>
+                    <button
+                      onClick={() => {
+                        navigate('/register');
+                        setVisible(false);
+                      }}
+                      className='w-full rounded-xl bg-primary-500 px-4 py-3 text-sm font-medium text-white shadow-sm transition-all hover:bg-primary-600'
+                    >
+                      {t('nav.register')}
+                    </button>
+                  </div>
+                )}
               </nav>
             </div>
           </div>

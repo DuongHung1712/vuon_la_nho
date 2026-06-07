@@ -27,11 +27,75 @@
     "deliveryBadge": "Fast 2h Delivery",
     "deliveryArea": "HCM City Area"
   },
+  "aiSuggest": {
+    "title": "detect grape leaf disease",
+    "description": "Upload a grape leaf image so AI can analyze likely disease signals and highlight the area it focused on.",
+    "uploadLabel": "Upload leaf image",
+    "selectImage": "Choose image",
+    "fileHint": "PNG, JPG, JPEG, maximum 10MB",
+    "previewAlt": "Selected grape leaf image",
+    "analyze": "Analyze disease",
+    "analyzing": "Analyzing...",
+    "resultTitle": "Analysis result",
+    "detectedDisease": "Detected disease:",
+    "confidence": "Confidence:",
+    "treatmentLabel": "Suggested action:",
+    "focusMapLabel": "AI focus area:",
+    "focusMapAlt": "AI focus map",
+    "focusMapHint": "Hotter areas show where the model paid more attention before making its prediction.",
+    "focusMapUnavailable": "No focus map could be generated for this image.",
+    "reset": "Analyze another image",
+    "diseases": {
+      "healthy": "Healthy",
+      "downyMildew": "Downy Mildew",
+      "esca": "Esca",
+      "leafBlight": "Leaf Blight",
+      "blackrot": "Black Rot",
+      "leafRoll": "Leaf Roll",
+      "invalidLeaf": "Not a valid grape leaf",
+      "invalidImage": "Invalid image format",
+      "unknown": "Unable to determine",
+      "processingError": "Processing error"
+    },
+    "treatments": {
+      "healthy": "No clear disease signs were detected in this image. Keep monitoring, maintain dry airflow around the canopy, and water at the base.",
+      "downyMildew": "This may be downy mildew. Remove affected leaves, keep the area well ventilated, avoid wetting the foliage, and inspect further if it spreads quickly.",
+      "esca": "This may be Esca wood disease. Check the trunk and branches, remove clearly infected parts when confirmed, and consult a specialist if needed.",
+      "leafBlight": "This may be leaf blight. Remove affected leaves, reduce moisture on the canopy, and monitor before taking stronger action.",
+      "blackrot": "This may be black rot. Collect diseased leaves or fruit, keep the area dry and airy, and inspect early if it appears on young fruit.",
+      "leafRoll": "This may be leaf roll. Check watering, nutrition, and sap-sucking pests; if symptoms persist, inspect the plant on site.",
+      "invalidLeaf": "The image is not suitable for identification. Please take a clear close-up of a grape leaf with good lighting and no obstruction.",
+      "invalidImage": "The image could not be opened. Please try again with a clear JPG or PNG file.",
+      "unknown": "Confidence is too low. Please retake a clearer photo or verify the plant in person before acting.",
+      "processingError": "Please try again with another image."
+    },
+    "messages": {
+      "selectImage": "Please choose an image before analyzing.",
+      "unsupportedType": "Only JPG, JPEG, and PNG images are supported.",
+      "invalidFormat": "The image format is invalid. Please use JPG or PNG.",
+      "invalidImage": "The image is invalid. Please choose another file.",
+      "emptyImage": "The selected image is empty or corrupted. Please choose another file.",
+      "oversize": "The image exceeds 10MB. Please choose a smaller file.",
+      "tooSmall": "The image is too small. Minimum size is {{size}}.",
+      "analyzeFailed": "Could not analyze the image.",
+      "success": "Analysis completed successfully.",
+      "serverUnavailable": "Could not connect to the server. Please try again.",
+      "missingImage": "No image was uploaded.",
+      "uploadFailed": "Image upload failed. Please try again.",
+      "timeout": "The request took too long. Please try again with a smaller or clearer image.",
+      "runtimeUnavailable": "The AI service is temporarily unavailable."
+    }
+  },
   "latest": {
     "title1": "Latest",
     "title2": "Collection",
     "description": "Discover the fresh greens that just arrived at Vườn Lá Nhỏ, bringing nature's breath into your home.",
     "viewAll": "View all products"
+  },
+  "bestseller": {
+    "title1": "Best Seller",
+    "title2": "Collection",
+    "description": "Discover the best-selling products that our customers love the most!"
   },
   "product": {
     "reviews": "Reviews",

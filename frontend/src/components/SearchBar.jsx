@@ -7,6 +7,7 @@ const SearchBar = () => {
     const { search, setSearch, showSearch, setShowSearch } = useContext(ShopContext);
     const [visible, setVisible] = useState(false);
     const location = useLocation();
+
     useEffect(() => {
         if (location.pathname.includes('collection')) {
             setVisible(true);
@@ -15,14 +16,28 @@ const SearchBar = () => {
             setVisible(false);
         }
     }, [location])
-    return showSearch && visible ? (
-        <div className='border-t border-b  bg-gray-50 text-center'>
-            <div className='inline-flex items-center justify-center border border-gray-400 px-5 py-2 my-5 mx-3 rounded-full w-3/4 sm:w-1/2'>
-                <input value={search} onChange={(e) => setSearch(e.target.value)} className='flex-1 outline-none bg-inherit text-sm' type="text" placeholder='Search' />
-                <Search className='w-4 h-4 text-gray-500' />
-            </div>
-            <X onClick={() => setShowSearch(false)} className='inline w-4 h-4 cursor-pointer text-gray-500 hover:text-gray-700' />
 
+    return showSearch && visible ? (
+        <div className='border-y border-gray-100 bg-gray-50/90 backdrop-blur-sm'>
+            <div className='mx-auto flex w-full max-w-7xl items-center gap-3 px-4 py-4 sm:px-6 lg:px-8'>
+                <div className='flex min-w-0 flex-1 items-center rounded-full border border-gray-300 bg-white px-4 py-3 shadow-sm'>
+                    <input
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className='min-w-0 flex-1 bg-transparent text-sm outline-none sm:text-base'
+                        type="text"
+                        placeholder='Tìm kiếm'
+                    />
+                    <Search className='w-4 h-4 text-gray-500' />
+                </div>
+                <button
+                    type='button'
+                    onClick={() => setShowSearch(false)}
+                    className='inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:text-gray-700'
+                >
+                    <X className='w-4 h-4' />
+                </button>
+            </div>
         </div>
     ) : null
 }
