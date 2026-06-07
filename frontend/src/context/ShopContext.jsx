@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useProducts, useCart, useAddToCart, useUpdateCart } from '../hooks/useApi';
 import Loading from '../components/Loading';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
@@ -61,7 +62,14 @@ const ShopContextProvider = (props) => {
             const sizes = cartItems[itemId];
             for (const size in sizes) {
                 const quantity = sizes[size];
-                totalAmount += itemInfo.price * quantity;
+                let price = itemInfo.price || 0;
+                if (itemInfo.sizes && itemInfo.sizes.length > 0) {
+                    const matchedSize = itemInfo.sizes.find(s => s.name == size);
+                    if (matchedSize) {
+                        price = matchedSize.price;
+                    }
+                }
+                totalAmount += price * quantity;
             }
         }
 
@@ -75,7 +83,7 @@ const ShopContextProvider = (props) => {
             setToken(storedToken);
             refetchCart();
         }
-    }, []);
+    }, [refetchCart]);
 
     const value = {
         products,

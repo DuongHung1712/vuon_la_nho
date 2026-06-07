@@ -1,209 +1,215 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useProfile, useUpdateProfile } from '../hooks/useApi';
-import { Mail, User, Phone, MapPin, Save, X, Camera } from 'lucide-react';
-import Loading from '../components/Loading';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Mail, User, Phone, MapPin, Save, X, Camera } from "lucide-react";
+import { useTranslation } from "react-i18next";
+
+import Loading from "../components/Loading";
+import PageIntro from "../components/PageIntro";
+import SEO from "../components/SEO";
+import { useProfile, useUpdateProfile } from "../hooks/useApi";
 
 const ProfileEdit = () => {
-    const navigate = useNavigate();
-    const token = localStorage.getItem('token');
-    const { data, isLoading: loading } = useProfile(token);
-    const updateProfileMutation = useUpdateProfile();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  const { data, isLoading: loading } = useProfile(token);
+  const updateProfileMutation = useUpdateProfile();
 
-    const [formData, setFormData] = useState({
-        name: '',
-        phone: '',
-        address: '',
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    address: "",
+  });
+  const [avatar, setAvatar] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState("");
+
+  useEffect(() => {
+    if (data?.user) {
+      setFormData({
+        name: data.user.name || "",
+        phone: data.user.phone || "",
+        address: data.user.address || "",
+      });
+      setAvatarPreview(data.user.avatar || "");
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAvatar(file);
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const submitData = new FormData();
+    submitData.append("name", formData.name);
+    submitData.append("phone", formData.phone);
+    submitData.append("address", formData.address);
+    if (avatar) {
+      submitData.append("avatar", avatar);
+    }
+    updateProfileMutation.mutate(submitData, {
+      onSuccess: () => {
+        navigate("/profile");
+      },
     });
+  };
 
-    const [avatar, setAvatar] = useState(null);
-    const [avatarPreview, setAvatarPreview] = useState('');
+  if (loading) {
+    return <Loading />;
+  }
 
-    useEffect(() => {
-        if (data?.user) {
-            setFormData({
-                name: data.user.name || '',
-                phone: data.user.phone || '',
-                address: data.user.address || '',
-            });
-            setAvatarPreview(data.user.avatar || '');
-        }
-    }, [data]);
+  return (
+    <div className="page-content-shell py-8 md:py-10">
+      <SEO noindex title={t("profileEditPage.seoTitle")} />
 
-    // Redirect if no token
-    useEffect(() => {
-        if (!localStorage.getItem('token')) {
-            navigate('/login');
-        }
-    }, [navigate]);
+      <section className="page-section">
+        <div className="page-section-inner space-y-8">
+          <PageIntro
+            eyebrow={t("profile.editTitle")}
+            title1={t("profileEditPage.title1")}
+            title2={t("profileEditPage.title2")}
+            description={t("profileEditPage.description")}
+            align="left"
+          />
 
-    if (loading) {
-        return <Loading />;
-    }
-
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
-
-    const handleAvatarChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setAvatar(file);
-            setAvatarPreview(URL.createObjectURL(file));
-        }
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const submitData = new FormData();
-        submitData.append('name', formData.name);
-        submitData.append('phone', formData.phone);
-        submitData.append('address', formData.address);
-        if (avatar) {
-            submitData.append('avatar', avatar);
-        }
-        updateProfileMutation.mutate(submitData, {
-            onSuccess: () => {
-                navigate('/profile');
-            },
-        });
-    };
-
-    if (loading) {
-        return <div className="flex justify-center items-center h-screen">Đang tải...</div>;
-    }
-
-    return (
-        <div className="container mx-auto px-4 py-8 max-w-3xl">
-            <div className="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
-                {/* Header */}
-                <div className="bg-primary-400 px-8 py-6">
-                    <h1 className="text-2xl font-bold text-white">Chỉnh sửa thông tin</h1>
+          <form
+            onSubmit={handleSubmit}
+            className="rounded-[24px] border border-primary-100/80 bg-white p-5 shadow-[0_18px_60px_-42px_rgba(66,88,62,0.45)] sm:p-8"
+          >
+            <div className="space-y-6">
+              <div className="flex flex-col items-center">
+                <div className="relative">
+                  <div className="flex h-32 w-32 items-center justify-center overflow-hidden rounded-full border-4 border-primary-200 bg-primary-50">
+                    {avatarPreview ? (
+                      <img src={avatarPreview} alt="Avatar" className="h-full w-full object-cover" />
+                    ) : (
+                      <User className="h-16 w-16 text-primary-400" />
+                    )}
+                  </div>
+                  <label
+                    htmlFor="avatar"
+                    className="absolute bottom-1 right-1 cursor-pointer rounded-full bg-primary-500 p-2 text-white shadow-md transition hover:bg-primary-600"
+                  >
+                    <Camera className="h-4 w-4" />
+                  </label>
+                  <input
+                    type="file"
+                    id="avatar"
+                    accept="image/*"
+                    onChange={handleAvatarChange}
+                    className="hidden"
+                  />
                 </div>
-                
-                <form onSubmit={handleSubmit} className="px-8 py-8">
-                    <div className="space-y-6">
-                        {/* Avatar upload */}
-                        <div className="flex flex-col items-center mb-6">
-                            <div className="relative">
-                                <div className="w-32 h-32 rounded-full border-4 border-primary-400 overflow-hidden bg-gray-100 flex items-center justify-center">
-                                    {avatarPreview ? (
-                                        <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
-                                    ) : (
-                                        <User className="w-16 h-16 text-gray-400" />
-                                    )}
-                                </div>
-                                <label htmlFor="avatar" className="absolute bottom-0 right-0 bg-primary-400 text-white p-2 rounded-full cursor-pointer hover:bg-primary-500 transition shadow-lg">
-                                    <Camera className="w-5 h-5" />
-                                </label>
-                                <input
-                                    type="file"
-                                    id="avatar"
-                                    accept="image/*"
-                                    onChange={handleAvatarChange}
-                                    className="hidden"
-                                />
-                            </div>
-                            <p className="text-sm text-gray-500 mt-2">Nhấp để thay đổi ảnh đại diện</p>
-                        </div>
+                <p className="mt-3 text-sm text-gray-500">{t("profile.changeAvatar")}</p>
+              </div>
 
-                        {/* Email field */}
-                        <div>
-                            <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                                <Mail className="w-4 h-4" />
-                                Email
-                            </label>
-                            <input
-                                type="email"
-                                value={data?.user?.email || ''}
-                                disabled
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed text-gray-600"
-                            />
-                            <p className="text-xs text-gray-500 mt-1">Email không thể thay đổi</p>
-                        </div>
+              <div className="grid gap-5 md:grid-cols-2">
+                <div className="md:col-span-2">
+                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+                    <Mail className="h-4 w-4" />
+                    {t("profile.email")}
+                  </label>
+                  <input
+                    type="email"
+                    value={data?.user?.email || ""}
+                    disabled
+                    className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-3 text-gray-500"
+                  />
+                  <p className="mt-2 text-xs text-gray-500">{t("profile.emailCannotChange")}</p>
+                </div>
 
-                        {/* Name field */}
-                        <div>
-                            <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                                <User className="w-4 h-4" />
-                                Họ tên <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-400 focus:border-primary-400"
-                                placeholder="Nhập họ tên của bạn"
-                            />
-                        </div>
+                <div className="md:col-span-2">
+                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+                    <User className="h-4 w-4" />
+                    {t("profile.fullName")}
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="w-full rounded-xl border border-primary-100 px-4 py-3 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                    placeholder={t("profileEditPage.placeholders.name")}
+                  />
+                </div>
 
-                        {/* Phone field */}
-                        <div>
-                            <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                                <Phone className="w-4 h-4" />
-                                Số điện thoại
-                            </label>
-                            <input
-                                type="tel"
-                                name="phone"
-                                value={formData.phone}
-                                onChange={handleChange}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-400 focus:border-primary-400"
-                                placeholder="Nhập số điện thoại"
-                            />
-                        </div>
+                <div>
+                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+                    <Phone className="h-4 w-4" />
+                    {t("profile.phone")}
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full rounded-xl border border-primary-100 px-4 py-3 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                    placeholder={t("profileEditPage.placeholders.phone")}
+                  />
+                </div>
 
-                        {/* Address field */}
-                        <div>
-                            <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                                <MapPin className="w-4 h-4" />
-                                Địa chỉ
-                            </label>
-                            <textarea
-                                name="address"
-                                value={formData.address}
-                                onChange={handleChange}
-                                rows="3"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-400 focus:border-primary-400 resize-none"
-                                placeholder="Nhập địa chỉ của bạn"
-                            />
-                        </div>
-                    </div>
-
-                    {/* Action buttons */}
-                    <div className="flex flex-col sm:flex-row gap-3 mt-8">
-                        <button
-                            type="submit"
-                            disabled={updateProfileMutation.isPending}
-                            className="flex-1 bg-primary-400 text-white py-3 px-6 rounded-lg hover:bg-primary-500 transition disabled:bg-gray-400 disabled:cursor-not-allowed font-medium flex items-center justify-center gap-2"
-                        >
-                            {updateProfileMutation.isPending ? (
-                                <span>Đang lưu...</span>
-                            ) : (
-                                <>
-                                    <Save className="w-5 h-5" />
-                                    <span>Lưu thay đổi</span>
-                                </>
-                            )}
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => navigate('/profile')}
-                            className="flex-1 bg-gray-500 text-white py-3 px-6 rounded-lg hover:bg-gray-600 transition font-medium flex items-center justify-center gap-2"
-                        >
-                            <X className="w-5 h-5" />
-                            <span>Hủy</span>
-                        </button>
-                    </div>
-                </form>
+                <div>
+                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+                    <MapPin className="h-4 w-4" />
+                    {t("profile.address")}
+                  </label>
+                  <textarea
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    rows="5"
+                    className="w-full rounded-xl border border-primary-100 px-4 py-3 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                    placeholder={t("profileEditPage.placeholders.address")}
+                  />
+                </div>
+              </div>
             </div>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <button
+                type="submit"
+                disabled={updateProfileMutation.isPending}
+                className="flex-1 rounded-xl bg-primary-500 px-6 py-3 font-medium text-white transition hover:bg-primary-600 disabled:cursor-not-allowed disabled:bg-gray-400"
+              >
+                <span className="inline-flex items-center gap-2">
+                  <Save className="h-5 w-5" />
+                  {updateProfileMutation.isPending ? t("profile.saving") : t("profile.saveChanges")}
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("/profile")}
+                className="flex-1 rounded-xl bg-gray-200 px-6 py-3 font-medium text-gray-700 transition hover:bg-gray-300"
+              >
+                <span className="inline-flex items-center gap-2">
+                  <X className="h-5 w-5" />
+                  {t("profile.cancel")}
+                </span>
+              </button>
+            </div>
+          </form>
         </div>
-    );
+      </section>
+    </div>
+  );
 };
 
 export default ProfileEdit;

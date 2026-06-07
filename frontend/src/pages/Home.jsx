@@ -1,4 +1,6 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+
 import Hero from "../components/Hero";
 import LatestCollection from "../components/LatestCollection";
 import BestSeller from "../components/BestSeller";
@@ -12,22 +14,26 @@ import {
 } from "../components/StructuredData";
 
 const Home = () => {
+  const { t } = useTranslation();
+
   return (
-    <div>
+    <div className="relative">
       <SEO
-        title="Vườn Lá Nhỏ - Cây Cảnh Chất Lượng Cao | Giao Hàng Toàn Quốc"
-        description="Vườn Lá Nhỏ chuyên cung cấp cây cảnh trong nhà, cây ngoài trời chất lượng cao. Đa dạng loại cây, giá cả hợp lý, giao hàng tận nơi, tư vấn chăm sóc tận tình."
-        keywords="cây cảnh, cây trong nhà, cây ngoài trời, mua cây online, vườn lá nhỏ, cây trang trí, sen đá, xương rồng"
+        title={t("homePage.seoTitle")}
+        description={t("homePage.seoDescription")}
+        keywords={t("homePage.seoKeywords")}
         ogUrl="https://vuonlanho.store/"
       />
       <OrganizationSchema />
       <WebsiteSchema />
       <Hero />
-      <LatestCollection />
-      <BestSeller />
-      <AiSuggest />
-      <OurPolicy />
-      <NewsletterBox />
+      <div className="page-content-shell">
+        <LatestCollection />
+        <BestSeller />
+        <AiSuggest />
+        <OurPolicy />
+        <NewsletterBox />
+      </div>
     </div>
   );
 };

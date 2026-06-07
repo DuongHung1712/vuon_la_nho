@@ -27,65 +27,6 @@
     "deliveryBadge": "Giao nhanh 2h",
     "deliveryArea": "Nội thành HCM"
   },
-  "aiSuggest": {
-    "title": "nhận diện bệnh trên lá cây nho",
-    "description": "Tải lên ảnh lá nho để AI phân tích dấu hiệu bệnh có thể gặp và hiển thị vùng model tập trung khi đưa ra kết quả.",
-    "uploadLabel": "Tải ảnh lá cây",
-    "selectImage": "Chọn ảnh",
-    "fileHint": "PNG, JPG, JPEG, tối đa 10MB",
-    "previewAlt": "Ảnh lá nho đã chọn",
-    "analyze": "Phân tích bệnh",
-    "analyzing": "Đang phân tích...",
-    "resultTitle": "Kết quả phân tích",
-    "detectedDisease": "Bệnh được phát hiện:",
-    "confidence": "Độ tin cậy:",
-    "treatmentLabel": "Cách xử lý:",
-    "focusMapLabel": "Vùng AI tập trung phân tích:",
-    "focusMapAlt": "Bản đồ vùng AI chú ý",
-    "focusMapHint": "Vùng màu nóng cho thấy khu vực model chú ý nhiều hơn trước khi đưa ra kết quả.",
-    "focusMapUnavailable": "Chưa tạo được bản đồ vùng chú ý cho ảnh này.",
-    "reset": "Phân tích ảnh khác",
-    "diseases": {
-      "healthy": "Khỏe mạnh",
-      "downyMildew": "Sương mai",
-      "esca": "Esca",
-      "leafBlight": "Cháy lá",
-      "blackrot": "Thối đen",
-      "leafRoll": "Xoăn lá",
-      "invalidLeaf": "Không phải lá nho hợp lệ",
-      "invalidImage": "Lỗi định dạng ảnh",
-      "unknown": "Không xác định được",
-      "processingError": "Lỗi xử lý"
-    },
-    "treatments": {
-      "healthy": "Không thấy dấu hiệu bệnh rõ trên ảnh. Tiếp tục theo dõi, giữ tán lá khô thoáng và tưới vào gốc.",
-      "downyMildew": "Có thể là sương mai. Nên tách lá bệnh, giữ vườn thông thoáng, tránh làm ướt lá và kiểm tra thêm nếu bệnh lan nhanh.",
-      "esca": "Có thể là bệnh gỗ Esca. Nên kiểm tra thêm thân và cành, cắt bỏ phần nghi nhiễm nếu đã rõ và tham khảo kỹ thuật viên.",
-      "leafBlight": "Có thể là cháy lá. Nên loại bỏ lá bệnh, giảm ẩm trên tán lá và theo dõi thêm trước khi xử lý sâu hơn.",
-      "blackrot": "Có thể là thối đen. Nên thu gom lá hoặc quả bệnh, giữ vườn khô thoáng và kiểm tra sớm nếu xuất hiện trên quả non.",
-      "leafRoll": "Có thể là xoăn lá. Nên kiểm tra nước tưới, dinh dưỡng và côn trùng chích hút; nếu kéo dài, cần kiểm tra thực địa.",
-      "invalidLeaf": "Ảnh chưa phù hợp để nhận diện. Hãy chụp cận lá nho rõ nét, đủ sáng và tránh vật cản.",
-      "invalidImage": "Không thể mở ảnh. Vui lòng thử lại bằng ảnh JPG hoặc PNG rõ nét.",
-      "unknown": "Độ tin cậy thấp. Hãy chụp lại ảnh rõ hơn hoặc kiểm tra thực tế trước khi xử lý.",
-      "processingError": "Vui lòng thử lại với ảnh khác."
-    },
-    "messages": {
-      "selectImage": "Vui lòng chọn ảnh trước khi phân tích.",
-      "unsupportedType": "Chỉ hỗ trợ ảnh JPG, JPEG hoặc PNG.",
-      "invalidFormat": "Định dạng ảnh không hợp lệ. Vui lòng chọn ảnh JPG hoặc PNG.",
-      "invalidImage": "Ảnh không hợp lệ. Vui lòng chọn ảnh khác.",
-      "emptyImage": "Ảnh đang rỗng hoặc bị lỗi. Vui lòng chọn ảnh khác.",
-      "oversize": "Ảnh vượt quá 10MB. Vui lòng chọn ảnh nhỏ hơn.",
-      "tooSmall": "Ảnh quá nhỏ. Kích thước tối thiểu là {{size}}.",
-      "analyzeFailed": "Không thể phân tích ảnh.",
-      "success": "Phân tích thành công.",
-      "serverUnavailable": "Không thể kết nối đến server. Vui lòng thử lại.",
-      "missingImage": "Chưa có ảnh được tải lên.",
-      "uploadFailed": "Tải ảnh lên không thành công. Vui lòng thử lại.",
-      "timeout": "Xử lý quá lâu. Vui lòng thử lại với ảnh nhỏ hơn hoặc rõ hơn.",
-      "runtimeUnavailable": "Dịch vụ AI hiện tạm thời chưa sẵn sàng."
-    }
-  },
   "latest": {
     "title1": "Bộ Sưu Tập",
     "title2": "Mới Nhất",
@@ -389,110 +330,110 @@
     "currency": "đ"
   },
   "homePage": {
-    "seoTitle": "Vườn Lá Nhỏ - Cây cảnh cho không gian sống thêm xanh",
-    "seoDescription": "Vườn Lá Nhỏ mang đến các lựa chọn cây cảnh trong nhà và ngoài trời được chọn lọc kỹ, dễ chăm, dễ sống và phù hợp nhiều không gian.",
-    "seoKeywords": "cây cảnh, cây trong nhà, cây ngoài trời, mua cây online, vườn lá nhỏ"
+    "seoTitle": "Vuon La Nho - Cay Canh Chat Luong Cao | Giao Hang Toan Quoc",
+    "seoDescription": "Vuon La Nho mang den cac lua chon cay canh trong nha va ngoai troi duoc chon loc ky, de cham, de song va phu hop nhieu khong gian.",
+    "seoKeywords": "cay canh, cay trong nha, cay ngoai troi, mua cay online, vuon la nho"
   },
   "aboutPage": {
-    "seoTitle": "Vườn Lá Nhỏ - Về Chúng Tôi",
-    "seoDescription": "Tìm hiểu về Vườn Lá Nhỏ, triết lý sống xanh, bộ sưu tập cây cảnh chọn lọc và cam kết đồng hành cùng khách hàng.",
-    "seoKeywords": "vườn lá nhỏ, giới thiệu cửa hàng cây, cây cảnh chất lượng",
+    "seoTitle": "Ve Chung Toi - Vuon La Nho",
+    "seoDescription": "Tim hieu ve Vuon La Nho, triet ly song xanh, bo suu tap cay canh chon loc va cam ket dong hanh cung khach hang.",
+    "seoKeywords": "ve vuon la nho, gioi thieu cua hang cay, cay canh chat luong",
     "eyebrow": "Cau chuyen thuong hieu",
     "title1": "Ve",
     "title2": "Vuon La Nho",
     "description": "Mot thuong hieu xanh nho nhung duoc xay dung de mang lai cam giac binh yen, mem mai va song dong hon cho khong gian song.",
     "imageAlt": "Bo suu tap cay canh Vuon La Nho",
     "story": "Vuon La Nho chon loc cay dua tren suc song, tinh tham my va kha nang phu hop voi nhieu kieu nha o hien dai. Chung toi muon moi don hang deu tao duoc cam giac duoc cham chut tu luc ban lua chon den khi cay ve toi nha.",
-    "contactLabel": "Liên hệ trực tiếp",
+    "contactLabel": "Lien he truc tiep",
     "contactName": "Duong Quoc Hung",
     "contactEmail": "duonghung171204sd@gmail.com",
     "highlights": {
-      "curatedTitle": "Tuyển chọn kỹ lưỡng",
-      "curatedDesc": "Mỗi bộ sưu tập được chọn theo tính thẩm mỹ, độ cân bằng và khả năng ứng dụng trong nhà ở hiện đại.",
-      "careTitle": "Hướng dẫn dễ hiểu",
-      "careDesc": "Thông tin chăm sóc được trình bày rõ ràng để người mới bắt đầu cũng có thể tự tin giữ cây khỏe.",
-      "serviceTitle": "Đồng hành tận tâm",
-      "serviceDesc": "Từ khâu chọn cây phù hợp đến giải đáp sau mua, đội ngũ hỗ trợ luôn giữ sự gần gũi và kịp thời."
+      "curatedTitle": "Tuyen chon ky luong",
+      "curatedDesc": "Moi bo suu tap duoc chon theo tinh tham my, do can bang va kha nang ung dung trong nha o hien dai.",
+      "careTitle": "Huong dan de hieu",
+      "careDesc": "Thong tin cham soc duoc trinh bay ro rang de nguoi moi bat dau cung co the tu tin giu cay khoe.",
+      "serviceTitle": "Dong hanh tan tam",
+      "serviceDesc": "Tu khau chon cay phu hop den giai dap sau mua, doi ngu ho tro luon giu su gan gui va kip thoi."
     }
   },
   "contactPage": {
-    "seoTitle": "Liên Hệ - Vườn Lá Nhỏ",
-    "seoDescription": "Liên hệ Vườn Lá Nhỏ để được tư vấn chọn cây, hỗ trợ đơn hàng và hướng dẫn chăm sóc.",
-    "seoKeywords": "liên hệ vườn lá nhỏ, tư vấn cây cảnh, hỗ trợ đơn hàng",
-    "eyebrow": "Kết nối cùng Vườn Lá Nhỏ",
-    "title1": "Liên hệ",
-    "title2": "đội ngũ",
-    "description": "Cần tư vấn chọn cây, kiểm tra đơn hàng hay nhận hướng dẫn chăm sóc? Đội ngũ của Vườn Lá Nhỏ sẵn sàng hỗ trợ.",
+    "seoTitle": "Lien He - Vuon La Nho",
+    "seoDescription": "Lien he Vuon La Nho de duoc tu van chon cay, ho tro don hang va huong dan cham soc.",
+    "seoKeywords": "lien he vuon la nho, tu van cay canh, ho tro don hang",
+    "eyebrow": "Ket noi cung Vuon La Nho",
+    "title1": "Lien he",
+    "title2": "doi ngu",
+    "description": "Can tu van chon cay, kiem tra don hang hay nhan huong dan cham soc? Doi ngu cua Vuon La Nho san sang ho tro.",
     "cards": {
-      "addressTitle": "Địa chỉ cửa hàng",
-      "addressContent": "401 Lê Lợi, khóm Tân Mỹ,\nphường Sa Đéc, tỉnh Đồng Tháp",
-      "phoneTitle": "Số điện thoại",
+      "addressTitle": "Dia chi cua hang",
+      "addressContent": "401 Le Loi, khom Tan My,\nphuong Sa Dec, tinh Dong Thap",
+      "phoneTitle": "So dien thoai",
       "phoneContent": "0767925665",
       "emailTitle": "Email",
       "emailContent": "duonghung171204sd@gmail.com",
-      "hoursTitle": "Thời gian hỗ trợ",
-      "hoursContent": "Mỗi ngày\n08:00 - 20:00"
+      "hoursTitle": "Thoi gian ho tro",
+      "hoursContent": "Moi ngay\n08:00 - 20:00"
     }
   },
   "forgotPasswordPage": {
-    "seoTitle": "Quên mật khẩu - Vườn Lá Nhỏ",
-    "heroTitle": "Khôi phục tài khoản",
-    "heroDescription": "Nhập email của bạn, chúng tôi sẽ gửi liên kết đặt lại mật khẩu một cách an toàn.",
-    "sending": "Đang gửi..."
+    "seoTitle": "Quen Mat Khau - Vuon La Nho",
+    "heroTitle": "Khoi phuc tai khoan",
+    "heroDescription": "Nhap email cua ban, chung toi se gui lien ket dat lai mat khau mot cach an toan.",
+    "sending": "Dang gui..."
   },
   "verifyEmailPage": {
-    "seoTitle": "Xác thực email - Vườn Lá Nhỏ",
-    "heroTitle": "Xác thực email",
-    "heroDescription": "Hệ thống đang kiểm tra liên kết xác nhận và hoàn tất kích hoạt tài khoản cho bạn.",
-    "cardTitle": "Xác thực email",
+    "seoTitle": "Xac Thuc Email - Vuon La Nho",
+    "heroTitle": "Xac thuc email",
+    "heroDescription": "He thong dang kiem tra lien ket xac nhan va hoan tat kich hoat tai khoan cho ban.",
+    "cardTitle": "Xac thuc email",
     "cardStates": {
-      "verifying": "Đang kiểm tra trạng thái xác thực...",
-      "success": "Email đã được xác thực",
-      "error": "Không thể hoàn tất xác thực"
+      "verifying": "Dang kiem tra trang thai xac thuc...",
+      "success": "Email da duoc xac thuc",
+      "error": "Khong the hoan tat xac thuc"
     }
   },
   "loginSuccessPage": {
-    "seoTitle": "Đăng nhập thành công - Vườn Lá Nhỏ",
-    "badge": "Đăng nhập an toàn",
-    "processingTitle": "Đang xử lý đăng nhập",
-    "processingDescription": "Vui lòng đợi trong giây lát để hệ thống đồng bộ tài khoản của bạn.",
-    "errorTitle": "Đăng nhập bị gián đoạn",
-    "error": "Đã xảy ra lỗi trong quá trình xử lý đăng nhập.",
-    "redirectDescription": "Đang chuyển bạn về trang đăng nhập..."
+    "seoTitle": "Dang Dang Nhap - Vuon La Nho",
+    "badge": "Dang nhap an toan",
+    "processingTitle": "Dang xu ly dang nhap",
+    "processingDescription": "Vui long doi trong giay lat de he thong dong bo tai khoan cua ban.",
+    "errorTitle": "Dang nhap bi gian doan",
+    "error": "Da xay ra loi trong qua trinh xu ly dang nhap.",
+    "redirectDescription": "Dang chuyen ban ve trang dang nhap..."
   },
   "loginPage": {
-    "seoTitle": "Đăng Nhập - Vườn Lá Nhỏ",
-    "heroTitle": "Chào mừng bạn trở lại"
+    "seoTitle": "Dang Nhap - Vuon La Nho",
+    "heroTitle": "Chao mung ban tro lai"
   },
   "registerPage": {
-    "seoTitle": "Đăng Ký - Vườn Lá Nhỏ",
-    "heroTitle": "Tạo tài khoản xanh",
-    "heroDescription": "Lưu sản phẩm yêu thích, theo dõi đơn hàng và mua sắm thuận tiện hơn cùng Vườn Lá Nhỏ.",
+    "seoTitle": "Dang Ky - Vuon La Nho",
+    "heroTitle": "Tao tai khoan xanh",
+    "heroDescription": "Luu san pham yeu thich, theo doi don hang va mua sam thuan tien hon cung Vuon La Nho.",
     "placeholders": {
-      "name": "Nguyễn Văn A"
+      "name": "Nguyen Van A"
     }
   },
   "resetPasswordPage": {
-    "seoTitle": "Đặt Lại Mật Khẩu - Vườn Lá Nhỏ",
-    "heroTitle": "Tạo mật khẩu mới",
-    "heroDescription": "Chọn mật khẩu mới an toàn để tiếp tục sử dụng tài khoản và mua sắm một cách yên tâm."
+    "seoTitle": "Dat Lai Mat Khau - Vuon La Nho",
+    "heroTitle": "Tao mat khau moi",
+    "heroDescription": "Chon mat khau moi an toan de tiep tuc su dung tai khoan va mua sam mot cach yen tam."
   },
   "profilePage": {
-    "seoTitle": "Hồ Sơ Cá Nhân - Vườn Lá Nhỏ",
-    "title1": "Hồ sơ",
-    "title2": "của tôi",
-    "description": "Xem lại thông tin tài khoản và cập nhật dữ liệu giao hàng để các đơn sau được xử lý nhanh hơn.",
-    "memberSince": "Thông tin tài khoản"
+    "seoTitle": "Ho So Ca Nhan - Vuon La Nho",
+    "title1": "Ho so",
+    "title2": "cua toi",
+    "description": "Xem lai thong tin tai khoan va cap nhat du lieu giao hang de cac don sau duoc xu ly nhanh hon.",
+    "memberSince": "Thong tin tai khoan"
   },
   "profileEditPage": {
-    "seoTitle": "Chỉnh Sửa Hồ Sơ - Vườn Lá Nhỏ",
-    "title1": "Chỉnh sửa",
-    "title2": "hồ sơ",
-    "description": "Cập nhật thông tin liên hệ và ảnh đại diện để đơn hàng của bạn luôn chính xác.",
+    "seoTitle": "Chinh Sua Ho So - Vuon La Nho",
+    "title1": "Chinh sua",
+    "title2": "ho so",
+    "description": "Cap nhat thong tin lien he va anh dai dien de don hang cua ban luon chinh xac.",
     "placeholders": {
-      "name": "Nhập họ tên của bạn",
-      "phone": "Nhập số điện thoại",
-      "address": "Nhập địa chỉ"
+      "name": "Nhap ho ten cua ban",
+      "phone": "Nhap so dien thoai",
+      "address": "Nhap dia chi"
     }
   }
 }

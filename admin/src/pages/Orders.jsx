@@ -20,7 +20,7 @@ const Orders = ({ token }) => {
 
   const getStatusColor = (status) => {
     const colors = {
-      'Đã đặt hàng': 'bg-blue-100 text-blue-700',
+      'Đã nhận đơn': 'bg-blue-100 text-blue-700',
       'Đang đóng gói': 'bg-yellow-100 text-yellow-700',
       'Đã gửi đi': 'bg-purple-100 text-purple-700',
       'Đang trên đường': 'bg-orange-100 text-orange-700',
@@ -133,11 +133,11 @@ const Orders = ({ token }) => {
           value={order.status}
           className='p-2 text-xs border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary'
         >
-          <option value="OrderPlaced">Order Placed</option>
-          <option value="Packing">Packing</option>
-          <option value="Shipped">Shipped</option>
-          <option value="Out for delivery">Out for delivery</option>
-          <option value="Delivered">Delivered</option>
+          <option value="Đã nhận đơn">Đã nhận đơn</option>
+          <option value="Đang đóng gói">Đang đóng gói</option>
+          <option value="Đã gửi đi">Đã gửi đi</option>
+          <option value="Đang trên đường">Đang trên đường</option>
+          <option value="Đã giao hàng thành công">Đã giao hàng thành công</option>
         </select>
       ),
       sortable: false,

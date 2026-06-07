@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  darkMode: 'class',
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
@@ -47,6 +47,9 @@ export default {
           foreground: "#111827",
         },
       },
+      fontFamily: {
+        display: ['"Playfair Display"', "Georgia", "serif"],
+      },
       keyframes: {
         "grow-up": {
           "0%, 100%": {
@@ -68,16 +71,36 @@ export default {
           "0%": { opacity: "0", transform: "scale(0.95)" },
           "100%": { opacity: "1", transform: "scale(1)" },
         },
+        "slide-in-right": {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        "hero-reveal": {
+          "0%": { opacity: "0", transform: "translateY(24px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "hero-image": {
+          "0%": { opacity: "0", transform: "scale(0.96) translateX(20px)" },
+          "100%": { opacity: "1", transform: "scale(1) translateX(0)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-8px)" },
+        },
       },
       animation: {
         "grow-up": "grow-up 1.5s ease-in-out infinite",
         "fade-in": "fade-in 0.3s ease-out",
         "scale-in": "scale-in 0.2s ease-out",
+        "slide-in-right": "slide-in-right 0.3s ease-out",
+        "hero-reveal": "hero-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both",
+        "hero-image": "hero-image 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both",
+        float: "float 4s ease-in-out infinite",
       },
       borderRadius: {
-        'xl': '1rem',
-        '2xl': '1.25rem',
-        '3xl': '1.5rem',
+        xl: "1rem",
+        "2xl": "1.25rem",
+        "3xl": "1.5rem",
       },
     },
   },

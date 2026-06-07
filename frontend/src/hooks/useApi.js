@@ -413,7 +413,7 @@ export const useUpdateReview = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: reviewApi.update,
-    onSuccess: (response, variables) => {
+    onSuccess: (response) => {
       if (response.data.success) {
         toast.success("Cập nhật đánh giá thành công!");
         queryClient.invalidateQueries({ queryKey: ["reviews"] });

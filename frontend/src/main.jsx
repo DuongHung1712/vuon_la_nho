@@ -6,6 +6,7 @@ import ShopContextProvider from './context/ShopContext.jsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { HelmetProvider } from 'react-helmet-async'
 import './i18n/config'
+import 'react-toastify/dist/ReactToastify.css'
 
 // Create a client
 const queryClient = new QueryClient({

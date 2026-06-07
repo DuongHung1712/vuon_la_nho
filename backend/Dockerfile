@@ -31,7 +31,7 @@ RUN pip3 install --break-system-packages --upgrade pip setuptools wheel && \
 COPY . .
 
 # Verify model file exists and is not a Git LFS pointer
-RUN MODEL_SIZE=$(stat -c%s /app/ml/xception_best.keras 2>/dev/null || echo "0") && \
+RUN MODEL_SIZE=$(stat -c%s /app/ml/xception_cbam_best.keras 2>/dev/null || echo "0") && \
     if [ "$MODEL_SIZE" -lt 1048576 ]; then \
     echo "ERROR: Model file is too small ($MODEL_SIZE bytes). Likely a Git LFS pointer!" && \
     echo "Please run 'git lfs pull' before building the Docker image." && \

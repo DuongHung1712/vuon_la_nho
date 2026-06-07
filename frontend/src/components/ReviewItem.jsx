@@ -22,7 +22,7 @@ const ReviewItem = ({ review, onEdit, onDelete, isOwner }) => {
   const getTimeAgo = (date) => {
     try {
       return formatDistanceToNow(new Date(date), { addSuffix: true, locale: vi });
-    } catch (error) {
+    } catch {
       return '';
     }
   };
